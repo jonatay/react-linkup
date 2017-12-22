@@ -1,0 +1,9 @@
+.idea
+/node_modules/
+/client/node_modules/
+/client/build/
+/client/src/firebase/config.js
+/serviceAccountKey.json
+/.env
+public/images/
+public/javascripts/

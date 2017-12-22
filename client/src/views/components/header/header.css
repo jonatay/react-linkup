@@ -1,0 +1,48 @@
+.header {
+  padding: 10px 0;
+  height: 60px;
+  overflow: hidden;
+  line-height: 40px; }
+
+.header__title {
+  float: left;
+  font-size: 0.875rem;
+  font-weight: 400;
+  text-rendering: auto;
+  transform: translate(0, 0); }
+  .header__title:before {
+    padding-right: 5px;
+    color: #fff;
+    line-height: 20px; }
+
+.header__actions {
+  float: right;
+  padding: 8px 0;
+  line-height: 24px; }
+  .header__actions:after {
+    clear: both;
+    content: '';
+    display: table; }
+  .header__actions li {
+    float: left;
+    list-style: none; }
+    .header__actions li:last-child {
+      margin-left: 12px;
+      padding-left: 12px;
+      border-left: 1px solid #333; }
+    .header__actions li:first-child {
+      border: none; }
+  .header__actions .btn {
+    display: block;
+    margin: 0;
+    color: #999;
+    font-size: 0.875rem;
+    line-height: 24px; }
+  .header__actions .link {
+    display: block;
+    fill: #98999a;
+    transform: translate(0, 0); }
+  .header__actions .link--github {
+    padding-top: 1px;
+    width: 22px;
+    height: 24px; }
