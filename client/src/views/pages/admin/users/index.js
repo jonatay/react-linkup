@@ -1,1 +1,1 @@
-export {default} from './users-page';
+export {default} from './admin-users-page';

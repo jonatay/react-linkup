@@ -1,11 +1,12 @@
 import { Record } from 'immutable';
-import { authActions } from './actions';
+import { authActions } from './auth-actions';
 
 export const AuthState = new Record({
   authenticated: false,
   uid: null,
   user: null,
-  photoURL:null
+  photoURL:null,
+  token:null
 });
 
 export function authReducer(state = new AuthState(), { payload, type }) {
@@ -13,9 +14,10 @@ export function authReducer(state = new AuthState(), { payload, type }) {
     case authActions.SIGN_IN_FULFILLED:
       return state.merge({
         authenticated: true,
-        uid: payload.uid,
-        user: payload,
-        photoURL: payload.authUser.photoURL
+        uid: payload.authUser.uid,
+        user: payload.authUser,
+        photoURL: payload.authUser.photoURL,
+        token: payload.authUser.getIdToken()
       });
 
     case authActions.SIGN_OUT_FULFILLED:
@@ -23,7 +25,8 @@ export function authReducer(state = new AuthState(), { payload, type }) {
         authenticated: false,
         uid: null,
         user: null,
-        photoURL: null
+        photoURL: null,
+        token:null
       });
 
     default:

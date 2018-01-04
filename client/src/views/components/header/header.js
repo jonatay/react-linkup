@@ -2,22 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Layout, Menu, Avatar, Icon } from 'antd';
 //import './header.css';
+import {navActions} from "../../../admin";
+
 const SubMenu = Menu.SubMenu;
+const modules = navActions.modules;
 
 const { Header } = Layout;
-const AppHeader = ({ authenticated, signOut, photoURL }) => {
+const AppHeader = ({ authenticated, signOut, photoURL, navigateTo }) => {
   const handleMenuClick = ({ key }) => {
      switch (key) {
       case 'signOut':
         signOut();
         break;
+       case 'admin-users-page':
+         navigateTo(modules.navToAdminUsers);
+         break;
       default:
         console.log(key);
     }
   };
-  if (!authenticated) return null;
-  else
-    return (
+  return (
       <Header
         style={{ position: 'fixed', width: '100%', lineHeight: 40, height: 40 }}
       >
@@ -71,7 +75,7 @@ const AppHeader = ({ authenticated, signOut, photoURL }) => {
               </span>
             }
           >
-            <Menu.Item key="9">Users</Menu.Item>
+            <Menu.Item key="admin-users-page">Users</Menu.Item>
             <Menu.Item key="10">Rights</Menu.Item>
           </SubMenu>
         </Menu>
@@ -82,36 +86,9 @@ const AppHeader = ({ authenticated, signOut, photoURL }) => {
 AppHeader.propTypes = {
   authenticated: PropTypes.bool.isRequired,
   signOut: PropTypes.func.isRequired,
-  photoURL: PropTypes.string.isRequired
+  photoURL: PropTypes.string.isRequired,
+  navigateTo: PropTypes.func.isRequired
 };
 
 export default AppHeader;
 
-/*
-
-  <header className="header">
-    <div className="g-row">
-      <div className="g-col">
-        <h1 className="header__title">reactLinkup</h1>
-
-        <ul className="header__actions">
-          {authenticated ? (
-            <li>
-              <Button onClick={signOut}>Sign out</Button>
-            </li>
-          ) : null}
-          {<li>}
-{<a}
-{className="link link--github"}
-{href="https://github.com/r-park/todo-redux-saga"}
-{>}
-{<GitHubLogo />}
-{</a>}
-{</li>}
-</ul>
-</div>
-</div>
-</header>
-
-
- */

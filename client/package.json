@@ -2,9 +2,11 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://localhost/",
+  "homepage": "http://localhost/linkup",
+  "proxy": "http://localhost:3001",
   "dependencies": {
     "antd": "^3.0.2",
+    "axios": "^0.17.1",
     "babel-polyfill": "^6.26.0",
     "firebase": "^4.8.1",
     "react": "^16.2.0",
@@ -17,6 +19,7 @@
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0",
+    "redux-saga-requests-axios": "^0.5.0",
     "redux-thunk": "^2.2.0",
     "reselect": "^3.0.1"
   },

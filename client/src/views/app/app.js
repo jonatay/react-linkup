@@ -6,26 +6,38 @@ import { withRouter } from 'react-router-dom';
 import { Layout } from 'antd';
 
 import { authActions, getPhotoURL, isAuthenticated } from '../../auth';
+import { navActions } from "../../admin";
+
 import AppHeader from '../components/header';
 import RequireAuthRoute from '../components/require-auth-route';
 import RequireUnauthRoute from '../components/require-unauth-route';
 import SignInPage from '../pages/sign-in';
 import RootPage from '../pages/root';
+import AdminUsersPage from '../pages/admin/users';
+
+import './app.css';
 
 const { Content } = Layout;
 
-const App = ({ authenticated, signOut, photoURL }) => {
+const App = ({ authenticated, signOut, photoURL, navigateTo }) => {
+  if (!authenticated)
+    return <Layout>
+      <Content>
+        <RequireUnauthRoute
+          authenticated={authenticated}
+          path="/*"
+          component={SignInPage}
+        />
+      </Content>
+    </Layout>;
   return (
     <Layout>
-      {!authenticated ? (
-        ''
-      ) : (
-        <AppHeader
-          authenticated={authenticated}
-          signOut={signOut}
-          photoURL={photoURL}
-        />
-      )}
+      <AppHeader
+        authenticated={authenticated}
+        signOut={signOut}
+        photoURL={photoURL}
+        navigateTo={navigateTo}
+      />
       <Content style={{ padding: '0 10px', marginTop: 60 }}>
         <div style={{ background: '#fff', padding: 5, minHeight: 750 }}>
           <RequireAuthRoute
@@ -34,10 +46,11 @@ const App = ({ authenticated, signOut, photoURL }) => {
             path="/"
             component={RootPage}
           />
-          <RequireUnauthRoute
+          <RequireAuthRoute
             authenticated={authenticated}
-            path="/sign-in"
-            component={SignInPage}
+            exact
+            path="/admin-users-page"
+            component={AdminUsersPage}
           />
         </div>
       </Content>
@@ -48,7 +61,8 @@ const App = ({ authenticated, signOut, photoURL }) => {
 App.propTypes = {
   authenticated: PropTypes.bool.isRequired,
   signOut: PropTypes.func.isRequired,
-  photoURL: PropTypes.string
+  photoURL: PropTypes.string,
+  navigateTo: PropTypes.func.isRequired
 };
 
 //=====================================
@@ -62,7 +76,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  signOut: authActions.signOut
+  signOut: authActions.signOut,
+  navigateTo: navActions.navigateTo
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

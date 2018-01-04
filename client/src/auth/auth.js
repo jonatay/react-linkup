@@ -1,5 +1,5 @@
 import { firebaseAuth } from '../firebase';
-import { authActions } from './actions';
+import { authActions } from './auth-actions';
 
 
 export function initAuth(dispatch) {

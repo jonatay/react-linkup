@@ -7,40 +7,44 @@ import Button from 'src/views/components/button';
 
 import './sign-in-page.css';
 
-
-const SignInPage = ({signInWithGoogle}) => {
+const SignInPage = ({ signInWithGithub, signInWithGoogle, signInWithTwitter, signInWithFacebook }) => {
   return (
     <div className="g-row sign-in">
       <div className="g-col">
         <h1 className="sign-in__heading">Sign in</h1>
-        {/*<Button className="sign-in__button" onClick={signInWithGithub}>GitHub</Button>*/}
-        <Button className="sign-in__button" onClick={signInWithGoogle}>Google</Button>
-        {/*<Button className="sign-in__button" onClick={signInWithTwitter}>Twitter</Button>*/}
+        <Button className="sign-in__button" onClick={signInWithGithub}>
+          GitHub
+        </Button>
+        <Button className="sign-in__button" onClick={signInWithGoogle}>
+          Google
+        </Button>
+        <Button className="sign-in__button" onClick={signInWithTwitter}>
+          Twitter
+        </Button>
+        <Button className="sign-in__button" onClick={signInWithFacebook}>
+          Facebook
+        </Button>
       </div>
     </div>
   );
 };
 
 SignInPage.propTypes = {
-  // signInWithGithub: PropTypes.func.isRequired,
+  signInWithGithub: PropTypes.func.isRequired,
   signInWithGoogle: PropTypes.func.isRequired,
-  // signInWithTwitter: PropTypes.func.isRequired
+  signInWithTwitter: PropTypes.func.isRequired,
+  signInWithFacebook: PropTypes.func.isRequired
 };
-
 
 //=====================================
 //  CONNECT
 //-------------------------------------
 
 const mapDispatchToProps = {
-  // signInWithGithub: authActions.signInWithGithub,
+  signInWithGithub: authActions.signInWithGithub,
   signInWithGoogle: authActions.signInWithGoogle,
-  // signInWithTwitter: authActions.signInWithTwitter
+  signInWithTwitter: authActions.signInWithTwitter,
+  signInWithFacebook: authActions.signInWithFacebook
 };
 
-export default withRouter(
-  connect(
-    null,
-    mapDispatchToProps
-  )(SignInPage)
-);
+export default withRouter(connect(null, mapDispatchToProps)(SignInPage));

@@ -21,15 +21,19 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET users listing. */
-router.get('/users', function(req, res, next) {
-  // res.send('respond with a resource');
-  res.json([{
-    id: 1,
-    username: "jono"
-  }, {
-    id: 2,
-    username: "user"
-  }]);
+router.get('/admin/users', function(req, res, next) {
+  admin.auth().listUsers().then(listUsersResult=>{
+    res.json(listUsersResult.users);
+  })
+  // res.json([{
+  //   id: 1,
+  //   name: "Jonathan Taylor",
+  //   email:'whatever@wherever.com'
+  // }, {
+  //   id: 2,
+  //   name: "Some Other User",
+  //   email:'whatever@wherever.com'
+  // }]);
 });
 
 module.exports = router;

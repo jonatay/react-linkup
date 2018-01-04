@@ -1,11 +1,7 @@
-import { all } from 'redux-saga/effects'
+import { all } from 'redux-saga/effects';
 import { authSagas } from './auth';
-// import { taskSagas } from './tasks';
-
+import { userSagas, navSagas } from './admin';
 
 export default function* sagas() {
-  yield all([
-    ...authSagas,
-    // ...taskSagas
-  ]);
+  yield all([...authSagas, ...navSagas, ...userSagas]);
 }

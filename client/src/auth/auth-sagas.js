@@ -1,13 +1,13 @@
 import { call, fork, put, take } from 'redux-saga/effects';
 import { firebaseAuth } from '../firebase';
 import history from '../history';
-import { authActions } from './actions';
+import { authActions } from './auth-actions';
 
 
 function* signIn(authProvider) {
   try {
     const authData = yield call([firebaseAuth, firebaseAuth.signInWithPopup], authProvider);
-    console.log(authData);
+    //console.log(authData);
     yield put(authActions.signInFulfilled(authData.user));
     yield history.push('/');
   }
