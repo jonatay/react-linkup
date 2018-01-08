@@ -20,3 +20,20 @@ export const apiFetch = (path, token) => {
   };
   return fetch('/api/' + path, myInit);
 };
+
+export const apiRemove = (path, key, token) => {
+  let myHeaders = new Headers();
+  myHeaders.append('Content-Type', 'json');
+  myHeaders.append('Access-Control-Allow-Origin', '*');
+  myHeaders.append('Authorization', 'Bearer ' + token);
+  var myInit = {
+    method: 'DELETE',
+    headers: myHeaders,
+    mode: 'cors',
+    cache: 'default',
+    accept: 'application/json'
+  };
+  return fetch(`/api/${path}/${key}`, myInit);
+};
+
+

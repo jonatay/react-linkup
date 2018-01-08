@@ -19,7 +19,7 @@ export function userReducer(state = new UsersState(), {payload, type}) {
 
     case userActions.REMOVE_USER_FULFILLED:
       return state.set('list', state.list.filter(user => {
-        return user.key !== payload.user.key;
+        return user.uid !== payload.user.uid;
       }));
 
     case userActions.UPDATE_USER_FULFILLED:

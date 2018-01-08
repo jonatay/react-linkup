@@ -1,4 +1,4 @@
-import { apiFetch, statusHelper } from './api-fetch';
+import { apiFetch, apiRemove, statusHelper } from './api-fetch';
 
 export class ApiList {
   constructor(actions, modelClass, path) {
@@ -23,7 +23,7 @@ export class ApiList {
     this._token = value;
   }
 
-  list(path, token) {
+  list(path,token) {
     return apiFetch(path, token)
       .then(statusHelper)
       .then(response => response.json())
@@ -38,12 +38,16 @@ export class ApiList {
     });
   }
 
-  remove(key) {
-    return new Promise((resolve, reject) => {
-      // firebaseDb.ref(`${this.path}/${key}`)
-      //   .remove(error => error ? reject(error) : resolve());
-      resolve('?removed?');
-    });
+  remove(path, key, token) {
+    return apiRemove(path, key, token)
+      .then(statusHelper)
+      .then(response => response.json())
+      .catch(error => error);
+    // return new Promise((resolve, reject) => {
+    //   // firebaseDb.ref(this.path)
+    //   //   .push(value, error => error ? reject(error) : resolve());
+    //   resolve();
+    // });
   }
 
   update(key, value) {

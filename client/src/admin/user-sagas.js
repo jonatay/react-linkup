@@ -1,10 +1,12 @@
 import { LOCATION_CHANGE } from 'react-router-redux';
 // import { eventChannel } from 'redux-saga';
-import { call, fork, put, take } from 'redux-saga/effects';
-import { authActions } from 'src/auth';
+import { call, fork, put, take, select, takeEvery } from 'redux-saga/effects';
+import { getIdToken } from 'src/auth';
 import { userActions } from './user-actions';
 import { navActions } from './nav-actions';
 import { userList } from './user-list';
+
+const userPath = 'admin/users';
 
 // function subscribe() {
 //   return eventChannel(emit => userList.subscribe(emit));
@@ -32,12 +34,14 @@ const createUser = write.bind(
   userList.push,
   userActions.createUserFailed
 );
-const removeUser = write.bind(
-  null,
-  userList,
-  userList.remove,
-  userActions.removeUserFailed
-);
+
+// const removeUser = write.bind(
+//   null,
+//   userList,
+//   userList.remove,
+//   userActions.removeUserFailed
+// );
+
 const updateUser = write.bind(
   null,
   userList,
@@ -73,28 +77,29 @@ function* watchLocationChange() {
   while (true) {
     const { payload } = yield take(LOCATION_CHANGE);
     if (payload.pathname === navActions.modules.navToAdminUsers.url) {
-      // let users = yield call(userList.list, userList.path, userList.token);
-      // yield put(userActions.loadUsersFulfilled(users));
       yield put(userActions.loadUsers());
     }
   }
 }
 
+function* loadAllUsers() {
+  const token = yield select(getIdToken);
+  const users = yield call(userList.list, userPath, token);
+  yield put(userActions.loadUsersFulfilled(users));
+}
+
 function* watchLoadUsers() {
-  while (true) {
-    yield take(userActions.LOAD_USERS);
-    console.log('asking for a token');
-    //let token = yield put(authActions.GET_ID_TOKEN);
-    // let payload = yield take(authActions.GET_ID_TOKEN_FULFILLED);
-    // console.log('loading-users-saga');
-  }
+  yield takeEvery(userActions.LOAD_USERS, loadAllUsers);
 }
 
 function* watchRemoveUser() {
   while (true) {
-    let { payload } = yield take(userActions.REMOVE_USER);
-    yield fork(removeUser, payload.user.key);
+    let {payload} = yield take(userActions.REMOVE_USER);
+    const token = yield select(getIdToken);
+    payload = yield call(userList.remove, userPath, payload.user.uid ,token);
+    yield put(userActions.removeUserFulfilled(payload));
   }
+  // yield takeEvery(userActions.REMOVE_USER, removeUser);
 }
 
 function* watchUpdateUser() {

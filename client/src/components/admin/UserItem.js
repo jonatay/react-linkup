@@ -88,6 +88,7 @@ export class UserItem extends Component {
         />
         <div>
           <Button
+            onClick={this.remove}
             type={!user.disabled ? 'default' : 'danger'}
             icon={!user.disabled ? 'check-square' : 'close-square'}
           >
