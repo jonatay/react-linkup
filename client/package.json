@@ -2,8 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://localhost/linkup",
-  "proxy": "http://localhost:3001",
+  "proxy": "http://localhost:3001/",
   "dependencies": {
     "antd": "^3.0.2",
     "axios": "^0.17.1",
