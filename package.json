@@ -11,6 +11,7 @@
     "debug": "~2.6.9",
     "dotenv": "^4.0.0",
     "express": "~4.15.5",
+    "express-acl": "^1.0.4",
     "express-firebase-middleware": "^2.0.0",
     "firebase-admin": "^5.5.1",
     "jade": "~1.11.0",

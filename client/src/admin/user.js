@@ -10,5 +10,6 @@ export const User = new Record({
   lastSignInTime: null,
   photoURL: null,
   providerData: [],
-  uid: null
+  uid: null,
+  isAdmin:false
 });

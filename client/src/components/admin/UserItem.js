@@ -15,6 +15,7 @@ export class UserItem extends Component {
     this.save = this.save.bind(this);
     this.stopEditing = this.stopEditing.bind(this);
     this.toggleDisabled = this.toggleDisabled.bind(this);
+
   }
 
   edit() {
