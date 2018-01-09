@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { Layout } from 'antd';
 
 import { authActions, getPhotoURL, isAuthenticated } from '../../auth';
-import { navActions } from "../../admin";
+import { navActions } from '../../admin';
 
 import AppHeader from '../components/header';
 import RequireAuthRoute from '../components/require-auth-route';
@@ -14,6 +14,7 @@ import RequireUnauthRoute from '../components/require-unauth-route';
 import SignInPage from '../pages/sign-in';
 import RootPage from '../pages/root';
 import AdminUsersPage from '../pages/admin/users';
+import AdminRightsPage from '../pages/admin/rights';
 
 import './app.css';
 
@@ -21,15 +22,17 @@ const { Content } = Layout;
 
 const App = ({ authenticated, signOut, photoURL, navigateTo }) => {
   if (!authenticated)
-    return <Layout>
-      <Content>
-        <RequireUnauthRoute
-          authenticated={authenticated}
-          path="/*"
-          component={SignInPage}
-        />
-      </Content>
-    </Layout>;
+    return (
+      <Layout>
+        <Content>
+          <RequireUnauthRoute
+            authenticated={authenticated}
+            path="/*"
+            component={SignInPage}
+          />
+        </Content>
+      </Layout>
+    );
   return (
     <Layout>
       <AppHeader
@@ -51,6 +54,12 @@ const App = ({ authenticated, signOut, photoURL, navigateTo }) => {
             exact
             path="/admin-users-page"
             component={AdminUsersPage}
+          />
+          <RequireAuthRoute
+            authenticated={authenticated}
+            exact
+            path="/admin-rights-page"
+            component={AdminRightsPage}
           />
         </div>
       </Content>

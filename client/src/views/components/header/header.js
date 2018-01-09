@@ -10,16 +10,23 @@ const modules = navActions.modules;
 const { Header } = Layout;
 const AppHeader = ({ authenticated, signOut, photoURL, navigateTo }) => {
   const handleMenuClick = ({ key }) => {
-     switch (key) {
-      case 'signOut':
-        signOut();
-        break;
-       case 'admin-users-page':
-         navigateTo(modules.navToAdminUsers);
-         break;
-      default:
-        console.log(key);
+    if (key === 'signOut') {
+      signOut();
+    } else {
+      const module = modules[key];
+      if (module) {
+        navigateTo(module.url);
+      }
     }
+     // switch (key) {
+     //  case 'signOut':
+     //    signOut();
+     //    break;
+     //   case 'admin-users-page':
+     //     navigateTo(modules.navToAdminUsers);
+     //     break;
+     //  default:
+     //    console.log(key)
   };
   return (
       <Header
@@ -75,8 +82,8 @@ const AppHeader = ({ authenticated, signOut, photoURL, navigateTo }) => {
               </span>
             }
           >
-            <Menu.Item key="admin-users-page">Users</Menu.Item>
-            <Menu.Item key="10">Rights</Menu.Item>
+            <Menu.Item key={modules.navToAdminUsers.name}>Users</Menu.Item>
+            <Menu.Item key={modules.navToAdminRights.name}>Rights</Menu.Item>
           </SubMenu>
         </Menu>
       </Header>
