@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "set DEBUG=reactLinkup:* & set PORT=3001 & nodemon ./bin/www"
+    "start": "set DEBUG=reactLinkup:* & nodemon ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.18.2",

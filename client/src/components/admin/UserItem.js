@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { Button, List, Avatar } from 'antd';
+import { Button, List, Avatar, Popconfirm } from 'antd';
 
 export class UserItem extends Component {
   constructor() {
@@ -14,7 +14,7 @@ export class UserItem extends Component {
     this.remove = this.remove.bind(this);
     this.save = this.save.bind(this);
     this.stopEditing = this.stopEditing.bind(this);
-    this.toggleStatus = this.toggleStatus.bind(this);
+    this.toggleDisabled = this.toggleDisabled.bind(this);
   }
 
   edit() {
@@ -33,6 +33,11 @@ export class UserItem extends Component {
     this.props.removeUser(this.props.user);
   }
 
+  toggleDisabled() {
+    const { user } = this.props;
+    this.props.updateUser(user, { disabled: !user.disabled });
+  }
+
   save(event) {
     if (this.state.editing) {
       const { user } = this.props;
@@ -48,11 +53,6 @@ export class UserItem extends Component {
 
   stopEditing() {
     this.setState({ editing: false });
-  }
-
-  toggleStatus() {
-    const { user } = this.props;
-    this.props.updateUser(user, { completed: !user.completed });
   }
 
   renderTitle(user) {
@@ -78,22 +78,34 @@ export class UserItem extends Component {
   }
 
   render() {
-    const { user } = this.props;
+    const { user, authUser } = this.props;
     return (
       <List.Item key={user.uid}>
         <List.Item.Meta
           avatar={<Avatar src={user.photoURL} />}
           title={user.displayName}
-          description={user.email}
+          description={user.email===null?'<no-email>':user.email}
         />
         <div>
-          <Button
-            onClick={this.remove}
-            type={!user.disabled ? 'default' : 'danger'}
-            icon={!user.disabled ? 'check-square' : 'close-square'}
-          >
-            {!user.disabled ? 'active' : 'disabled'}
-          </Button>
+          {authUser.uid === user.uid ? (
+            ''
+          ) : (
+            <div>
+              <Button
+                onClick={this.toggleDisabled}
+                type={!user.disabled ? 'default' : 'danger'}
+                icon={!user.disabled ? 'check-square' : 'close-square'}
+              >
+                {!user.disabled ? 'active' : 'disabled'}
+              </Button>
+              <Popconfirm
+                title="Are you SURE you want to delete this user?"
+                onConfirm={this.remove}
+              >
+                <Button type="danger" icon="delete" />
+              </Popconfirm>
+            </div>
+          )}
         </div>
       </List.Item>
     );
@@ -103,7 +115,8 @@ export class UserItem extends Component {
 UserItem.propTypes = {
   removeUser: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
-  updateUser: PropTypes.func.isRequired
+  updateUser: PropTypes.func.isRequired,
+  authUser: PropTypes.object.isRequired
 };
 
 export default UserItem;

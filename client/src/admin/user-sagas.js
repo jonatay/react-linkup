@@ -1,75 +1,25 @@
 import { LOCATION_CHANGE } from 'react-router-redux';
-// import { eventChannel } from 'redux-saga';
-import { call, fork, put, take, select, takeEvery } from 'redux-saga/effects';
-import { getIdToken } from 'src/auth';
+import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
+import { authActions } from 'src/auth';
 import { userActions } from './user-actions';
 import { navActions } from './nav-actions';
 import { userList } from './user-list';
 
 const userPath = 'admin/users';
 
-// function subscribe() {
-//   return eventChannel(emit => userList.subscribe(emit));
-// }
-
-// function* read() {
-//   const channel = yield call(subscribe);
-//   while (true) {
-//     let action = yield take(channel);
-//     yield put(action);
-//   }
-// }
-
-function* write(context, method, onError, ...params) {
-  try {
-    yield call([context, method], ...params);
-  } catch (error) {
-    yield put(onError(error));
-  }
-}
-
-const createUser = write.bind(
-  null,
-  userList,
-  userList.push,
-  userActions.createUserFailed
-);
-
-// const removeUser = write.bind(
-//   null,
-//   userList,
-//   userList.remove,
-//   userActions.removeUserFailed
-// );
-
-const updateUser = write.bind(
-  null,
-  userList,
-  userList.update,
-  userActions.updateUserFailed
-);
-
 //=====================================
 //  WATCHERS
 //-------------------------------------
 
-// function* watchAuthentication() {
-//   while (true) {
-//     let { payload } = yield take(authActions.SIGN_IN_FULFILLED);
-//     // userList.token = payload.authUser.getIdToken().i;
-//     // let token = yield call([firebaseAuth, firebaseAuth.currentUser.getIdToken])
-//     let token = yield call([payload.authUser, payload.authUser.getIdToken])
-//     // console.log(token);
-//     userList.token = token;
-//     yield take([authActions.SIGN_OUT_FULFILLED]);
-//     userList.token = null;
-//   }
-// }
-
-function* watchCreateUser() {
+function* watchAuthentication() {
   while (true) {
-    let { payload } = yield take(userActions.CREATE_USER);
-    yield fork(createUser, payload.user);
+    let { payload } = yield take(authActions.SIGN_IN_FULFILLED);
+    let token = yield call([payload.authUser, payload.authUser.getIdToken]);
+    userList.token = token;
+    userList.path = userPath;
+    yield take([authActions.SIGN_OUT_FULFILLED]);
+    userList.token = null;
+    userList.path = null;
   }
 }
 
@@ -83,8 +33,7 @@ function* watchLocationChange() {
 }
 
 function* loadAllUsers() {
-  const token = yield select(getIdToken);
-  const users = yield call(userList.list, userPath, token);
+  const users = yield call([userList, userList.list]);
   yield put(userActions.loadUsersFulfilled(users));
 }
 
@@ -92,21 +41,29 @@ function* watchLoadUsers() {
   yield takeEvery(userActions.LOAD_USERS, loadAllUsers);
 }
 
+function* removeUser({ payload }) {
+  let result = yield call([userList, userList.remove], payload.user.uid);
+  yield put(userActions.removeUserFulfilled(result));
+}
+
 function* watchRemoveUser() {
-  while (true) {
-    let {payload} = yield take(userActions.REMOVE_USER);
-    const token = yield select(getIdToken);
-    payload = yield call(userList.remove, userPath, payload.user.uid ,token);
-    yield put(userActions.removeUserFulfilled(payload));
-  }
-  // yield takeEvery(userActions.REMOVE_USER, removeUser);
+  yield takeEvery(userActions.REMOVE_USER, removeUser);
+}
+
+function* updateUser({ payload }) {
+  let result = yield call([userList,userList.update], payload.user.uid, payload.changes);
+  yield put(userActions.updateUserFulfilled(result.user));
 }
 
 function* watchUpdateUser() {
-  while (true) {
-    let { payload } = yield take(userActions.UPDATE_USER);
-    yield fork(updateUser, payload.user.key, payload.changes);
-  }
+  yield takeEvery(userActions.UPDATE_USER, updateUser);
+  // while (true) {
+  //   let { payload } = yield take(userActions.UPDATE_USER);
+  //   const token = yield select(getIdToken);
+  //   payload = yield call(userList.update, userPath, payload.user.uid ,token);
+  //   yield put(userActions.updateUserFulfilled(payload));
+  //   //yield fork(updateUser, payload.user.key, payload.changes);
+  // }
 }
 
 //=====================================
@@ -114,9 +71,9 @@ function* watchUpdateUser() {
 //-------------------------------------
 
 export const userSagas = [
-  // fork(watchAuthentication),
+  fork(watchAuthentication),
   fork(watchLoadUsers),
-  fork(watchCreateUser),
+  //fork(watchCreateUser),
   fork(watchLocationChange),
   fork(watchRemoveUser),
   fork(watchUpdateUser)

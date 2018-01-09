@@ -9,12 +9,10 @@ export const statusHelper = response => {
 export const apiFetch = (path, token) => {
   let myHeaders = new Headers();
   myHeaders.append('Content-Type', 'json');
-  myHeaders.append('Access-Control-Allow-Origin', '*');
   myHeaders.append('Authorization', 'Bearer ' + token);
   var myInit = {
     method: 'GET',
     headers: myHeaders,
-    mode: 'cors',
     cache: 'default',
     accept: 'application/json'
   };
@@ -24,16 +22,24 @@ export const apiFetch = (path, token) => {
 export const apiRemove = (path, key, token) => {
   let myHeaders = new Headers();
   myHeaders.append('Content-Type', 'json');
-  myHeaders.append('Access-Control-Allow-Origin', '*');
   myHeaders.append('Authorization', 'Bearer ' + token);
   var myInit = {
     method: 'DELETE',
     headers: myHeaders,
-    mode: 'cors',
-    cache: 'default',
     accept: 'application/json'
   };
   return fetch(`/api/${path}/${key}`, myInit);
 };
 
-
+export const apiUpdate = (path, key, changes, token) => {
+  let myHeaders = new Headers();
+  myHeaders.append('Content-Type', 'application/json');
+  myHeaders.append('Authorization', 'Bearer ' + token);
+  var myInit = {
+    method: 'PUT',
+    headers: myHeaders,
+    body: JSON.stringify(changes),
+    accept: 'application/json'
+  };
+  return fetch(`/api/${path}/${key}`, myInit);
+};
