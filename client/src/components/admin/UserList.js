@@ -6,7 +6,7 @@ import { List } from 'antd';
 
 import UserItem from './UserItem';
 
-const UserList = ({ removeUser, users, updateUser }) => {
+const UserList = ({ removeUser, users, updateUser, authUser }) => {
   let userItems = users.map((user, index) => {
     return (
       <UserItem
@@ -14,6 +14,7 @@ const UserList = ({ removeUser, users, updateUser }) => {
         key={index}
         user={user}
         updateUser={updateUser}
+        authUser={authUser}
       />
     );
   });
@@ -24,7 +25,8 @@ const UserList = ({ removeUser, users, updateUser }) => {
 UserList.propTypes = {
   removeUser: PropTypes.func.isRequired,
   users: PropTypes.instanceOf(ImList),
-  updateUser: PropTypes.func.isRequired
+  updateUser: PropTypes.func.isRequired,
+  authUser: PropTypes.object.isRequired
 };
 
 export default UserList;

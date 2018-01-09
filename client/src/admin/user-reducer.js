@@ -24,7 +24,7 @@ export function userReducer(state = new UsersState(), {payload, type}) {
 
     case userActions.UPDATE_USER_FULFILLED:
       return state.set('list', state.list.map(user => {
-        return user.key === payload.user.key ? payload.user : user;
+        return user.uid === payload.user.uid ? payload.user : user;
       }));
 
     default:

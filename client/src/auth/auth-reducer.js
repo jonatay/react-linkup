@@ -5,8 +5,9 @@ export const AuthState = new Record({
   authenticated: false,
   uid: null,
   user: null,
-  photoURL:null,
-  token:null
+  photoURL: null,
+  token: null,
+  authError: null
 });
 
 export function authReducer(state = new AuthState(), { payload, type }) {
@@ -17,7 +18,13 @@ export function authReducer(state = new AuthState(), { payload, type }) {
         uid: payload.authUser.uid,
         user: payload.authUser,
         photoURL: payload.authUser.photoURL,
-        token: payload.authUser.getIdToken()
+        token: payload.authUser.getIdToken(),
+        authError: null
+      });
+
+    case authActions.SIGN_IN_FAILED:
+      return state.merge({
+        authError: payload.error
       });
 
     case authActions.SIGN_OUT_FULFILLED:
@@ -26,7 +33,8 @@ export function authReducer(state = new AuthState(), { payload, type }) {
         uid: null,
         user: null,
         photoURL: null,
-        token:null
+        token: null,
+        authError: null
       });
 
     default:

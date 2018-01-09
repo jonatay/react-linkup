@@ -5,9 +5,9 @@ const admin = require('./services/firebase/firebase-admin');
 
 const firebaseMiddleware = require('express-firebase-middleware');
 
-router.use((req, res, next) => {
-  next();
-});
+// router.use((req, res, next) => {
+//   next();
+// });
 
 router.use('/', firebaseMiddleware.auth);
 
@@ -30,9 +30,8 @@ router.get('/admin/users', function(req, res, next) {
     });
 });
 
-/* Delete actually disables, and returns updated user */
 /* DELETE a user listing. */
-router.delete('/admin/users/:uid', function(req, res, next) {
+router.delete('/admin/users/:uid', function(req, res) {
   const uid = req.params.uid;
   admin
     .auth()
@@ -43,6 +42,21 @@ router.delete('/admin/users/:uid', function(req, res, next) {
     .catch(err => {
       res.json({ status: 'error', action: 'delete', uid: uid, error: err });
     });
+});
+
+/* PUT a user listing. */
+router.put('/admin/users/:uid', function(req, res) {
+  const uid = req.params.uid;
+  console.log(`updating uid:${uid} with:`, req.body);
+  admin
+    .auth()
+    .updateUser(uid, req.body)
+    .then(userRecord => {
+      res.json({ status: 'success', action: 'update', uid: uid, user:userRecord });
+    }).catch(err => {
+    res.json({ status: 'error', action: 'update', uid: uid, error: err });
+  });
+
 });
 
 module.exports = router;

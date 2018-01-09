@@ -1,7 +1,5 @@
 import { Record } from 'immutable';
 
-export const path = 'admin/users';
-
 export const User = new Record({
   disabled: null,
   displayName: null,

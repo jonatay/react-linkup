@@ -9,6 +9,14 @@ export const getPhotoURL = state => {
   return state.auth.photoURL;
 };
 
+export const getAuthError = state => {
+  return state.auth.authError
+}
+
+export const getAuthUser = state => {
+  return state.auth.user
+}
+
 export const getIdToken = state => {
   return state.auth.token.i;
   // return new Promise((resolve, reject) => {
