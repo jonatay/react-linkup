@@ -5,11 +5,11 @@ import { withRouter } from 'react-router-dom';
 import { userActions, getVisibleUsers } from 'src/admin';
 import { getAuthUser } from "src/auth";
 
-import UserList from 'src/components/admin/UserList';
+import UserTable from 'src/components/admin/UserTable';
 
 const AdminUsersPage = ({ users,authUser, removeUser,updateUser }) => {
   return (
-<UserList users={users} authUser={authUser} removeUser={removeUser} updateUser={updateUser}/>
+<UserTable users={users} authUser={authUser} removeUser={removeUser} updateUser={updateUser}/>
   );
 };
 
