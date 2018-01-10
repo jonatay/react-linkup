@@ -5,17 +5,53 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-
 import { List as ImList } from 'immutable';
 
-import { Table } from 'antd';
+import { Table, Popconfirm, Button } from 'antd';
+
+import EditTagGroup from './EditTagGroup';
 
 class RightTable extends React.Component {
+  handleRightChange(right, changes) {
+    this.props.updateRight(right, changes);
+  }
 
-  columns = [{
-    title: 'Name',
-    dataIndex: 'name'
-  }]
+  columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name'
+    },
+    {
+      title: 'Roles',
+      dataIndex: 'roles',
+      render: (text, record) => (
+        <EditTagGroup
+          tagName="Role"
+          tags={record.roles}
+          handleTagsChange={roles => this.handleRightChange(record, {roles})}
+        />
+      )
+    },
+    {
+      title: 'Assigned',
+      dataIndex: 'assigned'
+    },
+    {
+      dataIndex: 'key',
+      render:(text,record)=>(
+        <Popconfirm
+          title="Are you SURE you want to delete this Right?"
+          onConfirm={() => this.remove(record)}
+        >
+          <Button type="danger" icon="delete" />
+        </Popconfirm>
+      )
+    }
+  ];
+
+  remove(right) {
+    this.props.removeRight(right);
+  }
 
   render() {
     const { rights } = this.props;
