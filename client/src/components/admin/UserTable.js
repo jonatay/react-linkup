@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { List as ImList } from 'immutable';
-import { Avatar, Button, Popconfirm, Table } from 'antd';
+import { Avatar, Button, List, Popconfirm, Table } from 'antd';
 
 export class UserTable extends Component {
   constructor() {
@@ -33,20 +33,6 @@ export class UserTable extends Component {
     {
       title: 'E-Mail',
       dataIndex: 'email'
-    },
-    {
-      title: 'Created',
-      dataIndex: 'metadata.creationTime',
-      render: text => <Moment format={'YY-MM-DD'}>{text}</Moment>
-    },
-    {
-      title: 'Last Access',
-      dataIndex: 'metadata.lastSignInTime',
-      render: text => <Moment format={'YY-MM-DD HH:mm'}>{text}</Moment>
-    },
-    {
-      title: 'Provider',
-      dataIndex: 'providerData[0].providerId'
     },
     {
       title: 'Status',
@@ -132,9 +118,33 @@ export class UserTable extends Component {
     const { users } = this.props;
     return (
       <Table
+        rowKey="uid"
         dataSource={users.toArray()}
         columns={this.columns}
-        rowKey="uid"
+        expandedRowRender={record => {
+          const creationTime = record.metadata.creationTime;
+          const lastSignInTime = record.metadata.lastSignInTime;
+          const provider = record.providerData[0].providerId;
+          return (
+            <List
+              itemLayout="vertical"
+              grid={{ gutter: 5, column: 6 }}
+            >
+              <List.Item>
+                <List.Item.Meta title="user created:" />
+                <Moment format={'YY-MM-DD'}>{creationTime}</Moment>
+              </List.Item>
+              <List.Item>
+                <List.Item.Meta title="last sign-in:" />
+                <Moment format={'YY-MM-DD HH:mm'}>{lastSignInTime}</Moment>
+              </List.Item>
+              <List.Item>
+                <List.Item.Meta title="provider:" />
+                {provider}
+              </List.Item>
+            </List>
+          );
+        }}
         size="small"
       />
     );

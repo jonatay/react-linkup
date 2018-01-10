@@ -7,7 +7,7 @@ function* watchNavigation() {
   while (true) {
     const {payload} = yield take(navActions.NAVIGATE_TO);
     const module = payload.module;
-    yield put(push(module.url));
+    yield put(push(module));
   }
 }
 
