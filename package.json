@@ -6,6 +6,8 @@
     "start": "set DEBUG=reactLinkup:* & nodemon ./bin/www"
   },
   "dependencies": {
+    "acl": "^0.4.11",
+    "acl-firebase": "^0.1.1",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
@@ -13,6 +15,7 @@
     "express": "~4.15.5",
     "express-acl": "^1.0.4",
     "express-firebase-middleware": "^2.0.0",
+    "firebase": "^4.8.1",
     "firebase-admin": "^5.5.1",
     "jade": "~1.11.0",
     "morgan": "~1.9.0",

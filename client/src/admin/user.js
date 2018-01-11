@@ -11,5 +11,8 @@ export const User = new Record({
   photoURL: null,
   providerData: [],
   uid: null,
-  isAdmin:false
+  customClaims: {
+    admin:false,
+    roles:[]
+  }
 });

@@ -51,7 +51,10 @@ function* watchRemoveUser() {
 }
 
 function* updateUser({ payload }) {
-  let result = yield call([userList,userList.update], payload.user.uid, payload.changes);
+  let result = yield call([userList, userList.update], payload.user.uid, {
+    user: payload.user,
+    changes: payload.changes
+  });
   yield put(userActions.updateUserFulfilled(result.user));
 }
 

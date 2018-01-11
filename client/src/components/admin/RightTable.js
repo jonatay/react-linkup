@@ -10,6 +10,7 @@ import { List as ImList } from 'immutable';
 import { Table, Popconfirm, Button } from 'antd';
 
 import EditTagGroup from './EditTagGroup';
+import EditCell from './EditCell';
 
 class RightTable extends React.Component {
   handleRightChange(right, changes) {
@@ -18,8 +19,16 @@ class RightTable extends React.Component {
 
   columns = [
     {
-      title: 'Name',
-      dataIndex: 'name'
+      title: 'Resource',
+      dataIndex: 'name',
+      render: (text, record) => (
+        <EditCell
+          value={text}
+          handleValueChange={name => {
+            console.log(name);
+          }}
+        />
+      )
     },
     {
       title: 'Roles',
@@ -28,7 +37,7 @@ class RightTable extends React.Component {
         <EditTagGroup
           tagName="Role"
           tags={record.roles}
-          handleTagsChange={roles => this.handleRightChange(record, {roles})}
+          handleTagsChange={roles => this.handleRightChange(record, { roles })}
         />
       )
     },
@@ -38,7 +47,7 @@ class RightTable extends React.Component {
     },
     {
       dataIndex: 'key',
-      render:(text,record)=>(
+      render: (text, record) => (
         <Popconfirm
           title="Are you SURE you want to delete this Right?"
           onConfirm={() => this.remove(record)}
