@@ -44,14 +44,69 @@ router.delete('/admin/users/:uid', function(req, res) {
     });
 });
 
-/* PUT a user listing. */
+/* PUT a user listing.
+*   
+*   data contains user and changes
+*   
+*   if changes has admin type boolean
+*     setCustomClaims with new admin and old roles
+*   ELSE 
+*   if changes has roles type array
+*     setCustomClaims with new roles, old admin
+*   ELSE
+*     updateUser with changes
+*
+* */
 router.put('/admin/users/:uid', function(req, res) {
   const uid = req.params.uid;
   const data = req.body;
-  if (typeof data.isAdmin == 'boolean') {
+  const user = data.user;
+  const changes = data.changes;
+  if (typeof changes.admin === 'boolean') {
+    console.log(
+      `setting custom claim admin = ${changes.admin} for user ${
+        user.displayName
+      }`
+    );
     admin
       .auth()
-      .setCustomUserClaims(uid, { admin: data.isAdmin })
+      .setCustomUserClaims(uid, {
+        roles: user.customClaims.roles,
+        admin: changes.admin
+      })
+      .then(() => {
+        admin
+          .auth()
+          .getUser(uid)
+          .then(userRecord => {
+            res.json({
+              status: 'success',
+              action: 'update',
+              uid: uid,
+              user: userRecord
+            });
+          })
+          .catch(err => {
+            res.json({
+              status: 'error',
+              action: 'update',
+              uid: uid,
+              error: err
+            });
+          });
+      });
+  } else if (Array.isArray(changes.roles)) {
+    console.log(
+      `setting custom claim roles = ${changes.roles} for user ${
+        user.displayName
+      }`
+    );
+    admin
+      .auth()
+      .setCustomUserClaims(uid, {
+        roles: changes.roles,
+        admin: user.customClaims.admin
+      })
       .then(() => {
         admin
           .auth()
@@ -74,10 +129,10 @@ router.put('/admin/users/:uid', function(req, res) {
           });
       });
   } else {
-    console.log(`updating uid:${uid} with:`, req.body);
+    console.log(`updating uid:${uid} with:`, changes);
     admin
       .auth()
-      .updateUser(uid, req.body)
+      .updateUser(uid, changes)
       .then(userRecord => {
         res.json({
           status: 'success',

@@ -8,6 +8,8 @@ import Moment from 'react-moment';
 import { List as ImList } from 'immutable';
 import { Avatar, Button, List, Popconfirm, Table } from 'antd';
 
+import EditTagGroup from './EditTagGroup';
+
 export class UserTable extends Component {
   constructor() {
     super(...arguments);
@@ -111,7 +113,10 @@ export class UserTable extends Component {
   }
 
   setIsAdmin(user, isAdmin) {
-    this.props.updateUser(user, { isAdmin: isAdmin });
+    this.props.updateUser(user, { admin: isAdmin });
+  }
+  handleRolesChange(user, roles) {
+    this.props.updateUser(user, { roles: roles });
   }
 
   render() {
@@ -126,10 +131,7 @@ export class UserTable extends Component {
           const lastSignInTime = record.metadata.lastSignInTime;
           const provider = record.providerData[0].providerId;
           return (
-            <List
-              itemLayout="vertical"
-              grid={{ gutter: 5, column: 6 }}
-            >
+            <List itemLayout="vertical" grid={{ gutter: 5, column: 6 }}>
               <List.Item>
                 <List.Item.Meta title="user created:" />
                 <Moment format={'YY-MM-DD'}>{creationTime}</Moment>
@@ -141,6 +143,16 @@ export class UserTable extends Component {
               <List.Item>
                 <List.Item.Meta title="provider:" />
                 {provider}
+              </List.Item>
+              <List.Item>
+                <List.Item.Meta title="roles" />
+                <EditTagGroup
+                  tagName="Role"
+                  tags={record.customClaims.roles || []}
+                  handleTagsChange={roles =>
+                    this.handleRolesChange(record, roles)
+                  }
+                />
               </List.Item>
             </List>
           );
