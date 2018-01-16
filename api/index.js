@@ -5,6 +5,8 @@ const admin = require('./services/firebase/firebase-admin');
 
 const firebaseMiddleware = require('express-firebase-middleware');
 
+const acl = require('./services/firebase/firebase-acl');
+
 // router.use((req, res, next) => {
 //   next();
 // });
@@ -68,6 +70,11 @@ router.put('/admin/users/:uid', function(req, res) {
         user.displayName
       }`
     );
+    if (changes.admin) {
+      acl.addUserRoles(uid, 'admin');
+    } else {
+      acl.removeUserRoles(uid, 'admin');
+    }
     admin
       .auth()
       .setCustomUserClaims(uid, {
