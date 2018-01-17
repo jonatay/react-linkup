@@ -5,146 +5,43 @@ const admin = require('./services/firebase/firebase-admin');
 
 const firebaseMiddleware = require('express-firebase-middleware');
 
-// router.use((req, res, next) => {
-//   next();
-// });
+const root_controller = require('./controllers/rootController');
+const admin_user_controller = require('./controllers/adminUserController');
+const admin_rights_controller = require('./controllers/adminRightsController');
 
 router.use('/', firebaseMiddleware.auth);
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.json({
-    message: `You're logged in as ${res.locals.user.email} with Firebase UID: ${
-      res.locals.user.uid
-    }`
-  });
+router.use('/*', (req, res, next) => {
+  console.log(
+    `** REQ FROM ${res.locals.user.name} - ${res.locals.user.email} ***`
+  );
+  next();
 });
 
-/* GET users listing. */
-router.get('/admin/users', function(req, res, next) {
-  admin
-    .auth()
-    .listUsers()
-    .then(listUsersResult => {
-      res.json(listUsersResult.users);
-    });
-});
+/* GET api root page. */
+router.get('/', root_controller.root);
 
-/* DELETE a user listing. */
-router.delete('/admin/users/:uid', function(req, res) {
-  const uid = req.params.uid;
-  admin
-    .auth()
-    .deleteUser(uid)
-    .then(() => {
-      res.json({ status: 'success', action: 'delete', uid: uid });
-    })
-    .catch(err => {
-      res.json({ status: 'error', action: 'delete', uid: uid, error: err });
-    });
-});
+/* admin_user_controller routing */
+router.get('/admin/users', admin_user_controller.admin_user_list);
+router.delete('/admin/users/:uid', admin_user_controller.admin_user_delete);
+router.put('/admin/users/:uid', admin_user_controller.admin_user_update);
 
-/* PUT a user listing.
-*   
-*   data contains user and changes
-*   
-*   if changes has admin type boolean
-*     setCustomClaims with new admin and old roles
-*   ELSE 
-*   if changes has roles type array
-*     setCustomClaims with new roles, old admin
-*   ELSE
-*     updateUser with changes
-*
-* */
-router.put('/admin/users/:uid', function(req, res) {
-  const uid = req.params.uid;
-  const data = req.body;
-  const user = data.user;
-  const changes = data.changes;
-  if (typeof changes.admin === 'boolean') {
-    console.log(
-      `setting custom claim admin = ${changes.admin} for user ${
-        user.displayName
-      }`
-    );
-    admin
-      .auth()
-      .setCustomUserClaims(uid, {
-        roles: user.customClaims.roles,
-        admin: changes.admin
-      })
-      .then(() => {
-        admin
-          .auth()
-          .getUser(uid)
-          .then(userRecord => {
-            res.json({
-              status: 'success',
-              action: 'update',
-              uid: uid,
-              user: userRecord
-            });
-          })
-          .catch(err => {
-            res.json({
-              status: 'error',
-              action: 'update',
-              uid: uid,
-              error: err
-            });
-          });
-      });
-  } else if (Array.isArray(changes.roles)) {
-    console.log(
-      `setting custom claim roles = ${changes.roles} for user ${
-        user.displayName
-      }`
-    );
-    admin
-      .auth()
-      .setCustomUserClaims(uid, {
-        roles: changes.roles,
-        admin: user.customClaims.admin
-      })
-      .then(() => {
-        admin
-          .auth()
-          .getUser(uid)
-          .then(userRecord => {
-            res.json({
-              status: 'success',
-              action: 'update',
-              uid: uid,
-              user: userRecord
-            });
-          })
-          .catch(err => {
-            res.json({
-              status: 'error',
-              action: 'update',
-              uid: uid,
-              error: err
-            });
-          });
-      });
-  } else {
-    console.log(`updating uid:${uid} with:`, changes);
-    admin
-      .auth()
-      .updateUser(uid, changes)
-      .then(userRecord => {
-        res.json({
-          status: 'success',
-          action: 'update',
-          uid: uid,
-          user: userRecord
-        });
-      })
-      .catch(err => {
-        res.json({ status: 'error', action: 'update', uid: uid, error: err });
-      });
-  }
-});
+router.get(
+  '/admin/users/:uid/user-roles',
+  admin_rights_controller.user_roles
+);
+router.get(
+  '/admin/users/:uid/role-users',
+  admin_rights_controller.role_users
+);
+
+router.post(
+  '/admin/users/:uid/add-user-roles',
+  admin_rights_controller.add_user_roles
+);
+router.delete(
+  '/admin/users/:uid/remove-user-roles',
+  admin_rights_controller.remove_user_roles
+);
 
 module.exports = router;

@@ -50,7 +50,7 @@ export class UserTable extends Component {
                 type={!record.disabled ? 'default' : 'danger'}
                 icon={!record.disabled ? 'check-square' : 'close-square'}
               >
-                {!record.disabled ? 'active' : 'disabled'}
+                {/*{!record.disabled ? 'active' : 'disabled'}*/}
               </Button>
             </div>
           )}
@@ -60,15 +60,12 @@ export class UserTable extends Component {
     {
       dataIndex: 'customClaims',
       render: (text, record) => {
-        const isAdmin = text ? text.admin : false;
         return (
-          <Button
-            onClick={() => this.setIsAdmin(record, !isAdmin)}
-            type={!isAdmin ? 'default' : 'danger'}
-            icon={!isAdmin ? 'check-square' : 'close-square'}
-          >
-            {isAdmin ? 'admin' : 'not-admin'}
-          </Button>
+          <EditTagGroup
+            tagName="Role"
+            tags={record.customClaims.roles || []}
+            handleTagsChange={roles => this.handleRolesChange(record, roles)}
+          />
         );
       }
     },
@@ -116,7 +113,21 @@ export class UserTable extends Component {
     this.props.updateUser(user, { admin: isAdmin });
   }
   handleRolesChange(user, roles) {
-    this.props.updateUser(user, { roles: roles });
+    //this.props.updateUser(user, { roles: roles });
+    const oldRoles =
+      user.customClaims && user.customClaims.roles
+        ? user.customClaims.roles
+        : [];
+    // console.log(oldRoles, roles);
+    let addRoles = roles.filter(x => !oldRoles.includes(x));
+    let delRoles = oldRoles.filter(x => !roles.includes(x));
+    // console.log(addRoles, delRoles);
+    if (addRoles.length > 0) {
+      this.props.addUserRoles(user.uid, addRoles);
+    }
+    if (delRoles.length > 0) {
+      this.props.removeUserRoles(user.uid, delRoles);
+    }
   }
 
   render() {
@@ -163,47 +174,25 @@ export class UserTable extends Component {
   }
 }
 
-// const UserTable = ({ removeUser, users, updateUser, authUser }) => {
-//   return <Table dataSource={users.toArray()} columns={columns} rowKey="uid" />;
-// };
-
 UserTable.propTypes = {
   removeUser: PropTypes.func.isRequired,
   users: PropTypes.instanceOf(ImList),
   updateUser: PropTypes.func.isRequired,
-  authUser: PropTypes.object.isRequired
+  authUser: PropTypes.object.isRequired,
+  addUserRoles: PropTypes.func.isRequired,
+  removeUserRoles: PropTypes.func.isRequired
 };
 
 export default UserTable;
-
 /*
 
-      <List.Item key={user.uid}>
-        <List.Item.Meta
-          avatar={<Avatar src={user.photoURL} />}
-          title={user.displayName}
-          description={user.email === null ? '<no-email>' : user.email}
-        />
-        <div>
-          {authUser.uid === user.uid ? (
-            ''
-          ) : (
-            <div>
-              <Button
-                onClick={this.toggleDisabled}
-                type={!user.disabled ? 'default' : 'danger'}
-                icon={!user.disabled ? 'check-square' : 'close-square'}
-              >
-                {!user.disabled ? 'active' : 'disabled'}
-              </Button>
-              <Popconfirm
-                title="Are you SURE you want to delete this user?"
-                onConfirm={this.remove}
-              >
-                <Button type="danger" icon="delete" />
-              </Popconfirm>
-            </div>
-          )}
-        </div>
-      </List.Item>
+ <Button
+            onClick={() => this.setIsAdmin(record, !isAdmin)}
+            type={!isAdmin ? 'default' : 'danger'}
+            icon={!isAdmin ? 'check-square' : 'close-square'}
+          >
+            {isAdmin ? 'admin' : 'not-admin'}
+          </Button>
+
+
  */

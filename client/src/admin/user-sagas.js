@@ -4,7 +4,6 @@ import { authActions } from 'src/auth';
 import { userActions } from './user-actions';
 import { navActions } from './nav-actions';
 import { userList } from './user-list';
-
 const userPath = 'admin/users';
 
 //=====================================
@@ -60,15 +59,33 @@ function* updateUser({ payload }) {
 
 function* watchUpdateUser() {
   yield takeEvery(userActions.UPDATE_USER, updateUser);
-  // while (true) {
-  //   let { payload } = yield take(userActions.UPDATE_USER);
-  //   const token = yield select(getIdToken);
-  //   payload = yield call(userList.update, userPath, payload.user.uid ,token);
-  //   yield put(userActions.updateUserFulfilled(payload));
-  //   //yield fork(updateUser, payload.user.key, payload.changes);
-  // }
 }
 
+function* addUserRoles({ payload }) {
+  let result = yield call(
+    [userList, userList.addUserRoles],
+    payload.uid,
+    payload.roles
+  );
+  yield put(userActions.addUserRolesFulfilled(result));
+}
+
+function* watchAddUserRoles() {
+  yield takeEvery(userActions.ADD_USER_ROLES, addUserRoles);
+}
+
+function* removeUserRoles({ payload }) {
+  let result = yield call(
+    [userList, userList.removeUserRoles],
+    payload.uid,
+    payload.roles
+  );
+  yield put(userActions.removeUserRolesFulfilled(result));
+}
+
+function* watchRemoveUserRoles() {
+  yield takeEvery(userActions.REMOVE_USER_ROLES, removeUserRoles);
+}
 //=====================================
 //  USER SAGAS
 //-------------------------------------
@@ -79,5 +96,7 @@ export const userSagas = [
   //fork(watchCreateUser),
   fork(watchLocationChange),
   fork(watchRemoveUser),
-  fork(watchUpdateUser)
+  fork(watchUpdateUser),
+  fork(watchAddUserRoles),
+  fork(watchRemoveUserRoles)
 ];

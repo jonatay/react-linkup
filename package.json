@@ -6,19 +6,20 @@
     "start": "set DEBUG=reactLinkup:* & nodemon ./bin/www"
   },
   "dependencies": {
+    "@firebase/app-types": "^0.1.1",
     "acl": "^0.4.11",
-    "acl-firebase": "^0.1.1",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "dotenv": "^4.0.0",
-    "express": "~4.15.5",
+    "express": "^4.16.2",
     "express-acl": "^1.0.4",
     "express-firebase-middleware": "^2.0.0",
-    "firebase": "^4.8.1",
-    "firebase-admin": "^5.5.1",
+    "firebase": "^4.8.2",
+    "firebase-admin": "^5.8.0",
     "jade": "~1.11.0",
     "morgan": "~1.9.0",
+    "rollbar": "^2.3.7",
     "serve-favicon": "~2.4.5"
   }
 }

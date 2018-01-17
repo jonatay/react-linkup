@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
 
-
 export function getUsers(state) {
   return state.users;
 }
@@ -13,12 +12,15 @@ export function getUserList(state) {
   return getUsers(state).list;
 }
 
-
 //=====================================
 //  MEMOIZED SELECTORS
 //-------------------------------------
 
 export const getVisibleUsers = createSelector(
   getUserList,
-  (userList) => (userList)
+  userList => userList
+);
+
+export const getUserById = createSelector(getUserList, (userList, uid) =>
+  userList.filter(user => user.uid === uid)
 );

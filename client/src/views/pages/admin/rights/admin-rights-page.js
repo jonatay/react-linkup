@@ -1,52 +1,78 @@
 import React from 'react';
-import { List } from 'immutable';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { rightActions, getVisibleRights } from 'src/admin';
+import { Tabs, Icon } from 'antd';
 
-import RightForm  from 'src/components/admin/RightForm';
+import RolesContainer from 'src/components/admin/acl/RolesContainer';
 
-import RightTable from 'src/components/admin/RightTable';
+const TabPane = Tabs.TabPane;
 
-const RightsPage = ({ createRight, removeRight, rights, updateRight }) => {
+// const callback = key => {
+//   console.log(key);
+// };
+
+const AdminRightsPage = () => {
   return (
-    <div>
-      <RightForm handleSubmit={createRight}/>
-      <RightTable
-        createRight={createRight}
-        removeRight={removeRight}
-        rights={rights}
-        updateRight={updateRight}
-      />
-    </div>
+    <Tabs defaultActiveKey="roles">
+      <TabPane
+        tab={
+          <span>
+            <Icon type="folder-open" />roles
+          </span>
+        }
+        key="roles"
+      >
+        <RolesContainer />
+      </TabPane>
+      <TabPane
+        tab={
+          <span>
+            <Icon type="file" />resources
+          </span>
+        }
+        key="resources"
+      >
+        Content of Tab Pane 2
+      </TabPane>
+      <TabPane
+        tab={
+          <span>
+            <Icon type="team" />users
+          </span>
+        }
+        key="users"
+      >
+        Content of Tab Pane 3
+      </TabPane>
+      <TabPane
+        tab={
+          <span>
+            <Icon type="lock" />rights
+          </span>
+        }
+        key="rights"
+      >
+        Content of Tab Pane 3
+      </TabPane>
+    </Tabs>
   );
 };
-
-RightsPage.propTypes = {
-  createRight: PropTypes.func.isRequired,
-  filterRights: PropTypes.func.isRequired,
-  location: PropTypes.object.isRequired,
-  removeRight: PropTypes.func.isRequired,
-  rights: PropTypes.instanceOf(List),
-  updateRight: PropTypes.func.isRequired
-};
-
-//=====================================
-//  CONNECT
-//-------------------------------------
-
-const mapStateToProps = state => ({
-  rights: getVisibleRights(state)
-});
-
-const mapDispatchToProps = {
-  createRight: rightActions.createRight,
-  filterRights: rightActions.filterRights,
-  removeRight: rightActions.removeRight,
-  updateRight: rightActions.updateRight
-};
-
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(RightsPage)
-);
+//
+// AdminRightsPage.propTypes = {
+//
+// };
+//
+// //=====================================
+// //  CONNECT
+// //-------------------------------------
+//
+// const mapStateToProps = state => ({
+//
+// });
+//
+// const mapDispatchToProps = {
+//
+// };
+//
+// export default withRouter(
+//   connect(mapStateToProps, mapDispatchToProps)(AdminRightsPage)
+// );
+export default AdminRightsPage;

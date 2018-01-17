@@ -1,8 +1,5 @@
 {
   "verbose": true,
-  "ignore": [
-    "*.test.js",
-    "node_modules/*",
-    "client/*"
-  ]
+  "ignore": ["*.test.js"],
+  "watch": ["api/"]
 }

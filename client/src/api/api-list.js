@@ -1,4 +1,10 @@
-import { apiFetch, apiRemove, apiUpdate, statusHelper } from './api-fetch';
+import {
+  apiFetch,
+  apiRemove,
+  apiUpdate,
+  statusHelper,
+  apiCustom
+} from './api-fetch';
 
 export class ApiList {
   constructor(actions, modelClass, path) {
@@ -47,6 +53,13 @@ export class ApiList {
 
   update(key, value) {
     return apiUpdate(this.path, key, value, this.token)
+      .then(statusHelper)
+      .then(response => response.json())
+      .catch(error => error);
+  }
+
+  customApiCall(key, action, data, method) {
+    return apiCustom(this.path, key, action, data, method, this.token)
       .then(statusHelper)
       .then(response => response.json())
       .catch(error => error);

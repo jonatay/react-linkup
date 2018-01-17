@@ -43,3 +43,16 @@ export const apiUpdate = (path, key, changes, token) => {
   };
   return fetch(`/api/${path}/${key}`, myInit);
 };
+
+export const apiCustom = (path, key, action, data, method, token) => {
+  let myHeaders = new Headers();
+  myHeaders.append('Content-Type', 'application/json');
+  myHeaders.append('Authorization', 'Bearer ' + token);
+  var myInit = {
+    method: method,
+    headers: myHeaders,
+    body: JSON.stringify(data),
+    accept: 'application/json'
+  };
+  return fetch(`/api/${path}/${key}/${action}`, myInit);
+}

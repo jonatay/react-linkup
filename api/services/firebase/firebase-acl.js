@@ -1,14 +1,20 @@
-// require Firebase and get instance to firebase path
-var Firebase = require('firebase');
-var fb = new Firebase(process.env.FIREBASE_DATABASE_URL);
+var admin = require("./firebase-admin");
 
-// enable firebase client data caching by using on() listener (optional)
-fb.on('value', function(dataSnapshot) {
-  // no need to do anything here
+// As an admin, the app has access to read and write all data, regardless of Security Rules
+
+var db = admin.database();
+var ref = db.ref('acl');
+ref.once("value", function(dataSnapshot) {
+  console.log(dataSnapshot.val());
 });
 
 // require acl and create Firebase backend
 var acl = require('acl');
-acl = new acl(new acl.firebaseBackend(fb));
+var firebaseBackend = require('./firebase-acl-backend/');
+
+acl = new acl(new acl.firebaseBackend(ref));
 
 module.exports = acl;
+
+//1OEzjouzdISFnVJWDImBg88yOro2
+
