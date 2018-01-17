@@ -4,39 +4,59 @@
 */
 import React from 'react';
 import SortableTree from 'react-sortable-tree';
-// import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
+import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
 // import FullNodeDragTheme from 'react-sortable-tree-theme-full-node-drag';
 
-const RolesTree = ({ roles }) => {
-  const onChange = e => {
-    console.log(e);
-  };
+class RolesTree extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { treeData: this.treeRoles(props.roles.toArray()) };
+  }
+  componentWillReceiveProps(nextProps) {
+    this.setState({ treeData: this.treeRoles(nextProps.roles.toArray()) });
+  }
 
-  const treeRoles = roles.map(role => ({
-    title: role.key,
-    expanded: true,
-    subtitle: 'role',
-    noDragging: true,
-    children: role.users.map(user => ({
-      title: user.name,
-      subtitle: 'user',
-      noChildren: true
-    }))
-  }));
-  return (
-    <div style={{ height: 700 }}>
-      <SortableTree
-        treeData={treeRoles.toArray()}
-        // theme={FullNodeDragTheme}
-        onChange={onChange}
-        canDrag={({ node }) => !node.noDragging}
-        canDrop={({ nextParent }) =>
-          nextParent ? !nextParent.noChildren : false
+  componentWillMount() {
+    console.log(this.state);
+  }
+
+  treeRoles = roles =>
+    roles.map(role => ({
+      title: role.key,
+      expanded: true,
+      subtitle: 'role',
+      noDragging: true,
+      children: [
+        {
+          title: 'users',
+          noDragging: true,
+          expanded: false,
+          children: role.users.map(user => ({
+            title: user.name,
+            subtitle: 'user',
+            noDragging: true,
+            noChildren: true
+          }))
         }
-      />
-    </div>
-  );
-};
+      ]
+    }));
+
+  render() {
+    return (
+      <div style={{ height: 700 }}>
+        <SortableTree
+          treeData={this.state.treeData}
+          onChange={treeData => this.setState({ treeData })}
+          theme={FileExplorerTheme}
+          canDrag={({ node }) => !node.noDragging}
+          canDrop={({ nextParent }) =>
+            nextParent ? !nextParent.noChildren : false
+          }
+        />
+      </div>
+    );
+  }
+}
 
 export default RolesTree;
 
