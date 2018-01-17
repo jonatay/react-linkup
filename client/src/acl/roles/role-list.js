@@ -6,16 +6,14 @@ import { Role } from './role';
 //custom storage solution cause node_acl does things differently
 class RoleFirebaseList extends FirebaseList {
   unwrapSnapshot(snapshot) {
-    let attrs = { users: [] };
+    let role = { users: [] };
     let val = snapshot.val();
     for (let k in val) {
-      attrs.users.push({ name: k, val: val[k] });
+      role.users.push({ key:k, name: k, val: val[k] });
     }
-    attrs.key = snapshot.key;
-    attrs.title = snapshot.key;
-    // const newRec = new this._modelClass(attrs)
-    // console.log( attrs, newRec)
-    return new this._modelClass(attrs);
+    role.key = snapshot.key;
+    role.title = snapshot.key;
+    return new this._modelClass(role);
   }
 
   wrapValue(value) {

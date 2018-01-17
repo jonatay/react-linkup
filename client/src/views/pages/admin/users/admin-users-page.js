@@ -3,13 +3,27 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { userActions, getVisibleUsers } from 'src/admin';
-import { getAuthUser } from "src/auth";
+import { getAuthUser } from 'src/auth';
 
 import UserTable from 'src/components/admin/UserTable';
 
-const AdminUsersPage = ({ users,authUser, removeUser,updateUser }) => {
+const AdminUsersPage = ({
+  users,
+  authUser,
+  removeUser,
+  updateUser,
+  addUserRoles,
+  removeUserRoles
+}) => {
   return (
-<UserTable users={users} authUser={authUser} removeUser={removeUser} updateUser={updateUser}/>
+    <UserTable
+      users={users}
+      authUser={authUser}
+      removeUser={removeUser}
+      updateUser={updateUser}
+      addUserRoles={addUserRoles}
+      removeUserRoles={removeUserRoles}
+    />
   );
 };
 
@@ -22,7 +36,9 @@ const mapDispatchToProps = {
   createUser: userActions.createUser,
   filterUsers: userActions.filterUsers,
   removeUser: userActions.removeUser,
-  updateUser: userActions.updateUser
+  updateUser: userActions.updateUser,
+  addUserRoles: userActions.addUserRoles,
+  removeUserRoles: userActions.removeUserRoles
 };
 
 export default withRouter(

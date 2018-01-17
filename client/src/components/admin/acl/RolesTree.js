@@ -4,8 +4,8 @@
 */
 import React from 'react';
 import SortableTree from 'react-sortable-tree';
-import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
-import FullNodeDragTheme from 'react-sortable-tree-theme-full-node-drag';
+// import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
+// import FullNodeDragTheme from 'react-sortable-tree-theme-full-node-drag';
 
 const RolesTree = ({ roles }) => {
   const onChange = e => {
@@ -23,9 +23,8 @@ const RolesTree = ({ roles }) => {
       noChildren: true
     }))
   }));
-  console.log(treeRoles.toArray());
   return (
-    <div style={{ height: 400 }}>
+    <div style={{ height: 700 }}>
       <SortableTree
         treeData={treeRoles.toArray()}
         // theme={FullNodeDragTheme}

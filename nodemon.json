@@ -1,5 +1,5 @@
 {
   "verbose": true,
   "ignore": ["*.test.js"],
-  "watch": ["server/"]
+  "watch": ["api/"]
 }

@@ -4,7 +4,7 @@ var admin = require("./firebase-admin");
 
 var db = admin.database();
 var ref = db.ref('acl');
-ref.on("value", function(dataSnapshot) {
+ref.once("value", function(dataSnapshot) {
   console.log(dataSnapshot.val());
 });
 
