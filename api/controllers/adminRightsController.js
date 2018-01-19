@@ -1,6 +1,26 @@
 const admin = require('../services/firebase/firebase-admin');
 const acl = require('../services/firebase/firebase-acl');
 
+exports.acl_allow = function(req, res) {
+  const payload = req.body;
+  acl.allow(payload.roles, payload.resources, payload.permissions, err => {
+    if (err) {
+      res.json(err);
+    } else {
+      res.json('whatever');
+    }
+  });
+};
+exports.acl_deny = function(req, res) {
+  const payload = req.body;
+  acl.removeAllow(payload.roles[0], payload.resources, payload.permissions, err => {
+    if (err) {
+      res.json(err);
+    } else {
+      res.json('whatever out');
+    }
+  });
+};
 exports.user_roles = function(req, res) {
   const uid = req.params.uid;
   acl.userRoles(uid, function(err, userRoles) {

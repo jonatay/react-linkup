@@ -21,6 +21,11 @@ router.use('/*', (req, res, next) => {
 /* GET api root page. */
 router.get('/', root_controller.root);
 
+/* ACL routing allow & deny*/
+router.post('/admin/acl/acl-allow', admin_rights_controller.acl_allow);
+router.delete('/admin/acl/acl-deny', admin_rights_controller.acl_deny);
+
+
 /* admin_user_controller routing */
 router.get('/admin/users', admin_user_controller.admin_user_list);
 router.delete('/admin/users/:uid', admin_user_controller.admin_user_delete);
