@@ -54,5 +54,8 @@ export const apiCustom = (path, key, action, data, method, token) => {
     body: JSON.stringify(data),
     accept: 'application/json'
   };
-  return fetch(`/api/${path}/${key}/${action}`, myInit);
-}
+  return fetch(
+    `/api/${path}${key === null ? '' : `/${key}`}/${action}`,
+    myInit
+  );
+};
