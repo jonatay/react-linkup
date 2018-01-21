@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 
-import { initAuth } from './auth';
+import { initAuth } from './common/auth';
 import history from './history';
 import configureStore from './store';
 import App from './views/app';

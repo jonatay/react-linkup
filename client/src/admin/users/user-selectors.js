@@ -9,7 +9,7 @@ export function getUserFilter(state) {
 }
 
 export function getUserList(state) {
-  return getUsers(state).list;
+  return getUsers(state.admin).list;
 }
 
 //=====================================
@@ -23,4 +23,12 @@ export const getVisibleUsers = createSelector(
 
 export const getUserById = createSelector(getUserList, (userList, uid) =>
   userList.filter(user => user.uid === uid)
+);
+
+export const getUsersList = createSelector(getUserList, userList =>
+  userList.map(user => ({
+    uid: user.uid,
+    name: user.displayName,
+    photoURL: user.photoURL
+  }))
 );

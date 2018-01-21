@@ -21,11 +21,11 @@ class AclEditRoleParents extends React.Component {
   }
   handleAddRoleParents() {
     this.props.aclAddRoleParents(this.state.role, this.state.parents_array);
-    // this.setState({ role: '', parents: '', parents_array: [] });
+    this.setState({ role: '', parents: '', parents_array: [] });
   }
   handleRemoveRoleParents() {
     this.props.aclRemoveRoleParents(this.state.role, this.state.parents_array);
-    // this.setState({ role: '', parents: '', parents_array: [] });
+    this.setState({ role: '', parents: '', parents_array: [] });
   }
 
   render() {
@@ -36,7 +36,7 @@ class AclEditRoleParents extends React.Component {
             <h5>role to add/remove:</h5>
           </Col>
           <Col span={6} style={{ paddingLeft: 5 }}>
-            <h5>parents:</h5>
+            <h5>[parents]:</h5>
           </Col>
           <Col span={4} style={{ paddingLeft: 5 }} />
           <Col span={7}>

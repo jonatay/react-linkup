@@ -16,15 +16,6 @@ export const userActions = {
   LOAD_USERS_FULFILLED: 'LOAD_USERS_FULFILLED',
   LOAD_USERS_FAILED: 'LOAD_USERS_FAILED',
 
-  ADD_USER_ROLES: 'ADD_USER_ROLES',
-  ADD_USER_ROLES_FAILED: 'ADD_USER_ROLES_FAILED',
-  ADD_USER_ROLES_FULFILLED: 'ADD_USER_ROLES_FULFILLED',
-
-  REMOVE_USER_ROLES: 'REMOVE_USER_ROLES',
-  REMOVE_USER_ROLES_FAILED: 'REMOVE_USER_ROLES_FAILED',
-  REMOVE_USER_ROLES_FULFILLED: 'REMOVE_USER_ROLES_FULFILLED',
-
-
   loadUsers: () => ({
     type: userActions.LOAD_USERS
   }),
@@ -87,31 +78,5 @@ export const userActions = {
   loadUsersFailed: error => ({
     type: userActions.LOAD_USERS_FAILED,
     payload: { error }
-  }),
-
-  addUserRoles: (uid, roles) => ({
-    type: userActions.ADD_USER_ROLES,
-    payload: { uid, roles }
-  }),
-  addUserRolesFailed: error => ({
-    type: userActions.ADD_USER_ROLES_FAILED,
-    payload: { error }
-  }),
-  addUserRolesFulfilled: roles => ({
-    type: userActions.ADD_USER_ROLES_FULFILLED,
-    payload: { roles }
-  }),
-
-  removeUserRoles: (uid, roles) => ({
-    type: userActions.REMOVE_USER_ROLES,
-    payload: { uid, roles }
-  }),
-  removeUserRolesFailed: error => ({
-    type: userActions.REMOVE_USER_ROLES_FAILED,
-    payload: { error }
-  }),
-  removeUserRolesFulfilled: roles => ({
-    type: userActions.REMOVE_USER_ROLES_FULFILLED,
-    payload: { roles }
   })
 };

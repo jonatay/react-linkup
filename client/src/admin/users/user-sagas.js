@@ -1,8 +1,8 @@
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
-import { authActions } from 'src/auth';
+import { authActions } from 'src/common/auth/index';
 import { userActions } from './user-actions';
-import { navActions } from './nav-actions';
+import { navActions } from '../../common/nav/nav-actions';
 import { userList } from './user-list';
 const userPath = 'admin/users';
 
@@ -61,31 +61,6 @@ function* watchUpdateUser() {
   yield takeEvery(userActions.UPDATE_USER, updateUser);
 }
 
-function* addUserRoles({ payload }) {
-  let result = yield call(
-    [userList, userList.addUserRoles],
-    payload.uid,
-    payload.roles
-  );
-  yield put(userActions.addUserRolesFulfilled(result));
-}
-
-function* watchAddUserRoles() {
-  yield takeEvery(userActions.ADD_USER_ROLES, addUserRoles);
-}
-
-function* removeUserRoles({ payload }) {
-  let result = yield call(
-    [userList, userList.removeUserRoles],
-    payload.uid,
-    payload.roles
-  );
-  yield put(userActions.removeUserRolesFulfilled(result));
-}
-
-function* watchRemoveUserRoles() {
-  yield takeEvery(userActions.REMOVE_USER_ROLES, removeUserRoles);
-}
 //=====================================
 //  USER SAGAS
 //-------------------------------------
@@ -96,7 +71,5 @@ export const userSagas = [
   //fork(watchCreateUser),
   fork(watchLocationChange),
   fork(watchRemoveUser),
-  fork(watchUpdateUser),
-  fork(watchAddUserRoles),
-  fork(watchRemoveUserRoles)
+  fork(watchUpdateUser)
 ];

@@ -1,4 +1,4 @@
-import { firebaseAuth } from '../firebase';
+import { firebaseAuth } from '../../firebase/index';
 import { authActions } from './auth-actions';
 
 

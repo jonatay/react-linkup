@@ -1,6 +1,6 @@
 import { call, fork, put, take } from 'redux-saga/effects';
-import { firebaseAuth } from '../firebase';
-import history from '../history';
+import { firebaseAuth } from '../../firebase/index';
+import history from '../../history';
 import { authActions } from './auth-actions';
 
 

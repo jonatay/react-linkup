@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 export function getAcl(state) {
-  return state.acl.acl;
+  return state.admin.acl.acl;
 }
 
 //=====================================

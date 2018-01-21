@@ -9,12 +9,12 @@ import { withRouter } from 'react-router-dom';
 
 import { Collapse, Row } from 'antd';
 
-import { getAclTree, getRoles, roleActions, aclActions } from 'src/acl';
+import { getAclTree, getRoles, aclActions, getUsersList } from 'src/admin';
 
-import AclAllowDeny from './AclAllowDeny';
-import AclEditRoleParents from './AclEditRoleParents';
-import AclEditUserRoles from './AclEditUserRoles';
-import AclTree from './AclTree';
+import AclAllowDeny from './acl/AclAllowDeny';
+import AclEditRoleParents from './acl/AclEditRoleParents';
+import AclEditUserRoles from './acl/AclEditUserRoles';
+import AclTree from './acl/AclTree';
 
 class RightsContainer extends React.Component {
   render() {
@@ -24,6 +24,13 @@ class RightsContainer extends React.Component {
         <Row>
           <Collapse defaultActiveKey="edit_acl">
             <Collapse.Panel key="edit_acl" header={<h4>Edit acl</h4>}>
+              <AclEditUserRoles
+                users={this.props.users}
+                roles={this.props.roles}
+                aclAddUserRoles={this.props.aclAddUserRoles}
+                aclRemoveUserRoles={this.props.aclRemoveUserRoles}
+                aclRemoveRoles={this.props.aclRemoveRoles}
+              />
               <AclAllowDeny
                 aclAllow={this.props.aclAllow}
                 aclDeny={this.props.aclDeny}
@@ -31,12 +38,6 @@ class RightsContainer extends React.Component {
               <AclEditRoleParents
                 aclAddRoleParents={this.props.aclAddRoleParents}
                 aclRemoveRoleParents={this.props.aclRemoveRoleParents}
-              />
-              <AclEditUserRoles
-                users={this.props.users}
-                roles={this.props.roles}
-                aclAddUserRoles={this.props.aclAddUserRoles}
-                aclRemoveUserRoles={this.props.aclRemoveUserRoles}
               />
             </Collapse.Panel>
           </Collapse>
@@ -51,32 +52,29 @@ class RightsContainer extends React.Component {
 
 RightsContainer.propTypes = {
   aclTree: PropTypes.array.isRequired,
-  createRole: PropTypes.func.isRequired,
-  removeRole: PropTypes.func.isRequired,
-  updateRole: PropTypes.func.isRequired,
   aclAllow: PropTypes.func.isRequired,
   aclDeny: PropTypes.func.isRequired,
   aclAddRoleParents: PropTypes.func.isRequired,
   aclRemoveRoleParents: PropTypes.func.isRequired,
   aclAddUserRoles: PropTypes.func.isRequired,
-  aclRemoveUserRoles: PropTypes.func.isRequired
+  aclRemoveUserRoles: PropTypes.func.isRequired,
+  aclRemoveRoles: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   aclTree: getAclTree(state),
-  roles: getRoles(state)
+  roles: getRoles(state),
+  users: getUsersList(state)
 });
 
 const mapDispatchToProps = {
-  createRole: roleActions.createRole,
-  removeRole: roleActions.removeRole,
-  updateRole: roleActions.updateRole,
   aclAllow: aclActions.aclAllow,
   aclDeny: aclActions.aclDeny,
   aclAddRoleParents: aclActions.aclAddRoleParents,
   aclRemoveRoleParents: aclActions.aclRemoveRoleParents,
   aclAddUserRoles: aclActions.aclAddUserRoles,
-  aclRemoveUserRoles: aclActions.aclRemoveUserRoles
+  aclRemoveUserRoles: aclActions.aclRemoveUserRoles,
+  aclRemoveRoles: aclActions.aclRemoveRoles
 };
 
 export default withRouter(

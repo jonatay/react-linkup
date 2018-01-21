@@ -51,7 +51,6 @@ FirebaseBackend.prototype = {
    Gets the contents at the bucket's key.
    */
   get: function(bucket, key, cb) {
-    console.log('get key', JSON.stringify(key));
     contract(arguments)
       .params('string', 'string|number', 'function')
       .end();
@@ -63,7 +62,6 @@ FirebaseBackend.prototype = {
         'value',
         function(snap) {
           var doc = snap.val();
-          console.log('got doc: ', JSON.stringify(doc));
           if (!_.isObject(doc)) return cb(undefined, []);
           cb(undefined, _.without(_.keys(doc), 'key', '_id'));
         },
@@ -85,7 +83,6 @@ FirebaseBackend.prototype = {
     var fns = [];
     for (var i = 0, len = keys.length; i < len; i++) {
       (function(key) {
-        console.log('union key', JSON.stringify(key));
         fns.push(function(cb) {
           self.fb
             .child(bucket)

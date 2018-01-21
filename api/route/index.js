@@ -10,7 +10,7 @@ const adminRoutes = require('./adminRoutes');
 
 router.use('/', firebaseMiddleware.auth);
 const userId = function(req, res) {
-  console.debug(`asked for ${res.locals.user.uid}`)
+  console.debug(`asked for ${res.locals.user.uid}`);
   return res.locals.user.uid;
 };
 

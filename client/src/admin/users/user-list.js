@@ -1,4 +1,4 @@
-import { ApiList } from 'src/api';
+import { ApiList } from 'src/api/index';
 import { userActions } from './user-actions';
 import { User } from './user';
 

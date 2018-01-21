@@ -1,10 +1,10 @@
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { eventChannel } from 'redux-saga';
 import { call, cancel, fork, put, take } from 'redux-saga/effects';
-import { authActions } from 'src/auth';
+import { authActions } from 'src/common/auth/index';
 import { rightActions } from './right-actions';
 import { rightList } from './right-list';
-import { navActions } from 'src/admin';
+import { navActions } from 'src/admin/users/index';
 
 function subscribe() {
   return eventChannel(emit => rightList.subscribe(emit));

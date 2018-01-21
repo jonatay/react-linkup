@@ -1,5 +1,5 @@
 import { aclActions } from './acl-actions';
-import { FirebaseAclData } from "src/firebase";
+import { FirebaseAclData } from "src/firebase/index";
 
 export const aclData = new FirebaseAclData({
   onLoad: aclActions.aclLoadedOk,

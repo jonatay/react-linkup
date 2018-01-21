@@ -1,12 +1,20 @@
-import { call, take, takeEvery, put, fork, cancel } from 'redux-saga/effects';
+import {
+  call,
+  take,
+  takeEvery,
+  put,
+  fork,
+  cancel,
+  race
+} from 'redux-saga/effects';
 
 import { aclActions } from './acl-actions';
 import { aclApi } from './acl-api';
-import { authActions } from '../auth';
+import { authActions } from '../../common/auth/index';
 import { aclData } from './acl-data';
 import { eventChannel } from 'redux-saga';
-
-const aclPath = 'admin/acl';
+import { userActions } from "../users";
+const aclPath = 'admin';
 
 function subscribeToAcl() {
   return eventChannel(emit => aclData.subscribe(emit));
@@ -40,6 +48,36 @@ function* aclRemoveRoleParents({ payload }) {
   yield put(aclActions.aclRemoveRoleParentsOk(result));
 }
 
+function* addUserRoles({ payload }) {
+  let result = yield call([aclApi, aclApi.aclAddUserRoles], payload);
+  yield put(aclActions.aclAddUserRolesOk(result));
+}
+
+function* removeUserRoles({ payload }) {
+  let result = yield call([aclApi, aclApi.aclRemoveUserRoles], payload);
+  yield put(aclActions.aclRemoveUserRolesOk(result));
+}
+
+function* removeRole({ payload }) {
+  console.log(payload);
+  let result = yield call([aclApi, aclApi.aclRemoveRole], payload);
+  yield put(aclActions.aclRemoveRoleOk(result));
+}
+
+function* removeRoles({ payload }) {
+  console.log(payload);
+  for (let role of payload.roles) {
+    const task = yield put(aclActions.aclRemoveRole(role));
+    const { error } = yield race({
+      success: take(aclActions.ACL_REMOVE_ROLE_OK),
+      error: take(aclActions.ACL_REMOVE_ROLE_FAIL)
+    });
+    if (error) {
+      yield cancel(task);
+      break;
+    }
+  }
+}
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -50,6 +88,7 @@ function* watchAuthentication() {
     let token = yield call([payload.authUser, payload.authUser.getIdToken]);
     aclApi.token = token;
     aclApi.path = aclPath;
+    yield put(userActions.loadUsers());
     const job = yield fork(readFromAcl);
     yield take([authActions.SIGN_OUT_FULFILLED]);
     aclApi.token = null;
@@ -74,6 +113,22 @@ function* watchAclRemoveRoleParents() {
   yield takeEvery(aclActions.ACL_REMOVE_ROLE_PARENTS, aclRemoveRoleParents);
 }
 
+function* watchAddUserRoles() {
+  yield takeEvery(aclActions.ACL_ADD_USER_ROLES, addUserRoles);
+}
+
+function* watchRemoveUserRoles() {
+  yield takeEvery(aclActions.ACL_REMOVE_USER_ROLES, removeUserRoles);
+}
+
+function* watchRemoveRole() {
+  yield takeEvery(aclActions.ACL_REMOVE_ROLE, removeRole);
+}
+
+function* watchRemoveRoles() {
+  yield takeEvery(aclActions.ACL_REMOVE_ROLES, removeRoles);
+}
+
 //=====================================
 //  ACL SAGAS
 //-------------------------------------
@@ -82,5 +137,9 @@ export const aclSagas = [
   fork(watchAclAllow),
   fork(watchAclDeny),
   fork(watchAclAddRoleParents),
-  fork(watchAclRemoveRoleParents)
+  fork(watchAclRemoveRoleParents),
+  fork(watchAddUserRoles),
+  fork(watchRemoveUserRoles),
+  fork(watchRemoveRoles),
+  fork(watchRemoveRole)
 ];

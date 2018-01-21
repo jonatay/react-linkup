@@ -1,26 +1,25 @@
 import { createSelector } from 'reselect';
 
 export function isAuthenticated(state) {
-  return state.auth.authenticated;
+  return state.common.auth.authenticated;
 }
 
 export const getPhotoURL = state => {
-  // console.log(state.auth);
-  return state.auth.photoURL;
+  return state.common.auth.photoURL;
 };
 
 export const getAuthError = state => {
-  return state.auth.authError
+  return state.common.auth.authError
 }
 
 export const getAuthUser = state => {
-  return state.auth.user
+  return state.common.auth.user
 }
 
 export const getIdToken = state => {
-  return state.auth.token.i;
+  return state.common.auth.token.i;
   // return new Promise((resolve, reject) => {
-  //   state.auth.user
+  //   state.common.auth.user
   //     .getIdToken()
   //     .then(idToken => {
   //       resolve(idToken.i);
@@ -29,11 +28,11 @@ export const getIdToken = state => {
   //       reject(err);
   //     });
   // });
-  //return state.auth.user.getIdToken();
+  //return state.common.auth.user.getIdToken();
 };
 
 //=====================================
 //  MEMOIZED SELECTORS
 //-------------------------------------
 
-export const getAuth = createSelector(state => state.auth, auth => auth.toJS());
+export const getAuth = createSelector(state => state.common.auth, auth => auth.toJS());

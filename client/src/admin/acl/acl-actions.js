@@ -1,20 +1,27 @@
 export const aclActions = {
-  ACL_LOAD_USERS: 'ACL_LOAD_USERS',
-  ACL_LOAD_USERS_FULFILLED: 'ACL_LOAD_USERS_FULFILLED',
-  ACL_LOAD_USERS_FAILED: 'ACL_LOAD_USERS_FAILED',
 
-  aclLoadUsers: () => ({
-    type: aclActions.ACL_LOAD_USERS
-  }),
-  aclLoadUsersFulfilled: users => ({
-    type: aclActions.ACL_LOAD_USERS_FULFILLED,
-    payload: { users }
+  ACL_REMOVE_ROLES: 'ACL_REMOVE_ROLES',
+  aclRemoveRoles: (roles) => ({
+    type: aclActions.ACL_REMOVE_ROLES,
+    payload: { roles }
   }),
 
-  aclLoadUsersFailed: error => ({
-    type: aclActions.ACL_LOAD_USERS_FAILED,
-    payload: { error }
+  ACL_REMOVE_ROLE: 'ACL_REMOVE_ROLE',
+  ACL_REMOVE_ROLE_OK: 'ACL_REMOVE_ROLE_OK',
+  ACL_REMOVE_ROLE_FAIL: 'ACL_REMOVE_ROLE_FAIL',
+  aclRemoveRole: (role) => ({
+    type: aclActions.ACL_REMOVE_ROLE,
+    payload: { role }
   }),
+  aclRemoveRoleOk: payload => ({
+    type: aclActions.ACL_REMOVE_ROLE_OK,
+    payload: { payload }
+  }),
+  aclRemoveRoleFail: payload => ({
+    type: aclActions.ACL_REMOVE_ROLE_FAIL,
+    payload: { payload }
+  }),
+
 
   ACL_ADD_USER_ROLES: 'ACL_ADD_USER_ROLES',
   ACL_ADD_USER_ROLES_OK: 'ACL_ADD_USER_ROLES_OK',
@@ -23,11 +30,11 @@ export const aclActions = {
     type: aclActions.ACL_ADD_USER_ROLES,
     payload: { uid, roles }
   }),
-  aclAddUserRolesOk: (payload) => ({
+  aclAddUserRolesOk: payload => ({
     type: aclActions.ACL_ADD_USER_ROLES_OK,
     payload: { payload }
   }),
-  aclAddUserRolesFail: (payload) => ({
+  aclAddUserRolesFail: payload => ({
     type: aclActions.ACL_ADD_USER_ROLES_FAIL,
     payload: { payload }
   }),
@@ -39,14 +46,15 @@ export const aclActions = {
     type: aclActions.ACL_REMOVE_USER_ROLES,
     payload: { uid, roles }
   }),
-  aclRemoveUserRolesOk: (payload) => ({
+  aclRemoveUserRolesOk: payload => ({
     type: aclActions.ACL_REMOVE_USER_ROLES_OK,
     payload: { payload }
   }),
-  aclRemoveUserRolesFail: (payload) => ({
+  aclRemoveUserRolesFail: payload => ({
     type: aclActions.ACL_REMOVE_USER_ROLES_FAIL,
     payload: { payload }
   }),
+  
 
   ACL_ADD_ROLE_PARENTS: 'ACL_ADD_ROLE_PARENTS',
   aclAddRoleParents: (role, parents) => ({

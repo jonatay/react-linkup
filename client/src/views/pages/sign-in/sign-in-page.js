@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 import { notification } from 'antd';
 
-import { authActions, getAuthError } from 'src/auth';
+import { authActions, getAuthError } from 'src/common/auth';
 import Button from 'src/views/components/button';
 
 import './sign-in-page.css';

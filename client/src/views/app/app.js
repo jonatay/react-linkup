@@ -5,8 +5,12 @@ import { withRouter } from 'react-router-dom';
 
 import { Layout } from 'antd';
 
-import { authActions, getPhotoURL, isAuthenticated } from '../../auth';
-import { navActions } from '../../admin';
+import {
+  authActions,
+  getPhotoURL,
+  isAuthenticated,
+  navActions
+} from 'src/common';
 
 import AppHeader from '../components/header';
 import RequireAuthRoute from '../components/require-auth-route';

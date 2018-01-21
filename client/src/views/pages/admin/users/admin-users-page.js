@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { userActions, getVisibleUsers } from 'src/admin';
-import { getAuthUser } from 'src/auth';
+import { userActions, getVisibleUsers } from 'src/admin/users/index';
+import { getAuthUser } from 'src/common/auth';
 
 import UserTable from 'src/components/admin/UserTable';
 

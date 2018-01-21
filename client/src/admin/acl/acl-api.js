@@ -1,4 +1,4 @@
-import { ApiBase } from 'src/api';
+import { ApiBase } from 'src/api/index';
 
 class AclApi extends ApiBase {
   aclAllow(payload) {
@@ -16,6 +16,17 @@ class AclApi extends ApiBase {
   aclRemoveRoleParents(payload) {
     return this.customApiCall(null, 'remove-role-parents', payload, 'DELETE');
   }
+
+  aclAddUserRoles(payload) {
+    return this.customApiCall(null, 'add-user-roles', payload, 'POST');
+  }
+  aclRemoveUserRoles(payload) {
+    return this.customApiCall(null, 'remove-user-roles', payload, 'DELETE');
+  }
+  aclRemoveRole(payload) {
+    return this.customApiCall(null, 'remove-role', payload, 'DELETE');
+  }
+  
 }
 
 export const aclApi = new AclApi();

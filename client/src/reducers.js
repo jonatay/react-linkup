@@ -1,14 +1,10 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-import { authReducer } from './auth';
-import { rolesReducer, aclReducer } from './acl'
-import { userReducer } from './admin';
+import { commonReducer } from './common';
+import { adminReducer } from './admin';
 
 export default combineReducers({
-  auth: authReducer,
-  routing: routerReducer,
-  users: userReducer,
-  // rights: rightReducer,
-  roles: rolesReducer,
-  acl: aclReducer
+  router: routerReducer,
+  common: commonReducer,
+  admin: adminReducer
 });

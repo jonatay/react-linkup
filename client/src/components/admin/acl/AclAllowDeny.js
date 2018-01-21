@@ -25,7 +25,7 @@ class AclAllowDeny extends React.Component {
       this.state.resources_array,
       this.state.permissions_array
     );
-    //this.setState({ roles: '', resources: '', permissions: '' });
+    this.setState({ roles: '', resources: '', permissions: '' });
   }
   handleRemovePermissions() {
     this.props.aclDeny(
@@ -33,7 +33,7 @@ class AclAllowDeny extends React.Component {
       this.state.resources,
       this.state.permissions
     );
-    //this.setState({ roles: '', resources: '', permissions: '' });
+    this.setState({ roles: '', resources: '', permissions: '' });
   }
 
   render() {
@@ -41,37 +41,37 @@ class AclAllowDeny extends React.Component {
       <Row style={{ paddingBottom: 15 }}>
         <Row style={{ lineHeight: 0 }}>
           <Col span={5} style={{ paddingLeft: 5 }}>
-            <h5>allow/deny roles:</h5>
+            <h5>allow/deny [roles]:</h5>
           </Col>
           <Col span={6} style={{ paddingLeft: 5 }}>
-            <h5>resources:</h5>
+            <h5>[resources]:</h5>
           </Col>
           <Col span={4} style={{ paddingLeft: 5 }}>
-            <h5>permissions:</h5>
+            <h5>[permissions]:</h5>
           </Col>
           <Col span={7}>
-            <p>{'<-'} use comma [,] to delimit lists</p>
+            <p>{'<-'} use comma [,] to delimit [lists]</p>
           </Col>
         </Row>
         <Row>
           <InputGroup>
             <Col span={5}>
               <Input
-                placeholder="roles"
+                placeholder="[roles]"
                 value={this.state.roles}
                 onChange={this.handleInputChange.bind(this)}
               />
             </Col>
             <Col span={6}>
               <Input
-                placeholder="resources"
+                placeholder="[resources]"
                 value={this.state.resources}
                 onChange={this.handleInputChange.bind(this)}
               />
             </Col>
             <Col span={4}>
               <Input
-                placeholder="permissions"
+                placeholder="[permissions]"
                 value={this.state.permissions}
                 onChange={this.handleInputChange.bind(this)}
               />

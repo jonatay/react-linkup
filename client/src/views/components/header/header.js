@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Layout, Menu, Avatar, Icon } from 'antd';
 //import './header.css';
-import {navActions} from "../../../admin";
+import {navActions} from "src/common";
 
 const SubMenu = Menu.SubMenu;
 const modules = navActions.modules;

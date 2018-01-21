@@ -1,4 +1,4 @@
-import { FirebaseList } from 'src/firebase';
+import { FirebaseList } from 'src/firebase/index';
 import { rightActions } from './right-actions';
 import { Right } from './right';
 
