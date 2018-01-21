@@ -1,26 +1,19 @@
 const admin = require('../services/firebase/firebase-admin');
 const acl = require('../services/firebase/firebase-acl');
 
-exports.acl_allow = function(req, res) {
-  const payload = req.body;
-  acl.allow(payload.roles, payload.resources, payload.permissions, err => {
+
+exports.allowedPermissions = function(req,res) {
+  const uid = req.params.uid;
+  const resources = req.parema.resources;
+  acl.allowedPermissions(uid, resources, function (err, obj) {
     if (err) {
       res.json(err);
     } else {
-      res.json('whatever');
+      res.json(obj);
     }
-  });
-};
-exports.acl_deny = function(req, res) {
-  const payload = req.body;
-  acl.removeAllow(payload.roles[0], payload.resources, payload.permissions, err => {
-    if (err) {
-      res.json(err);
-    } else {
-      res.json('whatever out');
-    }
-  });
-};
+  })
+}
+
 exports.user_roles = function(req, res) {
   const uid = req.params.uid;
   acl.userRoles(uid, function(err, userRoles) {
@@ -41,6 +34,55 @@ exports.role_users = function(req, res) {
       res.json(users);
     }
   });
+};
+
+exports.acl_allow = function(req, res) {
+  const payload = req.body;
+  acl.allow(payload.roles, payload.resources, payload.permissions, err => {
+    if (err) {
+      res.json(err);
+    } else {
+      res.json('done allow');
+    }
+  });
+};
+
+exports.acl_deny = function(req, res) {
+  const payload = req.body;
+  acl.removeAllow(
+    payload.roles[0],
+    payload.resources,
+    payload.permissions,
+    err => {
+      if (err) {
+        res.json(err);
+      } else {
+        res.json('done deny');
+      }
+    }
+  );
+};
+
+exports.acl_addRoleParents = function(req, res) {
+  const payload = req.body;
+  acl.addRoleParents(payload.role, payload.parents, function (err) {
+    if (err) {
+      res.json(err);
+    } else {
+      res.json('done add role parents')
+    }
+  })
+};
+
+exports.acl_removeRoleParents = function(req, res) {
+  const payload = req.body;
+  acl.removeRoleParents(payload.role, payload.parents, function (err) {
+    if (err) {
+      res.json(err);
+    } else {
+      res.json('done remove role parents')
+    }
+  })
 };
 
 /*

@@ -10,7 +10,21 @@ import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
 // import { Button, Input } from 'antd';
 
 class RolesTree extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      treeData: this.props.aclTree
+    };
+  }
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      treeData: nextProps.aclTree
+    });
+  }
 
+  componentWillMount() {
+    // console.log(this.state);
+  }
 
   // treeRoles = roles =>
   //   roles.map(role => ({
@@ -41,9 +55,9 @@ class RolesTree extends React.Component {
 
   render() {
     return (
-      <div style={{ height: 700 }}>
+      <div style={{ height: 650 }}>
         <SortableTree
-          treeData={this.props.aclTree}
+          treeData={this.state.treeData}
           onChange={treeData => this.setState({ treeData })}
           theme={FileExplorerTheme}
           canDrag={({ node }) => !node.noDragging}

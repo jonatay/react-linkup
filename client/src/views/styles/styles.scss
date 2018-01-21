@@ -1,9 +1,4 @@
-@import
-'./shared',
-'minx/src/reset',
-'minx/src/elements',
-'./grid';
-
+@import './shared', 'minx/src/reset', 'minx/src/elements', './grid';
 
 html {
   //overflow-y: scroll;
@@ -19,9 +14,21 @@ a {
 }
 
 ::selection {
-  background: rgba(200,200,255,.1);
+  background: rgba(200, 200, 255, 0.1);
 }
 
 .hide {
   display: none !important;
+}
+
+.ant-collapse {
+  line-height: 18px !important;
+  .ant-collapse-item {
+    .arrow {
+      top: -7px !important;
+    }
+    .ant-collapse-header {
+      padding: 7px 0 0 40px !important;
+    }
+  }
 }

@@ -7,5 +7,4 @@ serviceAccountKey.json
 public/images/
 public/javascripts/
 /client/.env
-/server/.env
-/built/
+/.env

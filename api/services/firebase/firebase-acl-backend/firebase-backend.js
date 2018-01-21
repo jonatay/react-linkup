@@ -51,10 +51,10 @@ FirebaseBackend.prototype = {
    Gets the contents at the bucket's key.
    */
   get: function(bucket, key, cb) {
+    console.log('get key', JSON.stringify(key));
     contract(arguments)
       .params('string', 'string|number', 'function')
       .end();
-
     var self = this;
     self.fb
       .child(bucket)
@@ -63,6 +63,7 @@ FirebaseBackend.prototype = {
         'value',
         function(snap) {
           var doc = snap.val();
+          console.log('got doc: ', JSON.stringify(doc));
           if (!_.isObject(doc)) return cb(undefined, []);
           cb(undefined, _.without(_.keys(doc), 'key', '_id'));
         },
@@ -84,6 +85,7 @@ FirebaseBackend.prototype = {
     var fns = [];
     for (var i = 0, len = keys.length; i < len; i++) {
       (function(key) {
+        console.log('union key', JSON.stringify(key));
         fns.push(function(cb) {
           self.fb
             .child(bucket)
@@ -116,16 +118,10 @@ FirebaseBackend.prototype = {
     contract(arguments)
       .params('array', 'string', 'string|number', 'string|array|number')
       .end();
+
     if (key == 'key') throw new Error("Key name 'key' is not allowed.");
 
     var self = this;
-
-
-    console.log('transaction', JSON.stringify(bucket));
-    console.log('bucket', JSON.stringify(bucket));
-    console.log('key', JSON.stringify(key));
-    console.log('values', JSON.stringify(values));
-
 
     transaction.push(function(cb) {
       values = makeArray(values);
@@ -189,12 +185,6 @@ FirebaseBackend.prototype = {
 
     var self = this;
     values = makeArray(values);
-
-    console.log('transaction', JSON.stringify(bucket));
-    console.log('bucket', JSON.stringify(bucket));
-    console.log('key', JSON.stringify(key));
-    console.log('values', JSON.stringify(values));
-
     transaction.push(function(cb) {
       self.fb
         .child(bucket)

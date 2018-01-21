@@ -1,33 +1,31 @@
 /*
-    Jono : 18 01 13
-    RolesContainer : Stateless Functional Component
+    Jono : 18 01 19
+    AclAllowDeny : React Class Component
 */
 import React from 'react';
-import { List } from 'immutable';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-
 import { Input, Col, Button, Row } from 'antd';
-
-import { getAclTree, roleActions, aclActions } from 'src/acl';
-
-import RolesTree from './RolesTree';
-
 const InputGroup = Input.Group;
 
-class RolesContainer extends React.Component {
+class AclAllowDeny extends React.Component {
   constructor(props) {
     super(props);
     this.state = { roles: [], resources: [], permissions: [] };
   }
 
+  handleInputChange(e) {
+    let val = e.target.value.split(',');
+    this.setState({
+      [e.target.placeholder]: val,
+      [e.target.placeholder + '_array']: val.filter(n => n !== '')
+    });
+  }
   handleAddPermissions() {
     this.props.aclAllow(
-      this.state.roles,
-      this.state.resources,
-      this.state.permissions
+      this.state.roles_array,
+      this.state.resources_array,
+      this.state.permissions_array
     );
+    //this.setState({ roles: '', resources: '', permissions: '' });
   }
   handleRemovePermissions() {
     this.props.aclDeny(
@@ -35,54 +33,52 @@ class RolesContainer extends React.Component {
       this.state.resources,
       this.state.permissions
     );
-  }
-  handleInputChange(e) {
-    let val = e.target.value.split(',');
-    console.log(val);
-    this.setState({ [e.target.placeholder]: val.filter(n => n !== '') });
+    //this.setState({ roles: '', resources: '', permissions: '' });
   }
 
   render() {
-    const { aclTree } = this.props;
     return (
-      <div>
-        <Row>
+      <Row style={{ paddingBottom: 15 }}>
+        <Row style={{ lineHeight: 0 }}>
           <Col span={5} style={{ paddingLeft: 5 }}>
-            <h4>roles:</h4>
+            <h5>allow/deny roles:</h5>
           </Col>
           <Col span={6} style={{ paddingLeft: 5 }}>
-            <h4>resources:</h4>
+            <h5>resources:</h5>
           </Col>
           <Col span={4} style={{ paddingLeft: 5 }}>
-            <h4>permissions:</h4>
+            <h5>permissions:</h5>
           </Col>
           <Col span={7}>
             <p>{'<-'} use comma [,] to delimit lists</p>
           </Col>
         </Row>
         <Row>
-          <InputGroup size="large">
+          <InputGroup>
             <Col span={5}>
               <Input
                 placeholder="roles"
+                value={this.state.roles}
                 onChange={this.handleInputChange.bind(this)}
               />
             </Col>
             <Col span={6}>
               <Input
                 placeholder="resources"
+                value={this.state.resources}
                 onChange={this.handleInputChange.bind(this)}
               />
             </Col>
             <Col span={4}>
               <Input
                 placeholder="permissions"
+                value={this.state.permissions}
                 onChange={this.handleInputChange.bind(this)}
               />
             </Col>
             <Col span={3}>
               <Button
-                size="large"
+                size="small"
                 icon="plus-circle-o"
                 onClick={this.handleAddPermissions.bind(this)}
                 type="primary"
@@ -97,7 +93,7 @@ class RolesContainer extends React.Component {
             </Col>
             <Col span={3}>
               <Button
-                size="large"
+                size="small"
                 icon="minus-circle-o"
                 onClick={this.handleRemovePermissions.bind(this)}
                 type="danger"
@@ -112,38 +108,9 @@ class RolesContainer extends React.Component {
             </Col>
           </InputGroup>
         </Row>
-        <RolesTree aclTree={aclTree} />
-      </div>
+      </Row>
     );
   }
 }
 
-RolesContainer.propTypes = {
-  aclTree: PropTypes.array.isRequired,
-  createRole: PropTypes.func.isRequired,
-  removeRole: PropTypes.func.isRequired,
-  updateRole: PropTypes.func.isRequired,
-  aclAllow: PropTypes.func.isRequired,
-  aclDeny: PropTypes.func.isRequired
-};
-
-const mapStateToProps = state => ({
-  aclTree: getAclTree(state)
-});
-
-const mapDispatchToProps = {
-  createRole: roleActions.createRole,
-  removeRole: roleActions.removeRole,
-  updateRole: roleActions.updateRole,
-  aclAllow: aclActions.aclAllow,
-  aclDeny: aclActions.aclDeny
-};
-
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(RolesContainer)
-);
-
-/*
-const RolesContainer = ({ roles, createRole, removeRole, updateRole }) => {
-
- */
+export default AclAllowDeny;
