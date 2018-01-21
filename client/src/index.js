@@ -10,6 +10,7 @@ import history from './history';
 import configureStore from './store';
 import App from './views/app';
 import registerServiceWorker from './registerServiceWorker';
+// import './index.css';
 
 const store = configureStore();
 const rootElement = document.getElementById('root');

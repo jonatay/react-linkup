@@ -1,4 +1,84 @@
 export const aclActions = {
+  ACL_LOAD_USERS: 'ACL_LOAD_USERS',
+  ACL_LOAD_USERS_FULFILLED: 'ACL_LOAD_USERS_FULFILLED',
+  ACL_LOAD_USERS_FAILED: 'ACL_LOAD_USERS_FAILED',
+
+  aclLoadUsers: () => ({
+    type: aclActions.ACL_LOAD_USERS
+  }),
+  aclLoadUsersFulfilled: users => ({
+    type: aclActions.ACL_LOAD_USERS_FULFILLED,
+    payload: { users }
+  }),
+
+  aclLoadUsersFailed: error => ({
+    type: aclActions.ACL_LOAD_USERS_FAILED,
+    payload: { error }
+  }),
+
+  ACL_ADD_USER_ROLES: 'ACL_ADD_USER_ROLES',
+  ACL_ADD_USER_ROLES_OK: 'ACL_ADD_USER_ROLES_OK',
+  ACL_ADD_USER_ROLES_FAIL: 'ACL_ADD_USER_ROLES_FAIL',
+  aclAddUserRoles: (uid, roles) => ({
+    type: aclActions.ACL_ADD_USER_ROLES,
+    payload: { uid, roles }
+  }),
+  aclAddUserRolesOk: (payload) => ({
+    type: aclActions.ACL_ADD_USER_ROLES_OK,
+    payload: { payload }
+  }),
+  aclAddUserRolesFail: (payload) => ({
+    type: aclActions.ACL_ADD_USER_ROLES_FAIL,
+    payload: { payload }
+  }),
+
+  ACL_REMOVE_USER_ROLES: 'ACL_REMOVE_USER_ROLES',
+  ACL_REMOVE_USER_ROLES_OK: 'ACL_REMOVE_USER_ROLES_OK',
+  ACL_REMOVE_USER_ROLES_FAIL: 'ACL_REMOVE_USER_ROLES_FAIL',
+  aclRemoveUserRoles: (uid, roles) => ({
+    type: aclActions.ACL_REMOVE_USER_ROLES,
+    payload: { uid, roles }
+  }),
+  aclRemoveUserRolesOk: (payload) => ({
+    type: aclActions.ACL_REMOVE_USER_ROLES_OK,
+    payload: { payload }
+  }),
+  aclRemoveUserRolesFail: (payload) => ({
+    type: aclActions.ACL_REMOVE_USER_ROLES_FAIL,
+    payload: { payload }
+  }),
+
+  ACL_ADD_ROLE_PARENTS: 'ACL_ADD_ROLE_PARENTS',
+  aclAddRoleParents: (role, parents) => ({
+    type: aclActions.ACL_ADD_ROLE_PARENTS,
+    payload: { role, parents }
+  }),
+  ACL_ADD_ROLE_PARENTS_OK: 'ACL_ADD_ROLE_PARENTS_OK',
+  aclAddRoleParentsOk: payload => ({
+    type: aclActions.ACL_ADD_ROLE_PARENTS_OK,
+    payload: { payload }
+  }),
+  ACL_ADD_ROLE_PARENTS_FAIL: 'ACL_ADD_ROLE_PARENTS_FAIL',
+  aclAddRoleParentsFail: payload => ({
+    type: aclActions.ACL_ADD_ROLE_PARENTS_FAIL,
+    payload: { payload }
+  }),
+  ACL_REMOVE_ROLE_PARENTS: 'ACL_REMOVE_ROLE_PARENTS',
+  aclRemoveRoleParents: (role, parents) => ({
+    type: aclActions.ACL_REMOVE_ROLE_PARENTS,
+    payload: { role, parents }
+  }),
+  ACL_REMOVE_ROLE_PARENTS_OK: 'ACL_REMOVE_ROLE_PARENTS_OK',
+  aclRemoveRoleParentsOk: payload => ({
+    type: aclActions.ACL_REMOVE_ROLE_PARENTS_OK,
+    payload: { payload }
+  }),
+  ACL_REMOVE_ROLE_PARENTS_FAIL: 'ACL_REMOVE_ROLE_PARENTS_FAIL',
+  aclRemoveRoleParentsFail: payload => ({
+    type: aclActions.ACL_REMOVE_ROLE_PARENTS_FAIL,
+    payload: { payload }
+  }),
+
   ACL_LOADED_OK: 'ACL_LOADED_OK',
   aclLoadedOk: acl => ({
     type: aclActions.ACL_LOADED_OK,

@@ -121,3 +121,10 @@ a {
 
 .hide {
   display: none !important; }
+
+.ant-collapse {
+  line-height: 18px !important; }
+  .ant-collapse .ant-collapse-item .arrow {
+    top: -7px !important; }
+  .ant-collapse .ant-collapse-item .ant-collapse-header {
+    padding: 7px 0 0 40px !important; }

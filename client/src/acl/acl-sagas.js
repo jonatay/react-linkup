@@ -30,6 +30,16 @@ function* aclDeny({ payload }) {
   yield put(aclActions.aclDenyOk(result));
 }
 
+function* aclAddRoleParents({ payload }) {
+  let result = yield call([aclApi, aclApi.aclAddRoleParents], payload);
+  yield put(aclActions.aclAddRoleParentsOk(result));
+}
+
+function* aclRemoveRoleParents({ payload }) {
+  let result = yield call([aclApi, aclApi.aclRemoveRoleParents], payload);
+  yield put(aclActions.aclRemoveRoleParentsOk(result));
+}
+
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -56,11 +66,21 @@ function* watchAclDeny() {
   yield takeEvery(aclActions.ACL_DENY, aclDeny);
 }
 
+function* watchAclAddRoleParents() {
+  yield takeEvery(aclActions.ACL_ADD_ROLE_PARENTS, aclAddRoleParents);
+}
+
+function* watchAclRemoveRoleParents() {
+  yield takeEvery(aclActions.ACL_REMOVE_ROLE_PARENTS, aclRemoveRoleParents);
+}
+
 //=====================================
 //  ACL SAGAS
 //-------------------------------------
 export const aclSagas = [
   fork(watchAuthentication),
   fork(watchAclAllow),
-  fork(watchAclDeny)
+  fork(watchAclDeny),
+  fork(watchAclAddRoleParents),
+  fork(watchAclRemoveRoleParents)
 ];

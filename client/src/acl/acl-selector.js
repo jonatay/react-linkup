@@ -8,17 +8,27 @@ export function getAcl(state) {
 //  MEMOIZED SELECTORS
 //-------------------------------------
 
-const childNode = (title, obj) => {
+const childNode = (title, obj, depth = 1) => {
   return {
     title: title,
-    expanded:true,
+    noDragging: true,
+    expanded: depth <= 1,
     ...(Object.keys(obj).length > 0
-      ? { children: Object.keys(obj).map(key => childNode(key, obj[key])) }
+      ? {
+          children: Object.keys(obj).map(key =>
+            childNode(key, obj[key], depth + 1)
+          )
+        }
       : {})
   };
 };
 
 export const getAclTree = createSelector(getAcl, acl => {
-  console.log(acl);
   return Object.keys(acl).map((key, index) => childNode(key, acl[key]));
+});
+
+export const getRoles = createSelector(getAcl, acl => {
+  return typeof acl.meta === 'object' && typeof acl.meta.roles === 'object'
+    ? Object.keys(acl.meta.roles)
+    : [];
 });

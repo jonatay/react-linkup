@@ -8,6 +8,14 @@ class AclApi extends ApiBase {
   aclDeny(payload) {
     return this.customApiCall(null, 'acl-deny', payload, 'DELETE');
   }
+
+  aclAddRoleParents(payload) {
+    return this.customApiCall(null, 'add-role-parents', payload, 'POST');
+  }
+
+  aclRemoveRoleParents(payload) {
+    return this.customApiCall(null, 'remove-role-parents', payload, 'DELETE');
+  }
 }
 
 export const aclApi = new AclApi();
