@@ -1,3 +1,4 @@
+import { LOCATION_CHANGE } from 'react-router-redux';
 import {
   call,
   take,
@@ -13,7 +14,7 @@ import { aclApi } from './acl-api';
 import { authActions } from '../../common/auth/index';
 import { aclData } from './acl-data';
 import { eventChannel } from 'redux-saga';
-import { userActions } from "../users";
+import { userActions } from '../users';
 const aclPath = 'admin';
 
 function subscribeToAcl() {
@@ -78,6 +79,27 @@ function* removeRoles({ payload }) {
     }
   }
 }
+
+function* removeResource({ payload }) {
+  console.log(payload);
+  let result = yield call([aclApi, aclApi.aclRemoveResource], payload);
+  yield put(aclActions.aclRemoveResourceOk(result));
+}
+
+function* removeResources({ payload }) {
+  console.log(payload);
+  for (let resource of payload.resources) {
+    const task = yield put(aclActions.aclRemoveResource(resource));
+    const { error } = yield race({
+      success: take(aclActions.ACL_REMOVE_RESOURCE_OK),
+      error: take(aclActions.ACL_REMOVE_RESOURCE_FAIL)
+    });
+    if (error) {
+      yield cancel(task);
+      break;
+    }
+  }
+}
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -88,12 +110,22 @@ function* watchAuthentication() {
     let token = yield call([payload.authUser, payload.authUser.getIdToken]);
     aclApi.token = token;
     aclApi.path = aclPath;
-    yield put(userActions.loadUsers());
-    const job = yield fork(readFromAcl);
     yield take([authActions.SIGN_OUT_FULFILLED]);
     aclApi.token = null;
     aclApi.path = null;
-    yield cancel(job);
+  }
+}
+
+function* watchLocationChange() {
+  let job;
+  const {payload} = yield take(LOCATION_CHANGE);
+  if (payload.pathname === '/admin/rights') {
+    job = yield fork(readFromAcl);
+    yield put(userActions.loadUsers());
+  } else {
+    if (job) {
+      yield cancel(job);
+    }
   }
 }
 
@@ -129,11 +161,20 @@ function* watchRemoveRoles() {
   yield takeEvery(aclActions.ACL_REMOVE_ROLES, removeRoles);
 }
 
+function* watchRemoveResource() {
+  yield takeEvery(aclActions.ACL_REMOVE_RESOURCE, removeResource);
+}
+
+function* watchRemoveResources() {
+  yield takeEvery(aclActions.ACL_REMOVE_RESOURCES, removeResources);
+}
+
 //=====================================
 //  ACL SAGAS
 //-------------------------------------
 export const aclSagas = [
   fork(watchAuthentication),
+  fork(watchLocationChange),
   fork(watchAclAllow),
   fork(watchAclDeny),
   fork(watchAclAddRoleParents),
@@ -141,5 +182,7 @@ export const aclSagas = [
   fork(watchAddUserRoles),
   fork(watchRemoveUserRoles),
   fork(watchRemoveRoles),
-  fork(watchRemoveRole)
+  fork(watchRemoveRole),
+  fork(watchRemoveResources),
+  fork(watchRemoveResource)
 ];

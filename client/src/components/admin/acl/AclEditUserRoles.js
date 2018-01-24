@@ -5,7 +5,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Row, Col, Input, Button, Select } from 'antd';
+import { Row, Col, Input, Button, Select, Icon } from 'antd';
 
 class AclEditUserUsers extends React.Component {
   constructor(props) {
@@ -66,6 +66,16 @@ class AclEditUserUsers extends React.Component {
                   this.setState({ ...this.state, roles: value })
                 }
                 tokenSeparators={[',']}
+                prefix={
+                  this.state.roles ? (
+                    <Icon
+                      type="close-circle"
+                      onClick={() =>
+                        this.setState({ ...this.state, roles: [] })
+                      }
+                    />
+                  ) : null
+                }
               >
                 {roleOptions}
               </Select>

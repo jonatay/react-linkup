@@ -9,7 +9,8 @@ import {
   authActions,
   getPhotoURL,
   isAuthenticated,
-  navActions
+  navActions,
+  getAclFront
 } from 'src/common';
 
 import AppHeader from '../components/header';
@@ -24,10 +25,10 @@ import './app.css';
 
 const { Content } = Layout;
 
-const App = ({ authenticated, signOut, photoURL, navigateTo }) => {
+const App = ({ authenticated, signOut, photoURL, navigateTo, aclFront }) => {
   if (!authenticated)
     return (
-      <Layout>
+      <Layout style={{ height: '100%' }}>
         <Content>
           <RequireUnauthRoute
             authenticated={authenticated}
@@ -44,6 +45,7 @@ const App = ({ authenticated, signOut, photoURL, navigateTo }) => {
         signOut={signOut}
         photoURL={photoURL}
         navigateTo={navigateTo}
+        aclFront={aclFront}
       />
       <Content style={{ padding: '0 10px', marginTop: 60 }}>
         <div style={{ background: '#fff', padding: 5, minHeight: 750 }}>
@@ -56,13 +58,13 @@ const App = ({ authenticated, signOut, photoURL, navigateTo }) => {
           <RequireAuthRoute
             authenticated={authenticated}
             exact
-            path="/admin-users-page"
+            path="/admin/users"
             component={AdminUsersPage}
           />
           <RequireAuthRoute
             authenticated={authenticated}
             exact
-            path="/admin-rights-page"
+            path="/admin/rights"
             component={AdminRightsPage}
           />
         </div>
@@ -82,11 +84,11 @@ App.propTypes = {
 //  CONNECT
 //-------------------------------------
 
-const mapStateToProps = state => {
-  const photoURL = getPhotoURL(state);
-  const authenticated = isAuthenticated(state);
-  return { authenticated, photoURL };
-};
+const mapStateToProps = state => ({
+  photoURL: getPhotoURL(state),
+  authenticated: isAuthenticated(state),
+  aclFront: getAclFront(state)
+});
 
 const mapDispatchToProps = {
   signOut: authActions.signOut,

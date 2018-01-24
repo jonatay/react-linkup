@@ -1,3 +1,3 @@
-import { navSagas, authSagas } from './'; //rightSagas
+import { navSagas, authSagas, aclFrontSagas } from './';
 
-export const commonSagas = [...navSagas, ...authSagas];
+export const commonSagas = [...navSagas, ...authSagas, ...aclFrontSagas];

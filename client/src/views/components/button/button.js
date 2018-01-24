@@ -2,15 +2,16 @@ import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
+import Button from 'antd';
+
 import './button.css';
 
-
-const Button = ({children, className, onClick, type = 'button'}) => {
+const MyButton = ({ children, className, onClick, type = 'button', icon }) => {
   const cssClasses = classNames('btn', className);
   return (
-    <button className={cssClasses} onClick={onClick} type={type}>
+    <Button icon={icon} className={cssClasses} onClick={onClick}>
       {children}
-    </button>
+    </Button>
   );
 };
 
@@ -21,5 +22,4 @@ Button.propTypes = {
   type: PropTypes.oneOf(['button', 'reset', 'submit'])
 };
 
-
-export default Button;
+export default MyButton;

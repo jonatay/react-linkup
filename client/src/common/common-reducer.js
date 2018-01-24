@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
-import { authReducer } from './auth';
+import { authReducer, aclFrontReducer } from './';
 
 export const commonReducer = combineReducers({
-  auth: authReducer
+  auth: authReducer,
+  acl: aclFrontReducer
 });

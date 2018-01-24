@@ -9,7 +9,14 @@ import { withRouter } from 'react-router-dom';
 
 import { Collapse, Row } from 'antd';
 
-import { getAclTree, getRoles, aclActions, getUsersList } from 'src/admin';
+import {
+  getAclTree,
+  getRoles,
+  aclActions,
+  getUsersList,
+  getResources,
+  getPermissions
+} from 'src/admin';
 
 import AclAllowDeny from './acl/AclAllowDeny';
 import AclEditRoleParents from './acl/AclEditRoleParents';
@@ -34,6 +41,10 @@ class RightsContainer extends React.Component {
               <AclAllowDeny
                 aclAllow={this.props.aclAllow}
                 aclDeny={this.props.aclDeny}
+                roles={this.props.roles}
+                resources={this.props.resources}
+                permissions={this.props.permissions}
+                aclRemoveResources={this.props.aclRemoveResources}
               />
               <AclEditRoleParents
                 aclAddRoleParents={this.props.aclAddRoleParents}
@@ -58,13 +69,16 @@ RightsContainer.propTypes = {
   aclRemoveRoleParents: PropTypes.func.isRequired,
   aclAddUserRoles: PropTypes.func.isRequired,
   aclRemoveUserRoles: PropTypes.func.isRequired,
-  aclRemoveRoles: PropTypes.func.isRequired
+  aclRemoveRoles: PropTypes.func.isRequired,
+  aclRemoveResources: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   aclTree: getAclTree(state),
   roles: getRoles(state),
-  users: getUsersList(state)
+  users: getUsersList(state),
+  resources: getResources(state),
+  permissions: getPermissions(state)
 });
 
 const mapDispatchToProps = {
@@ -74,7 +88,8 @@ const mapDispatchToProps = {
   aclRemoveRoleParents: aclActions.aclRemoveRoleParents,
   aclAddUserRoles: aclActions.aclAddUserRoles,
   aclRemoveUserRoles: aclActions.aclRemoveUserRoles,
-  aclRemoveRoles: aclActions.aclRemoveRoles
+  aclRemoveRoles: aclActions.aclRemoveRoles,
+  aclRemoveResources: aclActions.aclRemoveResources
 };
 
 export default withRouter(

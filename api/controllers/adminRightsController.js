@@ -154,3 +154,16 @@ exports.remove_role = function(req, res) {
     }
   });
 };
+
+exports.remove_resource = function(req, res) {
+  const payload = req.body;
+  const resource = payload.resource;
+  console.log(`removing resource ${resource}`);
+  acl.removeResource(resource, function(err) {
+    if (err) {
+      res.json(err);
+    } else {
+      res.json({ removed: resource });
+    }
+  });
+};

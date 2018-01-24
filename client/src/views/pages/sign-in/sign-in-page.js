@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { notification } from 'antd';
 
 import { authActions, getAuthError } from 'src/common/auth';
-import Button from 'src/views/components/button';
+import { Button } from 'antd';
 
 import './sign-in-page.css';
 
@@ -34,16 +34,32 @@ const SignInPage = ({
       {authError === null ? '' : openNotification(authError)}
       <div className="g-col">
         <h1 className="sign-in__heading">Sign in</h1>
-        <Button className="sign-in__button" onClick={signInWithGithub}>
+        <Button
+          className="sign-in__button"
+          icon="github"
+          onClick={signInWithGithub}
+        >
           GitHub
         </Button>
-        <Button className="sign-in__button" onClick={signInWithGoogle}>
+        <Button
+          className="sign-in__button"
+          icon="google-plus"
+          onClick={signInWithGoogle}
+        >
           Google
         </Button>
-        <Button className="sign-in__button" onClick={signInWithTwitter}>
+        <Button
+          className="sign-in__button"
+          icon="twitter"
+          onClick={signInWithTwitter}
+        >
           Twitter
         </Button>
-        <Button className="sign-in__button" onClick={signInWithFacebook}>
+        <Button
+          className="sign-in__button"
+          icon="facebook"
+          onClick={signInWithFacebook}
+        >
           Facebook
         </Button>
       </div>

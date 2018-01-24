@@ -1,20 +1,20 @@
 import { createSelector } from 'reselect';
 
-export function isAuthenticated(state) {
+export function isAuthenticatedInt(state) {
   return state.common.auth.authenticated;
 }
 
-export const getPhotoURL = state => {
+const getPhotoURLInt = state => {
   return state.common.auth.photoURL;
 };
 
 export const getAuthError = state => {
-  return state.common.auth.authError
-}
+  return state.common.auth.authError;
+};
 
 export const getAuthUser = state => {
-  return state.common.auth.user
-}
+  return state.common.auth.user;
+};
 
 export const getIdToken = state => {
   return state.common.auth.token.i;
@@ -35,4 +35,14 @@ export const getIdToken = state => {
 //  MEMOIZED SELECTORS
 //-------------------------------------
 
-export const getAuth = createSelector(state => state.common.auth, auth => auth.toJS());
+export const getAuth = createSelector(
+  state => state.common.auth,
+  auth => auth.toJS()
+);
+
+export const getPhotoURL = createSelector(getPhotoURLInt, url => url);
+
+export const isAuthenticated = createSelector(
+  isAuthenticatedInt,
+  authenticated => authenticated
+);

@@ -19,7 +19,7 @@ function render(Component) {
   ReactDOM.render(
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        <div>
+        <div style={{ height: '100%' }}>
           <Component />
         </div>
       </ConnectedRouter>

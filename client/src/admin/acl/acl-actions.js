@@ -1,5 +1,27 @@
 export const aclActions = {
 
+  ACL_REMOVE_RESOURCES: 'ACL_REMOVE_RESOURCES',
+  aclRemoveResources: (resources) => ({
+    type: aclActions.ACL_REMOVE_RESOURCES,
+    payload: { resources }
+  }),
+
+  ACL_REMOVE_RESOURCE: 'ACL_REMOVE_RESOURCE',
+  ACL_REMOVE_RESOURCE_OK: 'ACL_REMOVE_RESOURCE_OK',
+  ACL_REMOVE_RESOURCE_FAIL: 'ACL_REMOVE_RESOURCE_FAIL',
+  aclRemoveResource: (resource) => ({
+    type: aclActions.ACL_REMOVE_RESOURCE,
+    payload: { resource }
+  }),
+  aclRemoveResourceOk: payload => ({
+    type: aclActions.ACL_REMOVE_RESOURCE_OK,
+    payload: { payload }
+  }),
+  aclRemoveResourceFail: payload => ({
+    type: aclActions.ACL_REMOVE_RESOURCE_FAIL,
+    payload: { payload }
+  }),
+
   ACL_REMOVE_ROLES: 'ACL_REMOVE_ROLES',
   aclRemoveRoles: (roles) => ({
     type: aclActions.ACL_REMOVE_ROLES,

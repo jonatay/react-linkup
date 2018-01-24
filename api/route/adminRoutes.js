@@ -19,6 +19,7 @@ router.delete(
 router.post('/add-user-roles', admin_rights_controller.add_user_roles);
 router.delete('/remove-user-roles', admin_rights_controller.remove_user_roles);
 router.delete('/remove-role', admin_rights_controller.remove_role);
+router.delete('/remove-resource', admin_rights_controller.remove_resource);
 
 /* admin_user_controller routing */
 router.get('/users', admin_user_controller.admin_user_list);

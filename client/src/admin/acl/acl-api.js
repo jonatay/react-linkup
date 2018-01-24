@@ -26,6 +26,9 @@ class AclApi extends ApiBase {
   aclRemoveRole(payload) {
     return this.customApiCall(null, 'remove-role', payload, 'DELETE');
   }
+  aclRemoveResource(payload) {
+    return this.customApiCall(null, 'remove-resource', payload, 'DELETE');
+  }
   
 }
 
