@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config();
 
 var express = require('express');
 var path = require('path');
@@ -11,6 +11,7 @@ var bodyParser = require('body-parser');
 // var users = require('./routes/users');
 
 var api = require('./api');
+var apiFims = require('./api-fims');
 
 var app = express();
 
@@ -30,12 +31,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/users', users);
 
 app.use('/api', api);
+app.use('/api-fims', apiFims);
 
-app.use('/static', express.static('client/build/static'))
-app.get('/*', function (req, res) {
+app.use('/static', express.static('client/build/static'));
+app.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

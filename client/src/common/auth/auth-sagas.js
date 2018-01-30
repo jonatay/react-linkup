@@ -16,12 +16,10 @@ const b64DecodeUnicode = str => {
 };
 function* signIn(authProvider) {
   try {
-    console.log(authProvider);
     const authData = yield call(
       [firebaseAuth, firebaseAuth.signInWithPopup],
       authProvider
     );
-    console.log(authData.user);
     let idToken = yield call([authData.user, authData.user.getIdToken]);
     const customClaim = JSON.parse(b64DecodeUnicode(idToken.split('.')[1]));
     yield put(
