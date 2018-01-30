@@ -1,6 +1,16 @@
 const admin = require('../services/firebase/firebase-admin');
 const acl = require('../services/firebase/firebase-acl');
 
+function arrayUnique(array) {
+  var a = array.concat();
+  for (var i = 0; i < a.length; ++i) {
+    for (var j = i + 1; j < a.length; ++j) {
+      if (a[i] === a[j]) a.splice(j--, 1);
+    }
+  }
+  return a;
+}
+
 exports.admin_user_list = function(req, res) {
   admin
     .auth()

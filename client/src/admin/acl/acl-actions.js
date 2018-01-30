@@ -1,7 +1,17 @@
 export const aclActions = {
-
+  ACL_LOAD_DATA: 'ACL_LOAD_DATA',
+  aclLoadData: payload => ({
+    type: aclActions.ACL_LOAD_DATA,
+    payload: { payload }
+  }),
+  ACL_CLEAR_DATA: 'ACL_CLEAR_DATA',
+  alcClearData: payclear => ({
+    type: aclActions.ACL_CLEAR_DATA,
+    payclear: { payclear }
+  }),
+  
   ACL_REMOVE_RESOURCES: 'ACL_REMOVE_RESOURCES',
-  aclRemoveResources: (resources) => ({
+  aclRemoveResources: resources => ({
     type: aclActions.ACL_REMOVE_RESOURCES,
     payload: { resources }
   }),
@@ -9,7 +19,7 @@ export const aclActions = {
   ACL_REMOVE_RESOURCE: 'ACL_REMOVE_RESOURCE',
   ACL_REMOVE_RESOURCE_OK: 'ACL_REMOVE_RESOURCE_OK',
   ACL_REMOVE_RESOURCE_FAIL: 'ACL_REMOVE_RESOURCE_FAIL',
-  aclRemoveResource: (resource) => ({
+  aclRemoveResource: resource => ({
     type: aclActions.ACL_REMOVE_RESOURCE,
     payload: { resource }
   }),
@@ -23,7 +33,7 @@ export const aclActions = {
   }),
 
   ACL_REMOVE_ROLES: 'ACL_REMOVE_ROLES',
-  aclRemoveRoles: (roles) => ({
+  aclRemoveRoles: roles => ({
     type: aclActions.ACL_REMOVE_ROLES,
     payload: { roles }
   }),
@@ -31,7 +41,7 @@ export const aclActions = {
   ACL_REMOVE_ROLE: 'ACL_REMOVE_ROLE',
   ACL_REMOVE_ROLE_OK: 'ACL_REMOVE_ROLE_OK',
   ACL_REMOVE_ROLE_FAIL: 'ACL_REMOVE_ROLE_FAIL',
-  aclRemoveRole: (role) => ({
+  aclRemoveRole: role => ({
     type: aclActions.ACL_REMOVE_ROLE,
     payload: { role }
   }),
@@ -43,7 +53,6 @@ export const aclActions = {
     type: aclActions.ACL_REMOVE_ROLE_FAIL,
     payload: { payload }
   }),
-
 
   ACL_ADD_USER_ROLES: 'ACL_ADD_USER_ROLES',
   ACL_ADD_USER_ROLES_OK: 'ACL_ADD_USER_ROLES_OK',
@@ -76,7 +85,6 @@ export const aclActions = {
     type: aclActions.ACL_REMOVE_USER_ROLES_FAIL,
     payload: { payload }
   }),
-  
 
   ACL_ADD_ROLE_PARENTS: 'ACL_ADD_ROLE_PARENTS',
   aclAddRoleParents: (role, parents) => ({

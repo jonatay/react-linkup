@@ -11,23 +11,23 @@ import {
 
 import { aclActions } from './acl-actions';
 import { aclApi } from './acl-api';
-import { authActions } from '../../common/auth/index';
-import { aclData } from './acl-data';
-import { eventChannel } from 'redux-saga';
+import { authActions, navActions } from 'src/common';
+// import { aclData } from './acl-data';
+// import { eventChannel } from 'redux-saga';
 import { userActions } from '../users';
 const aclPath = 'admin';
 
-function subscribeToAcl() {
-  return eventChannel(emit => aclData.subscribe(emit));
-}
+// function subscribeToAcl() {
+//   return eventChannel(emit => aclData.subscribe(emit));
+// }
 
-function* readFromAcl() {
-  const channel = yield call(subscribeToAcl);
-  while (true) {
-    let action = yield take(channel);
-    yield put(action);
-  }
-}
+// function* readFromAcl() {
+//   const channel = yield call(subscribeToAcl);
+//   while (true) {
+//     let action = yield take(channel);
+//     yield put(action);
+//   }
+// }
 
 function* aclAllow({ payload }) {
   let result = yield call([aclApi, aclApi.aclAllow], payload);
@@ -107,8 +107,7 @@ function* removeResources({ payload }) {
 function* watchAuthentication() {
   while (true) {
     let { payload } = yield take(authActions.SIGN_IN_FULFILLED);
-    let token = yield call([payload.authUser, payload.authUser.getIdToken]);
-    aclApi.token = token;
+    aclApi.token = payload.idToken;
     aclApi.path = aclPath;
     yield take([authActions.SIGN_OUT_FULFILLED]);
     aclApi.token = null;
@@ -117,17 +116,19 @@ function* watchAuthentication() {
 }
 
 function* watchLocationChange() {
-  let job;
-  const {payload} = yield take(LOCATION_CHANGE);
-  if (payload.pathname === '/admin/rights') {
-    job = yield fork(readFromAcl);
-    yield put(userActions.loadUsers());
-  } else {
-    if (job) {
-      yield cancel(job);
+  while (true) {
+    const { payload } = yield take(LOCATION_CHANGE);
+    if (payload.pathname === navActions.modules.navToAdminRights.url) {
+      yield put(userActions.loadUsers());
+    } else {
+
     }
   }
 }
+
+// function* watchAclLoadData() {
+//   yield;
+// }
 
 function* watchAclAllow() {
   yield takeEvery(aclActions.ACL_ALLOW, aclAllow);

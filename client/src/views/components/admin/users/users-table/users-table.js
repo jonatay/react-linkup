@@ -1,16 +1,14 @@
 /*
     Jono : 18 01 09
-    UserTable : React Class Component
+    UsersTable : React Class Component
 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { List as ImList } from 'immutable';
-import { Avatar, Button, List, Popconfirm, Table } from 'antd';
+import { Avatar, Button, List, Popconfirm, Table, Tag, Card } from 'antd';
 
-import EditTagGroup from './EditTagGroup';
-
-export class UserTable extends Component {
+export class UsersTable extends Component {
   constructor() {
     super(...arguments);
 
@@ -59,15 +57,20 @@ export class UserTable extends Component {
     },
     {
       dataIndex: 'customClaims',
-      render: (text, record) => {
-        return (
-          <EditTagGroup
-            tagName="Role"
-            tags={record.customClaims.roles || []}
-            handleTagsChange={roles => this.handleRolesChange(record, roles)}
-          />
-        );
-      }
+      title: 'Roles',
+      render: (text, record) => (
+        <span>
+          {Array.isArray(record.customClaims.roles) ? (
+            record.customClaims.roles.map(role => (
+              <Tag color="geekblue" key={role}>
+                {role}`
+              </Tag>
+            ))
+          ) : (
+            <p>none</p>
+          )}
+        </span>
+      )
     },
     {
       dataIndex: 'uid',
@@ -112,24 +115,6 @@ export class UserTable extends Component {
   setIsAdmin(user, isAdmin) {
     this.props.updateUser(user, { admin: isAdmin });
   }
-  handleRolesChange(user, roles) {
-    //this.props.updateUser(user, { roles: roles });
-    const oldRoles =
-      user.customClaims && user.customClaims.roles
-        ? user.customClaims.roles
-        : [];
-    // console.log(oldRoles, roles);
-    let addRoles = roles.filter(x => !oldRoles.includes(x));
-    let delRoles = oldRoles.filter(x => !roles.includes(x));
-    // console.log(addRoles, delRoles);
-    if (addRoles.length > 0) {
-      this.props.addUserRoles(user.uid, addRoles);
-    }
-    if (delRoles.length > 0) {
-      this.props.removeUserRoles(user.uid, delRoles);
-    }
-  }
-
   render() {
     const { users } = this.props;
     return (
@@ -142,28 +127,19 @@ export class UserTable extends Component {
           const lastSignInTime = record.metadata.lastSignInTime;
           const provider = record.providerData[0].providerId;
           return (
-            <List itemLayout="vertical" grid={{ gutter: 5, column: 6 }}>
+            <List itemLayout="vertical" grid={{ column: 4 }}>
               <List.Item>
-                <List.Item.Meta title="user created:" />
-                <Moment format={'YY-MM-DD'}>{creationTime}</Moment>
+                <Card title="created" size="small">
+                  <Moment format={'YY-MM-DD'}>{creationTime}</Moment>
+                </Card>
               </List.Item>
               <List.Item>
-                <List.Item.Meta title="last sign-in:" />
-                <Moment format={'YY-MM-DD HH:mm'}>{lastSignInTime}</Moment>
+                <Card title="last sign-in">
+                  <Moment format={'YY-MM-DD HH:mm'}>{lastSignInTime}</Moment>
+                </Card>
               </List.Item>
               <List.Item>
-                <List.Item.Meta title="provider:" />
-                {provider}
-              </List.Item>
-              <List.Item>
-                <List.Item.Meta title="roles" />
-                <EditTagGroup
-                  tagName="Role"
-                  tags={record.customClaims.roles || []}
-                  handleTagsChange={roles =>
-                    this.handleRolesChange(record, roles)
-                  }
-                />
+                <Card title="provider">{provider}</Card>
               </List.Item>
             </List>
           );
@@ -174,16 +150,14 @@ export class UserTable extends Component {
   }
 }
 
-UserTable.propTypes = {
+UsersTable.propTypes = {
   removeUser: PropTypes.func.isRequired,
   users: PropTypes.instanceOf(ImList),
   updateUser: PropTypes.func.isRequired,
-  authUser: PropTypes.object.isRequired,
-  addUserRoles: PropTypes.func.isRequired,
-  removeUserRoles: PropTypes.func.isRequired
+  authUser: PropTypes.object.isRequired
 };
 
-export default UserTable;
+export default UsersTable;
 /*
 
  <Button

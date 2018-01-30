@@ -64,3 +64,50 @@ export const getAclFront = createSelector(getAcl, getAclRoles, (acl, roles) => {
   }
   return [];
 });
+
+const childNode = (title, obj, depth = 1) => {
+  return {
+    title: title,
+    noDragging: true,
+    expanded: depth <= 1,
+    ...(Object.keys(obj).length > 0
+      ? {
+          children: Object.keys(obj).map(key =>
+            childNode(key, obj[key], depth + 1)
+          )
+        }
+      : {})
+  };
+};
+
+export const getAclTree = createSelector(getAcl, acl => {
+  return Object.keys(acl).map((key, index) => childNode(key, acl[key]));
+});
+
+export const getRoles = createSelector(getAcl, acl => {
+  return typeof acl.meta === 'object' && typeof acl.meta.roles === 'object'
+    ? Object.keys(acl.meta.roles)
+    : [];
+});
+
+const extractResources = resources => {
+  return Object.keys(flattenObject(resources)).map(key => {
+    return (
+      '/' +
+      key
+        .split('/')
+        .slice(1)
+        .join('/')
+    );
+  });
+};
+
+export const getResources = createSelector(getAcl, acl => {
+  return typeof acl.resources === 'object'
+    ? extractResources(acl.resources)
+    : [];
+});
+
+export const getPermissions = createSelector(getAcl, acl => {
+  return ['get', 'post', 'delete', 'put'];
+});

@@ -13,8 +13,7 @@ const userPath = 'admin/users';
 function* watchAuthentication() {
   while (true) {
     let { payload } = yield take(authActions.SIGN_IN_FULFILLED);
-    let token = yield call([payload.authUser, payload.authUser.getIdToken]);
-    userList.token = token;
+    userList.token = payload.idToken;
     userList.path = userPath;
     yield take([authActions.SIGN_OUT_FULFILLED]);
     userList.token = null;

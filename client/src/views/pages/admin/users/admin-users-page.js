@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { userActions, getVisibleUsers } from 'src/admin/users/index';
 import { getAuthUser } from 'src/common/auth';
 
-import UserTable from 'src/components/admin/UserTable';
+import { UsersTable } from 'src/views/components/admin/users/users-table';
 
 const AdminUsersPage = ({
   users,
@@ -16,13 +16,11 @@ const AdminUsersPage = ({
   removeUserRoles
 }) => {
   return (
-    <UserTable
+    <UsersTable
       users={users}
       authUser={authUser}
       removeUser={removeUser}
       updateUser={updateUser}
-      addUserRoles={addUserRoles}
-      removeUserRoles={removeUserRoles}
     />
   );
 };

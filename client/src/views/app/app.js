@@ -20,6 +20,8 @@ import SignInPage from '../pages/sign-in';
 import RootPage from '../pages/root';
 import AdminUsersPage from '../pages/admin/users';
 import AdminRightsPage from '../pages/admin/rights';
+import FleetTransactionsPage from '../pages/fleet/transactions';
+import FleetVehiclesPage from '../pages/fleet/vehicles';
 
 import './app.css';
 
@@ -58,14 +60,26 @@ const App = ({ authenticated, signOut, photoURL, navigateTo, aclFront }) => {
           <RequireAuthRoute
             authenticated={authenticated}
             exact
-            path="/admin/users"
+            path={navActions.modules.navToAdminUsers.url}
             component={AdminUsersPage}
           />
           <RequireAuthRoute
             authenticated={authenticated}
             exact
-            path="/admin/rights"
+            path={navActions.modules.navToAdminRights.url}
             component={AdminRightsPage}
+          />{' '}
+          <RequireAuthRoute
+            authenticated={authenticated}
+            exact
+            path={navActions.modules.navToFleetTransactions.url}
+            component={FleetTransactionsPage}
+          />
+          <RequireAuthRoute
+            authenticated={authenticated}
+            exact
+            path={navActions.modules.navToFleetVehicles.url}
+            component={FleetVehiclesPage}
           />
         </div>
       </Content>

@@ -9,14 +9,8 @@ import { withRouter } from 'react-router-dom';
 
 import { Collapse, Row } from 'antd';
 
-import {
-  getAclTree,
-  getRoles,
-  aclActions,
-  getUsersList,
-  getResources,
-  getPermissions
-} from 'src/admin';
+import { getAclTree, getRoles, getResources, getPermissions } from 'src/common';
+import { aclActions, getUsersList } from 'src/admin';
 
 import AclAllowDeny from './acl/AclAllowDeny';
 import AclEditRoleParents from './acl/AclEditRoleParents';

@@ -17,7 +17,7 @@ export const getAuthUser = state => {
 };
 
 export const getIdToken = state => {
-  return state.common.auth.token.i;
+  return state.common.auth.idToken;
   // return new Promise((resolve, reject) => {
   //   state.common.auth.user
   //     .getIdToken()

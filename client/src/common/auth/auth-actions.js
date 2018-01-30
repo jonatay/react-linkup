@@ -34,9 +34,9 @@ export const authActions = {
     payload: { error }
   }),
 
-  signInFulfilled: authUser => ({
+  signInFulfilled: (authUser, idToken, roles) => ({
     type: authActions.SIGN_IN_FULFILLED,
-    payload: { authUser }
+    payload: { authUser, idToken, roles }
   }),
 
   authAclGet: authUser => ({
