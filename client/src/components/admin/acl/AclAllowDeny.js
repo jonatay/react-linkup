@@ -3,7 +3,7 @@
     AclAllowDeny : React Class Component
 */
 import React from 'react';
-import { Input, Col, Button, Row } from 'antd';
+import { Input, Col, Button, Row, Select } from 'antd';
 const InputGroup = Input.Group;
 
 class AclAllowDeny extends React.Component {
@@ -20,61 +20,89 @@ class AclAllowDeny extends React.Component {
     });
   }
   handleAddPermissions() {
-    this.props.aclAllow(
-      this.state.roles_array,
-      this.state.resources_array,
-      this.state.permissions_array
-    );
-    //this.setState({ roles: '', resources: '', permissions: '' });
+    const { roles, resources, permissions } = this.state;
+    this.props.aclAllow(roles, resources, permissions);
+    this.setState({ roles: [], resources: [], permissions: [] });
   }
   handleRemovePermissions() {
-    this.props.aclDeny(
-      this.state.roles,
-      this.state.resources,
-      this.state.permissions
-    );
-    //this.setState({ roles: '', resources: '', permissions: '' });
+    const { roles, resources, permissions } = this.state;
+    if (roles.length === 0) {
+      this.props.aclRemoveResources(resources);
+    } else {
+      this.props.aclDeny(roles, resources, permissions);
+    }
+    this.setState({ roles: [], resources: [], permissions: [] });
   }
 
   render() {
+    const roleOptions = this.props.roles.map(role => (
+      <Select.Option key={role}>{role}</Select.Option>
+    ));
+    const resourceOptions = this.props.resources.map(resource => (
+      <Select.Option key={resource}>{resource}</Select.Option>
+    ));
+    const permissionOptions = this.props.permissions.map(permission => (
+      <Select.Option key={permission}>{permission}</Select.Option>
+    ));
+    const state = this.state;
+    const { roles, resources, permissions } = state;
     return (
       <Row style={{ paddingBottom: 15 }}>
         <Row style={{ lineHeight: 0 }}>
           <Col span={5} style={{ paddingLeft: 5 }}>
-            <h5>allow/deny roles:</h5>
+            <h5>allow/deny [roles]:</h5>
           </Col>
           <Col span={6} style={{ paddingLeft: 5 }}>
-            <h5>resources:</h5>
+            <h5>[resources]:</h5>
           </Col>
           <Col span={4} style={{ paddingLeft: 5 }}>
-            <h5>permissions:</h5>
+            <h5>[permissions]:</h5>
           </Col>
           <Col span={7}>
-            <p>{'<-'} use comma [,] to delimit lists</p>
+            <p>{'<-'} use comma [,] to delimit [lists]</p>
           </Col>
         </Row>
         <Row>
           <InputGroup>
             <Col span={5}>
-              <Input
-                placeholder="roles"
-                value={this.state.roles}
-                onChange={this.handleInputChange.bind(this)}
-              />
+              <Select
+                mode="tags"
+                value={roles}
+                style={{ width: '100%' }}
+                placeholder="[roles]"
+                onChange={value => this.setState({ ...state, roles: value })}
+                tokenSeparators={[',']}
+              >
+                {roleOptions}
+              </Select>
             </Col>
             <Col span={6}>
-              <Input
-                placeholder="resources"
-                value={this.state.resources}
-                onChange={this.handleInputChange.bind(this)}
-              />
+              <Select
+                mode="tags"
+                value={resources}
+                style={{ width: '100%' }}
+                placeholder="[resources]"
+                onChange={value =>
+                  this.setState({ ...state, resources: value })
+                }
+                tokenSeparators={[',']}
+              >
+                {resourceOptions}
+              </Select>
             </Col>
             <Col span={4}>
-              <Input
-                placeholder="permissions"
-                value={this.state.permissions}
-                onChange={this.handleInputChange.bind(this)}
-              />
+              <Select
+                mode="tags"
+                value={permissions}
+                style={{ width: '100%' }}
+                placeholder="[permissions]"
+                onChange={value =>
+                  this.setState({ ...state, permissions: value })
+                }
+                tokenSeparators={[',']}
+              >
+                {permissionOptions}
+              </Select>
             </Col>
             <Col span={3}>
               <Button
@@ -83,9 +111,9 @@ class AclAllowDeny extends React.Component {
                 onClick={this.handleAddPermissions.bind(this)}
                 type="primary"
                 disabled={
-                  this.state.roles.length === 0 ||
-                  this.state.resources.length === 0 ||
-                  this.state.permissions.length === 0
+                  roles.length === 0 ||
+                  resources.length === 0 ||
+                  permissions.length === 0
                 }
               >
                 allow
@@ -98,12 +126,21 @@ class AclAllowDeny extends React.Component {
                 onClick={this.handleRemovePermissions.bind(this)}
                 type="danger"
                 disabled={
-                  this.state.roles.length === 0 ||
-                  this.state.resources.length === 0 ||
-                  this.state.permissions.length === 0
+                  (roles.length === 0 ||
+                    permissions.length === 0 ||
+                    resources.length === 0) &&
+                  !(
+                    roles.length === 0 &&
+                    permissions.length === 0 &&
+                    resources.length > 0
+                  )
                 }
               >
-                deny
+                {roles.length === 0 &&
+                permissions.length === 0 &&
+                resources.length > 0
+                  ? 'remove resources'
+                  : 'remove'}
               </Button>
             </Col>
           </InputGroup>

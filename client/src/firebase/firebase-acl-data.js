@@ -5,14 +5,6 @@ export class FirebaseAclData {
     this._actions = actions;
   }
 
-  get path() {
-    return this._path;
-  }
-
-  set path(value) {
-    this._path = value;
-  }
-
   subscribe(emit) {
     let ref = firebaseDb.ref('acl/');
     let initialized = false;

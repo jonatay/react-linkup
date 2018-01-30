@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 
-import { initAuth } from './auth';
+import { initAuth } from './common/auth';
 import history from './history';
 import configureStore from './store';
 import App from './views/app';
@@ -19,7 +19,7 @@ function render(Component) {
   ReactDOM.render(
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        <div>
+        <div style={{ height: '100%' }}>
           <Component />
         </div>
       </ConnectedRouter>

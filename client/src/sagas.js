@@ -1,8 +1,7 @@
 import { all } from 'redux-saga/effects';
-import { authSagas } from './auth';
-import { userSagas, navSagas } from './admin';//rightSagas
-import { roleSagas, aclSagas } from "./acl";
+import { commonSagas } from './common'; //rightSagas
+import { adminSagas } from './admin';
 
 export default function* sagas() {
-  yield all([...authSagas, ...navSagas, ...userSagas, ...roleSagas, ...aclSagas]); //...rightSagas,
+  yield all([...commonSagas, ...adminSagas]);
 }

@@ -5,8 +5,13 @@ import { withRouter } from 'react-router-dom';
 
 import { Layout } from 'antd';
 
-import { authActions, getPhotoURL, isAuthenticated } from '../../auth';
-import { navActions } from '../../admin';
+import {
+  authActions,
+  getPhotoURL,
+  isAuthenticated,
+  navActions,
+  getAclFront
+} from 'src/common';
 
 import AppHeader from '../components/header';
 import RequireAuthRoute from '../components/require-auth-route';
@@ -15,15 +20,17 @@ import SignInPage from '../pages/sign-in';
 import RootPage from '../pages/root';
 import AdminUsersPage from '../pages/admin/users';
 import AdminRightsPage from '../pages/admin/rights';
+import FleetTransactionsPage from '../pages/fleet/transactions';
+import FleetVehiclesPage from '../pages/fleet/vehicles';
 
 import './app.css';
 
 const { Content } = Layout;
 
-const App = ({ authenticated, signOut, photoURL, navigateTo }) => {
+const App = ({ authenticated, signOut, photoURL, navigateTo, aclFront }) => {
   if (!authenticated)
     return (
-      <Layout>
+      <Layout style={{ height: '100%' }}>
         <Content>
           <RequireUnauthRoute
             authenticated={authenticated}
@@ -40,6 +47,7 @@ const App = ({ authenticated, signOut, photoURL, navigateTo }) => {
         signOut={signOut}
         photoURL={photoURL}
         navigateTo={navigateTo}
+        aclFront={aclFront}
       />
       <Content style={{ padding: '0 10px', marginTop: 60 }}>
         <div style={{ background: '#fff', padding: 5, minHeight: 750 }}>
@@ -52,14 +60,26 @@ const App = ({ authenticated, signOut, photoURL, navigateTo }) => {
           <RequireAuthRoute
             authenticated={authenticated}
             exact
-            path="/admin-users-page"
+            path={navActions.modules.navToAdminUsers.url}
             component={AdminUsersPage}
           />
           <RequireAuthRoute
             authenticated={authenticated}
             exact
-            path="/admin-rights-page"
+            path={navActions.modules.navToAdminRights.url}
             component={AdminRightsPage}
+          />{' '}
+          <RequireAuthRoute
+            authenticated={authenticated}
+            exact
+            path={navActions.modules.navToFleetTransactions.url}
+            component={FleetTransactionsPage}
+          />
+          <RequireAuthRoute
+            authenticated={authenticated}
+            exact
+            path={navActions.modules.navToFleetVehicles.url}
+            component={FleetVehiclesPage}
           />
         </div>
       </Content>
@@ -78,11 +98,11 @@ App.propTypes = {
 //  CONNECT
 //-------------------------------------
 
-const mapStateToProps = state => {
-  const photoURL = getPhotoURL(state);
-  const authenticated = isAuthenticated(state);
-  return { authenticated, photoURL };
-};
+const mapStateToProps = state => ({
+  photoURL: getPhotoURL(state),
+  authenticated: isAuthenticated(state),
+  aclFront: getAclFront(state)
+});
 
 const mapDispatchToProps = {
   signOut: authActions.signOut,

@@ -12,8 +12,8 @@ ref.once('value', function(dataSnapshot) {
 var acl = require('acl');
 var firebaseBackend = require('./firebase-acl-backend/');
 
-var rollbar = require('../rollbar');
+// var rollbar = require('../rollbar');
 
-acl = new acl(new acl.firebaseBackend(ref), rollbar);
+acl = new acl(new acl.firebaseBackend(ref) /*, rollbar*/);
 
 module.exports = acl;
