@@ -69,7 +69,7 @@ const childNode = (title, obj, depth = 1) => {
   return {
     title: title,
     noDragging: true,
-    expanded: depth <= 1,
+    expanded: depth <= 2,
     ...(Object.keys(obj).length > 0
       ? {
           children: Object.keys(obj).map(key =>

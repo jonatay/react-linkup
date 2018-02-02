@@ -2,11 +2,11 @@ export const navActions = {
   NAVIGATE_TO: 'NAVIGATE_TO',
   modules: {
     navToAdminUsers: {
-      url: '/admin/users',
+      url: '/admin',
       name: 'navToAdminUsers'
     },
     navToAdminRights: {
-      url: '/admin/rights',
+      url: '/admin',
       name: 'navToAdminRights'
     },
     navToFleetTransactions: {

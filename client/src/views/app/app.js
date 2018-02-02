@@ -10,7 +10,8 @@ import {
   getPhotoURL,
   isAuthenticated,
   navActions,
-  getAclFront
+  getAclFront,
+  getCurrentLocation
 } from 'src/common';
 
 import AppHeader from '../components/header';
@@ -18,16 +19,23 @@ import RequireAuthRoute from '../components/require-auth-route';
 import RequireUnauthRoute from '../components/require-unauth-route';
 import SignInPage from '../pages/sign-in';
 import RootPage from '../pages/root';
-import AdminUsersPage from '../pages/admin/users';
-import AdminRightsPage from '../pages/admin/rights';
 import FleetTransactionsPage from '../pages/fleet/transactions';
 import FleetVehiclesPage from '../pages/fleet/vehicles';
+
+import AdminPage from '../pages/admin-page';
 
 import './app.css';
 
 const { Content } = Layout;
 
-const App = ({ authenticated, signOut, photoURL, navigateTo, aclFront }) => {
+const App = ({
+  authenticated,
+  signOut,
+  photoURL,
+  navigateTo,
+  aclFront,
+  currentNavPath
+}) => {
   if (!authenticated)
     return (
       <Layout style={{ height: '100%' }}>
@@ -48,6 +56,7 @@ const App = ({ authenticated, signOut, photoURL, navigateTo, aclFront }) => {
         photoURL={photoURL}
         navigateTo={navigateTo}
         aclFront={aclFront}
+        currentNavPath={currentNavPath}
       />
       <Content style={{ padding: '0 10px', marginTop: 60 }}>
         <div style={{ background: '#fff', padding: 5, minHeight: 750 }}>
@@ -60,15 +69,9 @@ const App = ({ authenticated, signOut, photoURL, navigateTo, aclFront }) => {
           <RequireAuthRoute
             authenticated={authenticated}
             exact
-            path={navActions.modules.navToAdminUsers.url}
-            component={AdminUsersPage}
+            path="/admin"
+            component={AdminPage}
           />
-          <RequireAuthRoute
-            authenticated={authenticated}
-            exact
-            path={navActions.modules.navToAdminRights.url}
-            component={AdminRightsPage}
-          />{' '}
           <RequireAuthRoute
             authenticated={authenticated}
             exact
@@ -91,7 +94,8 @@ App.propTypes = {
   authenticated: PropTypes.bool.isRequired,
   signOut: PropTypes.func.isRequired,
   photoURL: PropTypes.string,
-  navigateTo: PropTypes.func.isRequired
+  navigateTo: PropTypes.func.isRequired,
+  currentNavPath: PropTypes.string.isRequired
 };
 
 //=====================================
@@ -101,7 +105,8 @@ App.propTypes = {
 const mapStateToProps = state => ({
   photoURL: getPhotoURL(state),
   authenticated: isAuthenticated(state),
-  aclFront: getAclFront(state)
+  aclFront: getAclFront(state),
+  currentNavPath: getCurrentLocation(state)
 });
 
 const mapDispatchToProps = {

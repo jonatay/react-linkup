@@ -6,10 +6,10 @@ import { Layout, Menu, Avatar, Icon } from 'antd';
 const SubMenu = Menu.SubMenu;
 
 const iconCheat = {
-  Admin:'tool',
-  Fleet:'car',
-  HR:'team'
-}
+  Admin: 'tool',
+  Fleet: 'car',
+  HR: 'team'
+};
 
 const { Header } = Layout;
 const AppHeader = ({
@@ -17,7 +17,8 @@ const AppHeader = ({
   signOut,
   photoURL,
   navigateTo,
-  aclFront
+  aclFront,
+  currentNavPath
 }) => {
   const handleMenuClick = ({ key }) => {
     if (key === 'signOut') {
@@ -41,6 +42,9 @@ const AppHeader = ({
         onClick={handleMenuClick}
         mode="horizontal"
         style={{ position: 'fixed', width: '100%', left: 0 }}
+        selectedKeys={
+          typeof currentNavPath === 'string' ? [currentNavPath.replace('/')] : []
+        }
       >
         <SubMenu
           style={{ position: 'absolute', right: -10, top: 8 }}
@@ -51,61 +55,16 @@ const AppHeader = ({
           <Menu.Item key="signOut">Logout</Menu.Item>
         </SubMenu>
 
-        {aclFront.map(subMenu => (
-          <SubMenu
-            key={subMenu.resource}
-            title={
-              <span>
-                <span><Icon type={iconCheat[subMenu.resource]} /></span>
-                <span>{subMenu.resource.toLowerCase()}</span>
-              </span>
-            }
-          >
-            {subMenu.children.map(menu => (
-              <Menu.Item key={`${subMenu.resource.toLowerCase()}/${menu.toLowerCase()}`}>{menu}</Menu.Item>
-            ))}
-          </SubMenu>
+        {aclFront.map(menu => (
+          <Menu.Item key={menu.resource.toLowerCase()}>
+            <span>
+              <Icon type={iconCheat[menu.resource]} />
+            </span>
+            {menu.resource}
+          </Menu.Item>
         ))}
-
-        {/*<SubMenu*/}
-        {/*key="subHr"*/}
-        {/*title={*/}
-        {/*<span>*/}
-        {/*<Icon type="team" />*/}
-        {/*<span>HR</span>*/}
-        {/*</span>*/}
-        {/*}*/}
-        {/*>*/}
-        {/*<Menu.Item key="3">Employees</Menu.Item>*/}
-        {/*<Menu.Item key="4">Shifts</Menu.Item>*/}
-        {/*<Menu.Item key="5">Leave</Menu.Item>*/}
-        {/*<Menu.Item key="6">Advances</Menu.Item>*/}
-        {/*</SubMenu>*/}
-        {/*<SubMenu*/}
-        {/*key="subFleet"*/}
-        {/*title={*/}
-        {/*<span>*/}
-        {/*<Icon type="car" />*/}
-        {/*<span>Fleet</span>*/}
-        {/*</span>*/}
-        {/*}*/}
-        {/*>*/}
-        {/*<Menu.Item key="7">Vehicles</Menu.Item>*/}
-        {/*<Menu.Item key="8">Transactions</Menu.Item>*/}
-        {/*</SubMenu>*/}
-        {/*<SubMenu*/}
-        {/*key="subAdmin"*/}
-        {/*title={*/}
-        {/*<span>*/}
-        {/*<Icon type="tool" />*/}
-        {/*<span>Admin</span>*/}
-        {/*</span>*/}
-        {/*}*/}
-        {/*>*/}
-        {/*<Menu.Item key={modules.navToAdminUsers.name}>Users</Menu.Item>*/}
-        {/*<Menu.Item key={modules.navToAdminRights.name}>Rights</Menu.Item>*/}
-        {/*</SubMenu>*/}
       </Menu>
+      <h1>{currentNavPath}</h1>
     </Header>
   );
 };
@@ -114,7 +73,9 @@ AppHeader.propTypes = {
   authenticated: PropTypes.bool.isRequired,
   signOut: PropTypes.func.isRequired,
   photoURL: PropTypes.string.isRequired,
-  navigateTo: PropTypes.func.isRequired
+  navigateTo: PropTypes.func.isRequired,
+  aclFront: PropTypes.array.isRequired,
+  currentNavPath: PropTypes.string.isRequired
 };
 
 export default AppHeader;
