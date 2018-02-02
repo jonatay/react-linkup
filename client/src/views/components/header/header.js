@@ -43,7 +43,7 @@ const AppHeader = ({
         mode="horizontal"
         style={{ position: 'fixed', width: '100%', left: 0 }}
         selectedKeys={
-          typeof currentNavPath === 'string' ? [currentNavPath.replace('/')] : []
+          typeof currentNavPath === 'string' ? [currentNavPath.replace('/','')] : []
         }
       >
         <SubMenu
@@ -64,7 +64,6 @@ const AppHeader = ({
           </Menu.Item>
         ))}
       </Menu>
-      <h1>{currentNavPath}</h1>
     </Header>
   );
 };
