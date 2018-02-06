@@ -1,4 +1,3 @@
-import { LOCATION_CHANGE } from 'react-router-redux';
 import {
   call,
   take,
@@ -11,10 +10,7 @@ import {
 
 import { aclActions } from './acl-actions';
 import { aclApi } from './acl-api';
-import { authActions, navActions } from 'src/common';
-// import { aclData } from './acl-data';
-// import { eventChannel } from 'redux-saga';
-import { userActions } from '../users';
+import { authActions } from 'src/common';
 const aclPath = 'admin';
 
 // function subscribeToAcl() {
@@ -115,17 +111,6 @@ function* watchAuthentication() {
   }
 }
 
-function* watchLocationChange() {
-  while (true) {
-    const { payload } = yield take(LOCATION_CHANGE);
-    if (payload.pathname === navActions.modules.navToAdminRights.url) {
-      yield put(userActions.loadUsers());
-    } else {
-
-    }
-  }
-}
-
 // function* watchAclLoadData() {
 //   yield;
 // }
@@ -175,7 +160,6 @@ function* watchRemoveResources() {
 //-------------------------------------
 export const aclSagas = [
   fork(watchAuthentication),
-  fork(watchLocationChange),
   fork(watchAclAllow),
   fork(watchAclDeny),
   fork(watchAclAddRoleParents),
