@@ -20,18 +20,20 @@ const TabPane = Tabs.TabPane;
 const AdminContainer = props => {
   return (
     <div>
-      <h3 style={{ paddingLeft: 10, color: '#1890ff' }}>Admin Page</h3>
-      <Tabs size="small">
-        <TabPane
-          key="acl"
-          tab={
-            <span>
-              <Icon type="cloud-o" />Acl
-            </span>
+      {/*<h3 style={{ paddingLeft: 10, color: '#1890ff' }}>Admin Page</h3>*/}
+      <Tabs
+        theme="dark"
+        size="small"
+        onChange={tab => {
+          switch (tab) {
+            case 'users':
+              props.loadUsers();
+              break;
+            default:
+              break;
           }
-        >
-          <AclTree aclTree={props.aclTree} />
-        </TabPane>
+        }}
+      >
         <TabPane
           key="rights"
           tab={
@@ -59,6 +61,7 @@ const AdminContainer = props => {
             aclAddRoleParents={props.aclAddRoleParents}
             aclRemoveRoleParents={props.aclRemoveRoleParents}
           />
+          <AclTree aclTree={props.aclTree} />
         </TabPane>
         <TabPane
           key="users"
@@ -74,6 +77,16 @@ const AdminContainer = props => {
             removeUser={props.removeUser}
             updateUser={props.updateUser}
           />
+        </TabPane>
+        <TabPane
+          key="acl"
+          tab={
+            <span>
+              <Icon type="cloud-o" />Acl
+            </span>
+          }
+        >
+          <AclTree aclTree={props.aclTree} />
         </TabPane>
       </Tabs>
     </div>
@@ -91,7 +104,8 @@ AdminContainer.propTypes = {
   aclRemoveRoles: PropTypes.func.isRequired,
   aclRemoveResources: PropTypes.func.isRequired,
   users: PropTypes.object.isRequired,
-  authUser: PropTypes.object.isRequired
+  authUser: PropTypes.object.isRequired,
+  loadUsers: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -119,7 +133,8 @@ const mapDispatchToProps = {
   removeUser: userActions.removeUser,
   updateUser: userActions.updateUser,
   addUserRoles: userActions.addUserRoles,
-  removeUserRoles: userActions.removeUserRoles
+  removeUserRoles: userActions.removeUserRoles,
+  loadUsers: userActions.loadUsers
 };
 
 export default withRouter(

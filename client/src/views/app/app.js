@@ -19,10 +19,10 @@ import RequireAuthRoute from '../components/require-auth-route';
 import RequireUnauthRoute from '../components/require-unauth-route';
 import SignInPage from '../pages/sign-in';
 import RootPage from '../pages/root';
-import FleetTransactionsPage from '../pages/fleet/transactions';
-import FleetVehiclesPage from '../pages/fleet/vehicles';
 
 import AdminPage from '../pages/admin-page';
+import FleetPage from '../pages/fleet-page';
+import HRPage from '../pages/hr-page';
 
 import './app.css';
 
@@ -75,14 +75,14 @@ const App = ({
           <RequireAuthRoute
             authenticated={authenticated}
             exact
-            path={navActions.modules.navToFleetTransactions.url}
-            component={FleetTransactionsPage}
+            path="/fleet"
+            component={FleetPage}
           />
           <RequireAuthRoute
             authenticated={authenticated}
             exact
-            path={navActions.modules.navToFleetVehicles.url}
-            component={FleetVehiclesPage}
+            path="/hr"
+            component={HRPage}
           />
         </div>
       </Content>

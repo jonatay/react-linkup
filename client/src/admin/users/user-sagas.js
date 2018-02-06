@@ -1,8 +1,6 @@
-import { LOCATION_CHANGE } from 'react-router-redux';
 import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
 import { authActions } from 'src/common/auth/index';
 import { userActions } from './user-actions';
-import { navActions } from '../../common/nav/nav-actions';
 import { userList } from './user-list';
 const userPath = 'admin/users';
 
@@ -18,15 +16,6 @@ function* watchAuthentication() {
     yield take([authActions.SIGN_OUT_FULFILLED]);
     userList.token = null;
     userList.path = null;
-  }
-}
-
-function* watchLocationChange() {
-  while (true) {
-    const { payload } = yield take(LOCATION_CHANGE);
-    if (payload.pathname === navActions.modules.navToAdminUsers.url) {
-      yield put(userActions.loadUsers());
-    }
   }
 }
 
@@ -68,7 +57,6 @@ export const userSagas = [
   fork(watchAuthentication),
   fork(watchLoadUsers),
   //fork(watchCreateUser),
-  fork(watchLocationChange),
   fork(watchRemoveUser),
   fork(watchUpdateUser)
 ];

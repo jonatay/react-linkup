@@ -41,6 +41,7 @@ const AppHeader = ({
       <Menu
         onClick={handleMenuClick}
         mode="horizontal"
+        theme="dark"
         style={{ position: 'fixed', width: '100%', left: 0 }}
         selectedKeys={
           typeof currentNavPath === 'string' ? [currentNavPath.replace('/','')] : []
