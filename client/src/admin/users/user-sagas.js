@@ -17,10 +17,14 @@ function* watchAuthentication() {
   }
 }
 
+function* watchIdTokenRefresh() {
+  while (true) {
+    const { payload } = yield take(authActions.REFRESH_ID_TOKEN_FULFILLED);
+    userList.token = payload.idToken;
+  }
+}
+
 function* loadAllUsers() {
-  const idToken = yield select(getIdToken);
-  console.log(idToken);
-  userList.token = idToken;
   const users = yield call([userList, userList.list]);
   yield put(userActions.loadUsersFulfilled(users));
 }
@@ -56,6 +60,7 @@ function* watchUpdateUser() {
 
 export const userSagas = [
   fork(watchAuthentication),
+  fork(watchIdTokenRefresh),
   fork(watchLoadUsers),
   //fork(watchCreateUser),
   fork(watchRemoveUser),

@@ -24,6 +24,11 @@ export const authReducer = (state = new AuthState(), { payload, type }) => {
         roles: payload.roles
       });
 
+    case authActions.REFRESH_ID_TOKEN_FULFILLED:
+      return state.merge({
+        idToken: payload.idToken
+      });
+
     case authActions.SIGN_IN_FAILED:
       return state.merge({
         authError: payload.error
