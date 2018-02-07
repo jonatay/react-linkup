@@ -3,32 +3,21 @@
     hr-container : Stateless Functional Component
 */
 import React from 'react';
-import { List } from 'immutable';
-import PropTypes from 'prop-types';
+// import { List } from 'immutable';
+// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-const HRContainer = (props) => {
-  return (
-    <div>HR Container</div>
-  );
+const HRContainer = props => {
+  return <div>HR Container</div>;
 };
 
-HRContainer.propTypes = {
+HRContainer.propTypes = {};
 
-}
+const mapStateToProps = state => ({});
 
-const mapStateToProps = state => ({
-
-});
-
-const mapDispatchToProps = {
-
-};
+const mapDispatchToProps = {};
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(HRContainer)
+  connect(mapStateToProps, mapDispatchToProps)(HRContainer)
 );

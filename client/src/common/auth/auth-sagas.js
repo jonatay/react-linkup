@@ -1,7 +1,10 @@
+import { delay } from 'redux-saga';
 import { call, fork, put, take } from 'redux-saga/effects';
 import { firebaseAuth } from '../../firebase/index';
 import history from '../../history';
 import { authActions } from './auth-actions';
+
+const tokenTimeout = 30 * 60 * 1000;
 
 const b64DecodeUnicode = str => {
   // Going backwards: from bytestream, to percent-encoding, to original string.
@@ -14,6 +17,7 @@ const b64DecodeUnicode = str => {
       .join('')
   );
 };
+
 function* signIn(authProvider) {
   try {
     const authData = yield call(
@@ -41,6 +45,13 @@ function* signOut() {
   }
 }
 
+function* refreshToken(user) {
+  while (true) {
+    yield put(authActions.refreshIdToken(user));
+    yield delay(tokenTimeout);
+  }
+}
+
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -52,6 +63,13 @@ function* watchSignIn() {
   }
 }
 
+function* watchSignInFulfilled() {
+  while (true) {
+    const { payload } = yield take(authActions.SIGN_IN_FULFILLED);
+    yield fork(refreshToken, payload.authUser);
+  }
+}
+
 function* watchSignOut() {
   while (true) {
     yield take(authActions.SIGN_OUT);
@@ -59,8 +77,24 @@ function* watchSignOut() {
   }
 }
 
+function* watchRefreshIdToken() {
+  while (true) {
+    const { payload } = yield take(authActions.REFRESH_ID_TOKEN);
+    let idToken = yield call(
+      [payload.authUser, payload.authUser.getIdToken],
+      true
+    );
+    yield put(authActions.refreshIdTokenFulfilled(idToken));
+  }
+}
+
 //=====================================
 //  AUTH SAGAS
 //-------------------------------------
 
-export const authSagas = [fork(watchSignIn), fork(watchSignOut)];
+export const authSagas = [
+  fork(watchSignIn),
+  fork(watchSignOut),
+  fork(watchSignInFulfilled),
+  fork(watchRefreshIdToken)
+];

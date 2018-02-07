@@ -1,5 +1,5 @@
-const admin = require('../services/firebase/firebase-admin');
-const acl = require('../services/firebase/firebase-acl');
+const admin = require('../../services/firebase/firebase-admin');
+const acl = require('../../services/firebase/firebase-acl');
 
 function arrayUnique(array) {
   var a = array.concat();
@@ -11,7 +11,7 @@ function arrayUnique(array) {
   return a;
 }
 
-exports.admin_user_list = function(req, res) {
+exports.user_list = function(req, res) {
   admin
     .auth()
     .listUsers()
@@ -20,11 +20,11 @@ exports.admin_user_list = function(req, res) {
     });
 };
 
-exports.admin_user_detail = function(req, res) {
+exports.user_detail = function(req, res) {
   console.log(req.params.id);
 };
 
-exports.admin_user_delete = function(req, res) {
+exports.user_delete = function(req, res) {
   console.log(req.params.id);
   const uid = req.params.uid;
   admin
@@ -51,7 +51,7 @@ exports.admin_user_delete = function(req, res) {
 *     updateUser with changes
 *
 * */
-exports.admin_user_update = function(req, res) {
+exports.user_update = function(req, res) {
   const uid = req.params.uid;
   const data = req.body;
   const user = data.user;

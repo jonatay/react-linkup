@@ -13,16 +13,24 @@ export const authActions = {
   SIGN_OUT_FAILED: 'SIGN_OUT_FAILED',
   SIGN_OUT_FULFILLED: 'SIGN_OUT_FULFILLED',
 
-  getIdTokenFailed: error => ({
-    type: authActions.GET_ID_TOKEN_FAILED,
+  REFRESH_ID_TOKEN: 'REFRESH_ID_TOKEN',
+  REFRESH_ID_TOKEN_FULFILLED: 'REFRESH_ID_TOKEN_FULFILLED',
+  REFRESH_ID_TOKEN_FAILED: 'REFRESH_ID_TOKEN_FAILED',
+
+  refreshIdToken: authUser => ({
+    type: authActions.REFRESH_ID_TOKEN,
+    payload: { authUser }
+  }),
+
+  refreshIdTokenFail: error => ({
+    type: authActions.REFRESH_ID_TOKEN_FAILED,
     payload: { error }
   }),
 
-  getIdTokenFulfilled: token => ({
-    type: authActions.GET_ID_TOKEN_FULFILLED,
-    payload: { token }
+  refreshIdTokenFulfilled: idToken => ({
+    type: authActions.REFRESH_ID_TOKEN_FULFILLED,
+    payload: { idToken }
   }),
-
 
   signIn: authProvider => ({
     type: authActions.SIGN_IN,
