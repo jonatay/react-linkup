@@ -16,8 +16,8 @@ export const getAuthUser = state => {
   return state.common.auth.user;
 };
 
-export const getIdToken = state => {
-  return state.common.auth.idToken;
+const getToken = state => {
+  // return state.common.auth.idToken;
   // return new Promise((resolve, reject) => {
   //   state.common.auth.user
   //     .getIdToken()
@@ -28,7 +28,7 @@ export const getIdToken = state => {
   //       reject(err);
   //     });
   // });
-  //return state.common.auth.user.getIdToken();
+  return state.common.auth.user.getIdToken();
 };
 
 //=====================================
@@ -46,3 +46,5 @@ export const isAuthenticated = createSelector(
   isAuthenticatedInt,
   authenticated => authenticated
 );
+
+export const getIdToken = createSelector(getToken, idToken => idToken);

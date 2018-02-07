@@ -2,6 +2,8 @@ import { ApiList } from 'src/api/index';
 import { userActions } from './user-actions';
 import { User } from './user';
 
+const userPath = 'admin/users';
+
 class UserApiList extends ApiList {
   addUserRoles(uid, roles) {
     return this.customApiCall(uid, 'add-user-roles', roles, 'POST')
@@ -24,5 +26,6 @@ export const userList = new UserApiList(
     onAddUserRoles: userActions.addUserRolesFulfilled,
     onRemoveUserRoles: userActions.removeUserRolesFulfilled
   },
-  User
+  User,
+  userPath
 );

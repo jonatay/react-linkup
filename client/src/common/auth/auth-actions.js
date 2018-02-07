@@ -13,16 +13,23 @@ export const authActions = {
   SIGN_OUT_FAILED: 'SIGN_OUT_FAILED',
   SIGN_OUT_FULFILLED: 'SIGN_OUT_FULFILLED',
 
-  getIdTokenFailed: error => ({
-    type: authActions.GET_ID_TOKEN_FAILED,
+  GET_ID_TOKEN: 'GET_ID_TOKEN',
+  GET_ID_TOKEN_OK: 'GET_ID_TOKEN_OK',
+  GET_ID_TOKEN_FAIL: 'GET_ID_TOKEN_FAIL',
+
+  getIdToken: () => ({
+    type: authActions.GET_ID_TOKEN
+  }),
+
+  getIdTokenFail: error => ({
+    type: authActions.GET_ID_TOKEN_FAIL,
     payload: { error }
   }),
 
-  getIdTokenFulfilled: token => ({
-    type: authActions.GET_ID_TOKEN_FULFILLED,
+  getIdTokenOk: token => ({
+    type: authActions.GET_ID_TOKEN_OK,
     payload: { token }
   }),
-
 
   signIn: authProvider => ({
     type: authActions.SIGN_IN,

@@ -1,8 +1,8 @@
-import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
+import { call, fork, put, take, takeEvery, select } from 'redux-saga/effects';
 import { authActions } from 'src/common/auth/index';
 import { userActions } from './user-actions';
 import { userList } from './user-list';
-const userPath = 'admin/users';
+import { getIdToken } from '../../common/auth';
 
 //=====================================
 //  WATCHERS
@@ -12,14 +12,15 @@ function* watchAuthentication() {
   while (true) {
     let { payload } = yield take(authActions.SIGN_IN_FULFILLED);
     userList.token = payload.idToken;
-    userList.path = userPath;
     yield take([authActions.SIGN_OUT_FULFILLED]);
     userList.token = null;
-    userList.path = null;
   }
 }
 
 function* loadAllUsers() {
+  const idToken = yield select(getIdToken);
+  console.log(idToken);
+  userList.token = idToken;
   const users = yield call([userList, userList.list]);
   yield put(userActions.loadUsersFulfilled(users));
 }

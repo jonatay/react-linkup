@@ -14,6 +14,7 @@ const b64DecodeUnicode = str => {
       .join('')
   );
 };
+
 function* signIn(authProvider) {
   try {
     const authData = yield call(
@@ -56,6 +57,12 @@ function* watchSignOut() {
   while (true) {
     yield take(authActions.SIGN_OUT);
     yield fork(signOut);
+  }
+}
+
+function* watchGetToken() {
+  while (true) {
+
   }
 }
 

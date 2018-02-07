@@ -1,4 +1,4 @@
-const db = require('./pg-db');
+const db = require('../api/services/postgres/db');
 
 const sqlGetAvailablePeriod = `
 SELECT year, month FROM fleet.fims_period 

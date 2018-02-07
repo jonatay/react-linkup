@@ -1,5 +1,5 @@
-const admin = require('../services/firebase/firebase-admin');
-const acl = require('../services/firebase/firebase-acl');
+const admin = require('../../services/firebase/firebase-admin');
+const acl = require('../../services/firebase/firebase-acl');
 
 exports.allowedPermissions = function(req, res) {
   const uid = req.params.uid;
