@@ -15,6 +15,9 @@ var apiFims = require('./api-fims');
 
 var app = express();
 
+var Raven = require('raven');
+Raven.config(`https://${process.env.SENTRY_KEY}@sentry.io/228199`).install();
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

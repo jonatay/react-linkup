@@ -1,8 +1,7 @@
-import { call, fork, put, take, takeEvery, select } from 'redux-saga/effects';
+import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
 import { authActions } from 'src/common/auth/index';
 import { userActions } from './user-actions';
 import { userList } from './user-list';
-import { getIdToken } from '../../common/auth';
 
 //=====================================
 //  WATCHERS

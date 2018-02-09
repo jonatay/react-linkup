@@ -8,6 +8,7 @@
   "dependencies": {
     "@firebase/app-types": "^0.1.1",
     "acl": "^0.4.11",
+    "asyncawait": "^1.0.6",
     "bluebird": "^3.5.1",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
@@ -21,6 +22,7 @@
     "jade": "~1.11.0",
     "morgan": "~1.9.0",
     "pg-promise": "^7.4.1",
+    "raven": "^2.4.0",
     "rollbar": "^2.3.7",
     "serve-favicon": "~2.4.5"
   }

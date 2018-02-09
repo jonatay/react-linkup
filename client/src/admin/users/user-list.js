@@ -22,9 +22,9 @@ export const userList = new UserApiList(
     onAdd: userActions.createUserFulfilled,
     onChange: userActions.updateUserFulfilled,
     onLoad: userActions.loadUsersFulfilled,
-    onRemove: userActions.removeUserFulfilled,
-    onAddUserRoles: userActions.addUserRolesFulfilled,
-    onRemoveUserRoles: userActions.removeUserRolesFulfilled
+    onRemove: userActions.removeUserFulfilled
+    // onAddUserRoles: userActions.addUserRolesFulfilled,
+    // onRemoveUserRoles: userActions.removeUserRolesFulfilled
   },
   User,
   userPath
