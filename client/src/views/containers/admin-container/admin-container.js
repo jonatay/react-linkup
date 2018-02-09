@@ -17,81 +17,90 @@ import AclEditUserRoles from 'src/views/components/admin/acl-edit-user-roles';
 import { Tabs, Icon } from 'antd';
 const TabPane = Tabs.TabPane;
 
-const AdminContainer = props => {
-  return (
-    <div>
-      {/*<h3 style={{ paddingLeft: 10, color: '#1890ff' }}>Admin Page</h3>*/}
-      <Tabs
-        theme="dark"
-        size="small"
-        onChange={tab => {
-          switch (tab) {
-            case 'users':
-              props.loadUsers();
-              break;
-            default:
-              break;
-          }
-        }}
-      >
-        <TabPane
-          key="rights"
-          tab={
-            <span>
-              <Icon type="key" />Rights
-            </span>
-          }
+class AdminContainer extends React.Component {
+
+  componentDidMount() {
+    this.props.loadUsers();
+  }
+
+  render() {
+    const props = this.props;
+    return (
+      <div>
+        {/*<h3 style={{ paddingLeft: 10, color: '#1890ff' }}>Admin Page</h3>*/}
+        <Tabs
+          defaultActiveKey="rights"
+          theme="dark"
+          size="small"
+          onChange={tab => {
+            switch (tab) {
+              case 'users':
+                props.loadUsers();
+                break;
+              default:
+                break;
+            }
+          }}
         >
-          <AclEditUserRoles
-            users={props.users}
-            roles={props.roles}
-            aclAddUserRoles={props.aclAddUserRoles}
-            aclRemoveUserRoles={props.aclRemoveUserRoles}
-            aclRemoveRoles={props.aclRemoveRoles}
-          />
-          <AclAllowDeny
-            aclAllow={props.aclAllow}
-            aclDeny={props.aclDeny}
-            roles={props.roles}
-            resources={props.resources}
-            permissions={props.permissions}
-            aclRemoveResources={props.aclRemoveResources}
-          />
-          <AclEditRoleParents
-            aclAddRoleParents={props.aclAddRoleParents}
-            aclRemoveRoleParents={props.aclRemoveRoleParents}
-          />
-          <AclTree aclTree={props.aclTree} />
-        </TabPane>
-        <TabPane
-          key="users"
-          tab={
-            <span>
-              <Icon type="user" />Users
-            </span>
-          }
-        >
-          <UsersTable
-            users={props.userList}
-            authUser={props.authUser}
-            removeUser={props.removeUser}
-            updateUser={props.updateUser}
-          />
-        </TabPane>
-        <TabPane
-          key="acl"
-          tab={
-            <span>
-              <Icon type="cloud-o" />Acl
-            </span>
-          }
-        >
-          <AclTree aclTree={props.aclTree} />
-        </TabPane>
-      </Tabs>
-    </div>
-  );
-};
+          <TabPane
+            key="rights"
+            tab={
+              <span>
+                <Icon type="key" />Rights
+              </span>
+            }
+          >
+            <AclEditUserRoles
+              users={props.users}
+              roles={props.roles}
+              aclAddUserRoles={props.aclAddUserRoles}
+              aclRemoveUserRoles={props.aclRemoveUserRoles}
+              aclRemoveRoles={props.aclRemoveRoles}
+            />
+            <AclAllowDeny
+              aclAllow={props.aclAllow}
+              aclDeny={props.aclDeny}
+              roles={props.roles}
+              resources={props.resources}
+              permissions={props.permissions}
+              aclRemoveResources={props.aclRemoveResources}
+            />
+            <AclEditRoleParents
+              aclAddRoleParents={props.aclAddRoleParents}
+              aclRemoveRoleParents={props.aclRemoveRoleParents}
+            />
+            <AclTree aclTree={props.aclTree} />
+          </TabPane>
+          <TabPane
+            key="users"
+            tab={
+              <span>
+                <Icon type="user" />Users
+              </span>
+            }
+          >
+            <UsersTable
+              users={props.userList}
+              authUser={props.authUser}
+              removeUser={props.removeUser}
+              updateUser={props.updateUser}
+            />
+          </TabPane>
+          <TabPane
+            key="acl"
+            tab={
+              <span>
+                <Icon type="cloud-o" />Acl
+              </span>
+            }
+          >
+            <AclTree aclTree={props.aclTree} />
+          </TabPane>
+        </Tabs>
+      </div>
+    );
+  }
+}
 
 AdminContainer.propTypes = {
   aclTree: PropTypes.array.isRequired,

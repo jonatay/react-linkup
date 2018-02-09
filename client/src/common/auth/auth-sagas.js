@@ -1,10 +1,10 @@
 import { delay } from 'redux-saga';
-import { call, fork, put, take } from 'redux-saga/effects';
+import { call, fork, put, take, cancel } from 'redux-saga/effects';
 import { firebaseAuth } from '../../firebase/index';
 import history from '../../history';
 import { authActions } from './auth-actions';
 
-const tokenTimeout = 30 * 60 * 1000;
+const tokenTimeout = 55 * 60 * 1000;
 
 const b64DecodeUnicode = str => {
   // Going backwards: from bytestream, to percent-encoding, to original string.
@@ -45,8 +45,10 @@ function* signOut() {
   }
 }
 
+//infinite loop that asks for token refresh every x minutes
+// get's by firebase token expiry without resorting to messageing
 function* refreshToken(user) {
-  while (true) {
+  while (user !== null) {
     yield put(authActions.refreshIdToken(user));
     yield delay(tokenTimeout);
   }
@@ -63,10 +65,14 @@ function* watchSignIn() {
   }
 }
 
+//starts (then cancels
 function* watchSignInFulfilled() {
   while (true) {
     const { payload } = yield take(authActions.SIGN_IN_FULFILLED);
-    yield fork(refreshToken, payload.authUser);
+    //start token refresh loop
+    const tokenRefresh = yield fork(refreshToken, payload.authUser);
+    yield take(authActions.SIGN_OUT);
+    yield cancel(tokenRefresh);
   }
 }
 
@@ -77,6 +83,7 @@ function* watchSignOut() {
   }
 }
 
+//
 function* watchRefreshIdToken() {
   while (true) {
     const { payload } = yield take(authActions.REFRESH_ID_TOKEN);
