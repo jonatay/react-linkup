@@ -50,16 +50,14 @@ UPDATE fleet.fims_voucher
   WHERE id=$[id]
 `;
 
-module.exports.insertBatch = (params, callback) => {
-  console.log(params);
-  const vouchers = params.vouchers;
-  const reqParam = params.reqParam;
+module.exports.postBatch = (data, callback) => {
+  const vouchers = data.vouchers;
+  const reqParam = data.reqParam;
   console.log(
     `...got rows! actual:${vouchers.length} reported:${
       reqParam.rows
     } - for period ${reqParam.reqPeriod}`
   );
-  //console.log(data)
 
   // clear out provisional
   if (reqParam.reqPeriod === 0) {
@@ -75,7 +73,6 @@ module.exports.insertBatch = (params, callback) => {
     cntProccessed++;
     voucher.batch_index = idx;
     voucher.request_period = reqParam.reqPeriod;
-    console.log(voucher.registration, voucher.batch_index);
     if (voucher.registration) {
       db
         .any(sqlSelectUnique, voucher)
@@ -87,8 +84,7 @@ module.exports.insertBatch = (params, callback) => {
               .any(sqlUpdateVoucher, voucher)
               .then(data => {
                 //cntUpd++;
-                //console.log(cntUpd, cntIns);
-              })
+                             })
               .catch(err => {
                 callback(err);
               });

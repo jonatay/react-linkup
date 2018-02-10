@@ -74,24 +74,29 @@ module.exports.getNext = callback => {
     });
 };
 
-module.exports.postBatchImport = (params, callback) => {
+module.exports.postBatchImport = (data, callback) => {
   let period = {
-    year: params.reqParam.year,
-    month: params.reqParam.month,
+    year: data.reqParam.year,
+    month: data.reqParam.month,
     when_received: new Date(),
-    rows_received: params.reqParam.rows,
-    account: params.reqParam.account,
+    rows_received: data.reqParam.rows,
+    account: data.reqParam.account,
     must_refresh: false
   };
-  console.log(period);
+
   db.any(sqlGetUniqueByPeriod, period).then(data => {
-    console.log(data);
+    console.log(postBatchImport);
     if (data[0]) {
-      console.log(data[0]);
+      db
+        .any(sqlUpdate, Object.assign(period, { id: data[0].id }))
+        .then(data => {
+          callback(null, { status: 'mod period', data });
+        });
     } else {
       db.any(sqlInsert, period).then(data => {
-        callback(null, { status: 'ok' });
+        callback(null, { status: 'ins period', data });
       });
     }
   });
+
 };
