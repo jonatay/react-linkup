@@ -1,5 +1,6 @@
 const Promise = require('bluebird');
 var aWait = require('asyncawait/await');
+var async = require('asyncawait/async');
 const db = require('../api/services/postgres/db');
 
 const sqlSelectUnique = `
@@ -15,8 +16,13 @@ SELECT id FROM fleet.fims_voucher WHERE
     batch_index=$[batch_index]
 `;
 
-const sqlClearProvisionalTrans = `
-DELETE FROM fleet.fims_voucher WHERE request_period = 0 CASCASE;
+const sqlClearProvisionalTransactions = `
+DELETE FROM fleet.fleet_transaction WHERE fims_voucher_id IN 
+  (SELECT id FROM fleet.fims_voucher WHERE request_period = 0)
+`;
+
+const sqlClearProvisionalVouchers = `
+DELETE FROM fleet.fims_voucher WHERE request_period = 0;
 `;
 
 const sqlInsertVoucher = `
@@ -50,22 +56,21 @@ UPDATE fleet.fims_voucher
   WHERE id=$[id]
 `;
 
-module.exports.insertBatch = (params, callback) => {
-  console.log(params);
-  const vouchers = params.vouchers;
-  const reqParam = params.reqParam;
+module.exports.postBatch = (data, callback) => {
+  const vouchers = data.vouchers;
+  const reqParam = data.reqParam;
   console.log(
     `...got rows! actual:${vouchers.length} reported:${
       reqParam.rows
     } - for period ${reqParam.reqPeriod}`
   );
-  //console.log(data)
 
   // clear out provisional
   if (reqParam.reqPeriod === 0) {
-    clear = () => {
-      aWait(db.any(sqlClearProvisionalTrans));
-    };
+    const clear = async(() => {
+      aWait(db.any(sqlClearProvisionalTransactions));
+      aWait(db.any(sqlClearProvisionalTransactions));
+    });
     clear();
   }
 
@@ -75,7 +80,6 @@ module.exports.insertBatch = (params, callback) => {
     cntProccessed++;
     voucher.batch_index = idx;
     voucher.request_period = reqParam.reqPeriod;
-    console.log(voucher.registration, voucher.batch_index);
     if (voucher.registration) {
       db
         .any(sqlSelectUnique, voucher)
@@ -87,7 +91,6 @@ module.exports.insertBatch = (params, callback) => {
               .any(sqlUpdateVoucher, voucher)
               .then(data => {
                 //cntUpd++;
-                //console.log(cntUpd, cntIns);
               })
               .catch(err => {
                 callback(err);

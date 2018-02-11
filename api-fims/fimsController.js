@@ -1,5 +1,5 @@
 const { getNext, postBatchImport } = require('./model-fims-period');
-const { insertBatch } = require('./model-fims-voucher');
+const { postBatch } = require('./model-fims-voucher');
 
 module.exports.get_period = (req, res) => {
   getNext((err, result) => {
@@ -12,24 +12,16 @@ module.exports.get_period = (req, res) => {
 };
 
 module.exports.post_batch_import = (req, res) => {
-  console.log(req.params);
-  insertBatch(req.params, (err, result) => {
-    if (err) {
-      res.json(err);
-    } else {
-      postBatchImport(req.params, (err, result) => {
+  const data = JSON.parse(req.body.data);
+  postBatch(data, (err, result) => {
+    postBatchImport(data, (err, result) => {
+      getNext((err, result) => {
         if (err) {
           res.json(err);
         } else {
-          getNext(config, db, (err, result) => {
-            if (err) {
-              res.json(err);
-            } else {
-              res.json(result);
-            }
-          });
+          res.json(result);
         }
       });
-    }
+    });
   });
 };
