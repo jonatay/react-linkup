@@ -45,9 +45,13 @@ const getNextDate = myDate => {
   let yrRet = myDate.month < 12 ? myDate.year : myDate.year + 1;
   let mthRet = myDate.month < 12 ? myDate.month + 1 : 1;
   //console.log(yrRet, yrNow, mthRet, mthNow)
-  if (yrNow > yrRet || (yrNow = yrRet && mthNow > mthRet)) {
-    return { year: yrRet, month: mthRet < 10 ? '0' + mthRet : '' + mthRet };
-  } else return { sinceLastCutoff: true };
+  if (yrNow > yrRet || (yrNow === yrRet && mthNow > mthRet)) {
+    return {
+      sinceLastCutoff: false,
+      year: yrRet,
+      month: mthRet < 10 ? '0' + mthRet : '' + mthRet
+    };
+  } else return { sinceLastCutoff: true, year: yrNow, month: mthNow };
 };
 
 module.exports.getNext = callback => {
@@ -74,18 +78,29 @@ module.exports.getNext = callback => {
     });
 };
 
-module.exports.postBatchImport = (data, callback) => {
-  let period = {
-    year: data.reqParam.year,
-    month: data.reqParam.month,
+module.exports.postBatchImport = (params, callback) => {
+  console.log([
+    'modelFimsPeriod-postBatchImport params.reqParam got:',
+    params.reqParam
+  ]);
+
+  let dNow = new Date();
+  let mthNow = dNow.getUTCMonth() + 1; //months from 1-12
+  let yrNow = dNow.getUTCFullYear();
+  let { reqParam } = params;
+
+  const period = {
+    year: reqParam.year > 0 ? reqParam.year : yrNow,
+    month: reqParam.month > 0 ? reqParam.month : mthNow,
     when_received: new Date(),
-    rows_received: data.reqParam.rows,
-    account: data.reqParam.account,
+    rows_received: reqParam.rows,
+    account: reqParam.account,
     must_refresh: false
   };
+  console.log(['revised period is:', period]);
 
   db.any(sqlGetUniqueByPeriod, period).then(data => {
-    console.log(postBatchImport);
+    console.log('sqlGetUniqueByPeriod', data);
     if (data[0]) {
       db
         .any(sqlUpdate, Object.assign(period, { id: data[0].id }))
@@ -98,5 +113,4 @@ module.exports.postBatchImport = (data, callback) => {
       });
     }
   });
-
 };

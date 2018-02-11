@@ -1,5 +1,6 @@
 const Promise = require('bluebird');
 var aWait = require('asyncawait/await');
+var async = require('asyncawait/async');
 const db = require('../api/services/postgres/db');
 
 const sqlSelectUnique = `
@@ -15,8 +16,13 @@ SELECT id FROM fleet.fims_voucher WHERE
     batch_index=$[batch_index]
 `;
 
-const sqlClearProvisionalTrans = `
-DELETE FROM fleet.fims_voucher WHERE request_period = 0 CASCASE;
+const sqlClearProvisionalTransactions = `
+DELETE FROM fleet.fleet_transaction WHERE fims_voucher_id IN 
+  (SELECT id FROM fleet.fims_voucher WHERE request_period = 0)
+`;
+
+const sqlClearProvisionalVouchers = `
+DELETE FROM fleet.fims_voucher WHERE request_period = 0;
 `;
 
 const sqlInsertVoucher = `
@@ -61,9 +67,10 @@ module.exports.postBatch = (data, callback) => {
 
   // clear out provisional
   if (reqParam.reqPeriod === 0) {
-    clear = () => {
-      aWait(db.any(sqlClearProvisionalTrans));
-    };
+    const clear = async(() => {
+      aWait(db.any(sqlClearProvisionalTransactions));
+      aWait(db.any(sqlClearProvisionalTransactions));
+    });
     clear();
   }
 
@@ -84,7 +91,7 @@ module.exports.postBatch = (data, callback) => {
               .any(sqlUpdateVoucher, voucher)
               .then(data => {
                 //cntUpd++;
-                             })
+              })
               .catch(err => {
                 callback(err);
               });
