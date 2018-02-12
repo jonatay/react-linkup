@@ -15,6 +15,10 @@ import {
   driverActions
 } from 'src/fleet';
 
+import VehiclesTable from 'src/views/components/fleet/vehicles-table';
+import DriversTable from '../../components/fleet/drivers-table';
+import TransactionsTable from '../../components/fleet/transactions-table';
+
 import { Tabs, Icon } from 'antd';
 const TabPane = Tabs.TabPane;
 
@@ -26,7 +30,53 @@ class FleetContainer extends React.Component {
 
   render() {
     const { vehicles, drivers } = this.props;
-    return <div>Fleet Container</div>;
+    return (
+      <Tabs
+        // defaultActiveKey="rights"
+        theme="dark"
+        size="small"
+        // onChange={tab => {
+        //   switch (tab) {
+        //     case 'users':
+        //       props.loadUsers();
+        //       break;
+        //     default:
+        //       break;
+        //   }
+        // }}
+      >
+        <TabPane
+          key="vehicles"
+          tab={
+            <span>
+              <Icon type="car" />Vehicles
+            </span>
+          }
+        >
+          <VehiclesTable vehicles={vehicles} />
+        </TabPane>
+        <TabPane
+          key="drivers"
+          tab={
+            <span>
+              <Icon type="idcard" />Drivers
+            </span>
+          }
+        >
+          <DriversTable />
+        </TabPane>
+        <TabPane
+          key="transactions"
+          tab={
+            <span>
+              <Icon type="pay-circle-o" />Transactions
+            </span>
+          }
+        >
+          <TransactionsTable />
+        </TabPane>
+      </Tabs>
+    );
   }
 }
 
