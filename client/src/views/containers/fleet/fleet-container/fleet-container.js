@@ -8,42 +8,37 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import {
-  getVehiclesList,
-  vehicleActions,
-  getDriversList,
-  driverActions
-} from 'src/fleet';
+import { driverActions, getVisibleDrivers } from 'src/fleet/index';
 
-import VehiclesTable from 'src/views/components/fleet/vehicles-table';
-import DriversTable from '../../components/fleet/drivers-table';
-import TransactionsTable from '../../components/fleet/transactions-table';
+import VehicleContainer from '../vehicle-container';
+import DriversTable from '../../../components/fleet/drivers-table/index';
+import TransactionsTable from '../../../components/fleet/transactions-table/index';
 
 import { Tabs, Icon } from 'antd';
 const TabPane = Tabs.TabPane;
 
 class FleetContainer extends React.Component {
+  state = { activeKey: 'vehicles' };
   componentDidMount() {
-    this.props.loadVehicles();
     this.props.loadDrivers();
   }
 
   render() {
-    const { vehicles, drivers } = this.props;
+    const { drivers, loadDrivers } = this.props;
     return (
       <Tabs
-        // defaultActiveKey="rights"
         theme="dark"
         size="small"
-        // onChange={tab => {
-        //   switch (tab) {
-        //     case 'users':
-        //       props.loadUsers();
-        //       break;
-        //     default:
-        //       break;
-        //   }
-        // }}
+        onChange={activeKey => {
+          switch (activeKey) {
+            case 'drivers':
+              loadDrivers();
+              break;
+            default:
+              break;
+          }
+          this.setState({ activeKey });
+        }}
       >
         <TabPane
           key="vehicles"
@@ -53,7 +48,7 @@ class FleetContainer extends React.Component {
             </span>
           }
         >
-          <VehiclesTable vehicles={vehicles} />
+          <VehicleContainer />
         </TabPane>
         <TabPane
           key="drivers"
@@ -63,7 +58,7 @@ class FleetContainer extends React.Component {
             </span>
           }
         >
-          <DriversTable />
+          <DriversTable drivers={drivers} />
         </TabPane>
         <TabPane
           key="transactions"
@@ -81,19 +76,15 @@ class FleetContainer extends React.Component {
 }
 
 FleetContainer.propTypes = {
-  vehicles: PropTypes.instanceOf(List).isRequired,
-  loadVehicles: PropTypes.func.isRequired,
   drivers: PropTypes.instanceOf(List).isRequired,
   loadDrivers: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  vehicles: getVehiclesList(state),
-  drivers: getDriversList(state)
+  drivers: getVisibleDrivers(state)
 });
 
 const mapDispatchToProps = {
-  loadVehicles: vehicleActions.loadVehicles,
   loadDrivers: driverActions.loadDrivers
 };
 

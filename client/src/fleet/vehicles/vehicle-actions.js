@@ -65,9 +65,9 @@ export const vehicleActions = {
     payload: { vehicle }
   }),
 
-  filterVehicles: filterType => ({
+  filterVehicles: filter => ({
     type: vehicleActions.FILTER_VEHICLES,
-    payload: { filterType }
+    payload: { filter }
   }),
 
   loadVehiclesFulfilled: vehicles => ({

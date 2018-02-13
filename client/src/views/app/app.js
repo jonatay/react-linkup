@@ -14,9 +14,9 @@ import {
   getCurrentLocation
 } from 'src/common';
 
-import AppHeader from '../components/header';
-import RequireAuthRoute from '../components/require-auth-route';
-import RequireUnauthRoute from '../components/require-unauth-route';
+import AppHeader from '../components/common/header';
+import RequireAuthRoute from '../components/common/require-auth-route';
+import RequireUnauthRoute from '../components/common/require-unauth-route';
 import SignInPage from '../pages/sign-in';
 import RootPage from '../pages/root';
 
@@ -59,7 +59,7 @@ const App = ({
         currentNavPath={currentNavPath}
       />
       <Content style={{ padding: '0 10px', marginTop: 60 }}>
-        <div style={{ background: '#fff', padding: 5, minHeight: 750 }}>
+        <div style={{ background: '#fff', padding: 5, minHeight: 700 }}>
           <RequireAuthRoute
             authenticated={authenticated}
             exact
