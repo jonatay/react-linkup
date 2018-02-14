@@ -21,6 +21,7 @@
     "react-sortable-tree-theme-file-explorer": "^1.1.2",
     "react-sortable-tree-theme-full-node-drag": "^1.1.0",
     "redux": "^3.7.2",
+    "redux-form": "^7.2.3",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0",
     "redux-saga-requests-axios": "^0.5.0",

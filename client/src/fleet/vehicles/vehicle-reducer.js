@@ -12,7 +12,7 @@ export function vehicleReducer(state = new VehiclesState(), {payload, type}) {
       return state.set('list', state.list.unshift(payload.vehicle));
 
     case vehicleActions.FILTER_VEHICLES:
-      return state.set('filter', payload.filterType || '');
+      return state.set('filter', payload.filter || '');
 
     case vehicleActions.LOAD_VEHICLES_FULFILLED:
       return state.set('list', new List(payload.vehicles));

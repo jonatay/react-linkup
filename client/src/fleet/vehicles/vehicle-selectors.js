@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 export function getVehicles(state) {
-  return state.vehicles;
+  return state.fleet.vehicles;
 }
 
 export function getVehicleFilter(state) {
@@ -9,7 +9,7 @@ export function getVehicleFilter(state) {
 }
 
 export function getVehicleList(state) {
-  return getVehicles(state.fleet).list;
+  return getVehicles(state).list;
 }
 
 //=====================================
@@ -18,12 +18,22 @@ export function getVehicleList(state) {
 
 export const getVisibleVehicles = createSelector(
   getVehicleList,
-  vehicleList => vehicleList
+  getVehicleFilter,
+  (vehicleList, filter) =>
+    vehicleList.filter(
+      vehicle =>
+        vehicle.name.toLowerCase().includes(filter.toLowerCase()) ||
+        vehicle.registration.toLowerCase().includes(filter.toLowerCase()) ||
+        vehicle.fims_drivers
+          .join(' ')
+          .toLowerCase()
+          .includes(filter.toLowerCase())
+    )
 );
 
 export const getVehicleById = createSelector(
   getVehicleList,
-  (vehicleList, uid) => vehicleList.filter(vehicle => vehicle.uid === uid)
+  (vehicleList, id) => vehicleList.filter(vehicle => vehicle.id === id)
 );
 
 export const getVehiclesList = createSelector(
