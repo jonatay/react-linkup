@@ -16,6 +16,7 @@ import {
 
 import FilterInput from 'src/views/components/common/filter-input/index';
 import VehicleTable from 'src/views/components/fleet/vehicle-table';
+import VehicleForm from 'src/views/components/fleet/vehicle-form';
 
 import { Tabs, Icon } from 'antd';
 const TabPane = Tabs.TabPane;
@@ -38,7 +39,7 @@ const IntVehicleTable = ({
 class VehicleContainer extends React.Component {
   state = {
     editVehicles: [],
-    currentTabKey: ''
+    activeKey: 'vehicles'
   };
   componentDidMount() {
     this.props.loadVehicles();
@@ -50,7 +51,10 @@ class VehicleContainer extends React.Component {
     if (typeof editVeh === 'undefined') {
       editVeh = editVehicles[editVehicles.push(vehicle) - 1];
     }
-    this.setState({ editVehicles });
+    this.setState({
+      editVehicles,
+      activeKey: String(editVehicles[editVehicles.length - 1].id)
+    });
     this.forceUpdate();
   };
 
@@ -66,13 +70,13 @@ class VehicleContainer extends React.Component {
           ...editVehicles.slice(0, vehIdx),
           ...editVehicles.slice(vehIdx + 1)
         ];
-        this.setState({ editVehicles });
+        this.setState({ editVehicles, activeKey: 'vehicles' });
       }
     }
   };
 
   render() {
-    const { editVehicles } = this.state;
+    const { editVehicles, activeKey } = this.state;
     return (
       <Tabs
         hideAdd
@@ -81,6 +85,7 @@ class VehicleContainer extends React.Component {
         onChange={activeKey => {
           this.setState({ activeKey });
         }}
+        activeKey={activeKey}
         onEdit={this.onEditTabs}
       >
         <TabPane
@@ -103,7 +108,7 @@ class VehicleContainer extends React.Component {
               </span>
             }
           >
-            <h1>{vehicle.registration}</h1>
+            <VehicleForm {...vehicle} onSubmit={data => console.log(data)} />
           </TabPane>
         ))}
       </Tabs>
