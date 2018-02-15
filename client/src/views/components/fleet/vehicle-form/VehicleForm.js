@@ -1,18 +1,27 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 
-import { Form, Input } from 'antd';
+import { Form, Input, Button } from 'antd';
+
+const FormItem = Form.Item;
+
+const renderField = props => (
+  <FormItem>
+    <Input {...props.input} />
+    {props.touched && props.error && <span>{props.error}</span>}
+  </FormItem>
+);
 
 const VehicleForm = props => {
   const { handleSubmit, pristine, reset, submitting } = props;
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form>
       <div>
         <label>Vehicle Name</label>
         <div>
           <Field
             name="name"
-            component="Input"
+            component={renderField}
             type="text"
             placeholder="Vehicle Name"
           />
@@ -23,71 +32,19 @@ const VehicleForm = props => {
         <div>
           <Field
             name="registration"
-            component="Input"
+            component={renderField}
             type="text"
             placeholder="Registration"
           />
         </div>
       </div>
       <div>
-        <label>Email</label>
-        <div>
-          <Field
-            name="email"
-            component="Input"
-            type="email"
-            placeholder="Email"
-          />
-        </div>
-      </div>
-      <div>
-        <label>Sex</label>
-        <div>
-          <label>
-            <Field name="sex" component="input" type="radio" value="male" />{' '}
-            Male
-          </label>
-          <label>
-            <Field name="sex" component="input" type="radio" value="female" />{' '}
-            Female
-          </label>
-        </div>
-      </div>
-      <div>
-        <label>Favorite Color</label>
-        <div>
-          <Field name="favoriteColor" component="select">
-            <option />
-            <option value="ff0000">Red</option>
-            <option value="00ff00">Green</option>
-            <option value="0000ff">Blue</option>
-          </Field>
-        </div>
-      </div>
-      <div>
-        <label htmlFor="employed">Employed</label>
-        <div>
-          <Field
-            name="employed"
-            id="employed"
-            component="input"
-            type="checkbox"
-          />
-        </div>
-      </div>
-      <div>
-        <label>Notes</label>
-        <div>
-          <Field name="notes" component="textarea" />
-        </div>
-      </div>
-      <div>
-        <button type="submit" disabled={pristine || submitting}>
+        <Button onClick={handleSubmit} disabled={pristine || submitting}>
           Submit
-        </button>
-        <button type="button" disabled={pristine || submitting} onClick={reset}>
+        </Button>
+        <Button type="button" disabled={pristine || submitting} onClick={reset}>
           Clear Values
-        </button>
+        </Button>
       </div>
     </Form>
   );

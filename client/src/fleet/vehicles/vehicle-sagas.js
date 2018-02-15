@@ -2,7 +2,9 @@ import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
 import { authActions } from 'src/common/auth/index';
 import { vehicleActions } from './vehicle-actions';
 import { vehicleList } from './vehicle-list';
+const jsondiffpatch = require('jsondiffpatch').create();
 
+// import * as jsondiffpatch from 'jsondiffpatch';
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -45,13 +47,11 @@ function* watchRemoveVehicle() {
 }
 
 function* updateVehicle({ payload }) {
+  const changes = jsondiffpatch.diff(payload.vehicle, payload.changes);
   let result = yield call(
     [vehicleList, vehicleList.update],
-    payload.vehicle.uid,
-    {
-      vehicle: payload.vehicle,
-      changes: payload.changes
-    }
+    payload.vehicle.id,
+    { changes }
   );
   yield put(vehicleActions.updateVehicleFulfilled(result.vehicle));
 }

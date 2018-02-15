@@ -108,7 +108,10 @@ class VehicleContainer extends React.Component {
               </span>
             }
           >
-            <VehicleForm {...vehicle} onSubmit={data => console.log(data)} />
+            <VehicleForm
+              initialValues={vehicle}
+              onSubmit={data => this.props.updateVehicle(vehicle, data)}
+            />
           </TabPane>
         ))}
       </Tabs>
@@ -119,7 +122,8 @@ class VehicleContainer extends React.Component {
 VehicleContainer.propTypes = {
   vehicles: PropTypes.instanceOf(List).isRequired,
   loadVehicles: PropTypes.func.isRequired,
-  filterVehicles: PropTypes.func.isRequired
+  filterVehicles: PropTypes.func.isRequired,
+  updateVehicle: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -129,7 +133,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   loadVehicles: vehicleActions.loadVehicles,
-  filterVehicles: vehicleActions.filterVehicles
+  filterVehicles: vehicleActions.filterVehicles,
+  updateVehicle: vehicleActions.updateVehicle
 };
 
 export default withRouter(
