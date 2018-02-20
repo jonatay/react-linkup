@@ -23,7 +23,7 @@ implement acl middleware
  -go down 4 levels
    eg. http://api-host:port/api(1)/fleet(2)/transactions(3)/operator(4)
  */
-router.use('/*', acl.middleware(4, userId));
+router.use('/*', acl.middleware(3, userId));
 
 /* GET api root page. */
 router.get('/', root_controller.root);

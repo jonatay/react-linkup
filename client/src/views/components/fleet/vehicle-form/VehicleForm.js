@@ -1,55 +1,94 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 
-import { Form, Input, Button } from 'antd';
+import validate from './validate';
+import './style.css';
+
+import { Form, Input, Button, Row, Col } from 'antd';
 
 const FormItem = Form.Item;
 
-const renderField = props => (
-  <FormItem>
-    <Input {...props.input} />
-    {props.touched && props.error && <span>{props.error}</span>}
-  </FormItem>
-);
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 5 }
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 12 }
+  }
+};
+
+const renderField = props => {
+  const { error, touched } = props.meta;
+  return (
+    <FormItem
+      {...formItemLayout}
+      label={props.placeholder}
+      hasFeedback
+      validateStatus={error ? 'error' : 'success'}
+      help={error}
+    >
+      <Input {...props.input} />
+    </FormItem>
+  );
+};
 
 const VehicleForm = props => {
-  const { handleSubmit, pristine, reset, submitting } = props;
+  const { handleSubmit, pristine, reset, submitting, invalid } = props;
   return (
     <Form>
-      <div>
-        <label>Vehicle Name</label>
-        <div>
+      <Row>
+        <Col span={12}>
           <Field
             name="name"
             component={renderField}
             type="text"
             placeholder="Vehicle Name"
           />
-        </div>
-      </div>
-      <div>
-        <label>Registration</label>
-        <div>
           <Field
             name="registration"
             component={renderField}
             type="text"
             placeholder="Registration"
           />
-        </div>
-      </div>
-      <div>
-        <Button onClick={handleSubmit} disabled={pristine || submitting}>
+          <Field
+            name="make"
+            component={renderField}
+            type="text"
+            placeholder="Make"
+          />
+          <Field
+            name="model"
+            component={renderField}
+            type="text"
+            placeholder="Model"
+          />
+          <Field
+            name="year"
+            component={renderField}
+            type="text"
+            placeholder="Registration Year"
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Button
+          onClick={handleSubmit}
+          disabled={pristine || submitting || invalid}
+        >
           Submit
         </Button>
         <Button type="button" disabled={pristine || submitting} onClick={reset}>
           Clear Values
         </Button>
-      </div>
+      </Row>
     </Form>
   );
 };
 
 export default reduxForm({
-  form: 'simple' // a unique identifier for this form
+  form: 'vehicleForm', // a unique identifier for this form
+  enableReinitialize: true,
+  validate
 })(VehicleForm);

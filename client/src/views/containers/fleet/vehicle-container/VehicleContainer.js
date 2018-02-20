@@ -75,6 +75,18 @@ class VehicleContainer extends React.Component {
     }
   };
 
+  onVehicleFormSubmit = (vehicle, changes) => {
+    this.props.updateVehicle(vehicle, changes);
+    let { editVehicles } = this.state;
+    let vehIdx = editVehicles.findIndex(elem => elem.id === changes.id);
+    editVehicles = [
+      ...editVehicles.slice(0, vehIdx),
+      changes,
+      ...editVehicles.slice(vehIdx + 1)
+    ];
+    this.setState({ editVehicles });
+  };
+
   render() {
     const { editVehicles, activeKey } = this.state;
     return (
@@ -110,7 +122,7 @@ class VehicleContainer extends React.Component {
           >
             <VehicleForm
               initialValues={vehicle}
-              onSubmit={data => this.props.updateVehicle(vehicle, data)}
+              onSubmit={data => this.onVehicleFormSubmit(vehicle, data)}
             />
           </TabPane>
         ))}
