@@ -6,7 +6,10 @@ const driverController = require('../controllers/fleet/driverController');
 const transactionsController = require('../controllers/fleet/transactionsController');
 
 router.get('/vehicles', vehicleController.vehicleList);
+router.put('/vehicles/:id', vehicleController.vehicleUpdate);
+
 router.get('/drivers', driverController.driverList);
+
 router.get('/transactions', transactionsController.transactionsList);
 
 module.exports = router;
