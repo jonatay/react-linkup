@@ -8,3 +8,4 @@ public/images/
 public/javascripts/
 /client/.env
 /.env
+/util/db/dumps/

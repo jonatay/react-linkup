@@ -1,7 +1,13 @@
 const db = require('../../services/postgres/db');
 
 const sqlListAllVehicles = `
-SELECT * FROM fleet.vehicle
+SELECT v.id, v.name, v.registration, v.make, v.model, v.year, 
+        v.fims_registrations, v.fims_names, v.fims_drivers, v.jdata, 
+        array_agg(cc.id) AS cost_centre_ids,array_agg(cc.name) AS cost_centres
+FROM fleet.vehicle v
+LEFT JOIN fleet.vehicle_cost_centre vcc ON vcc.vehicle_id = v.id 
+LEFT JOIN fleet.cost_centre cc ON cc.id = vcc.cost_centre_id
+GROUP BY v.id
 `;
 
 const sqlGetVehicle = `
@@ -37,6 +43,6 @@ exports.vehicleUpdate = (req, res) => {
   let sqlUpd = sqlUpdateVehicle.replace('*InsUpd*', sets.join(','));
   console.log(sqlUpd, vals);
   db.none(sqlUpd, vals).then(() => {
-    db.one(sqlGetVehicle, { id }).then(vehicle => res.json({vehicle}));
+    db.one(sqlGetVehicle, { id }).then(vehicle => res.json({ vehicle }));
   });
 };

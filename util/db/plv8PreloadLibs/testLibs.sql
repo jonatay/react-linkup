@@ -46,4 +46,6 @@ plv8.elog(NOTICE, path(1.5));
 plv8.elog(NOTICE, path(2));
 plv8.elog(NOTICE, path(2.5));
 
+plv8.elog(NOTICE, "HELLO WORLD".toProperCase());
+
 $$;

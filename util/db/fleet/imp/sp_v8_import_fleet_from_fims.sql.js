@@ -1,4 +1,4 @@
-// create or replace function fleet.import_fleet_from_fims() returns JSON as $$
+create or replace function fleet.import_fleet_from_fims() returns JSON as $$
 
 // *** find 'max' fims_voucher_id int fleet_transaction
 var maxId =
@@ -116,7 +116,7 @@ for (var i = 0; i < rwsFimsV.length; i++) {
 }
 return result;
 
-// $$ language plv8;
+$$ language plv8;
 
 // --DELETE FROM fleet.fleet_transaction;
 
