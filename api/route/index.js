@@ -25,6 +25,9 @@ implement acl middleware
  */
 router.use('/*', acl.middleware(3, userId));
 
+
+
+
 /* GET api root page. */
 router.get('/', root_controller.root);
 
