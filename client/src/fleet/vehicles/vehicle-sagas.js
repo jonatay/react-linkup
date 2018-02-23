@@ -37,9 +37,9 @@ function* watchLoadVehicles() {
 function* removeVehicle({ payload }) {
   let result = yield call(
     [vehicleList, vehicleList.remove],
-    payload.vehicle.uid
+    payload.vehicle.id
   );
-  yield put(vehicleActions.removeVehicleFulfilled(result));
+  yield put(vehicleActions.toggleIsActiveVehicleFulfilled(result.id));
 }
 
 function* watchRemoveVehicle() {

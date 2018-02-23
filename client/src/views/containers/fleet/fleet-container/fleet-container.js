@@ -13,6 +13,7 @@ import { driverActions, getVisibleDrivers } from 'src/fleet/index';
 import VehicleContainer from '../vehicle-container';
 import DriversTable from '../../../components/fleet/drivers-table/index';
 import TransactionsTable from '../../../components/fleet/transactions-table/index';
+import FleetSettings from '../fleet-settings';
 
 import { Tabs, Icon } from 'antd';
 const TabPane = Tabs.TabPane;
@@ -69,6 +70,16 @@ class FleetContainer extends React.Component {
           }
         >
           <TransactionsTable />
+        </TabPane>
+        <TabPane
+          key="settings"
+          tab={
+            <span>
+              <Icon type="setting" />Settings
+            </span>
+          }
+        >
+          <FleetSettings />
         </TabPane>
       </Tabs>
     );

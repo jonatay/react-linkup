@@ -22,7 +22,7 @@ export const vehicleList = new VehicleApiList(
     onAdd: vehicleActions.createVehicleFulfilled,
     onChange: vehicleActions.updateVehicleFulfilled,
     onLoad: vehicleActions.loadVehiclesFulfilled,
-    onRemove: vehicleActions.removeVehicleFulfilled
+    onRemove: vehicleActions.toggleIsActiveVehicleFulfilled
   },
   Vehicle,
   vehiclePath

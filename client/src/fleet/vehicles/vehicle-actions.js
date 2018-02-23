@@ -3,9 +3,9 @@ export const vehicleActions = {
   CREATE_VEHICLE_FAILED: 'CREATE_VEHICLE_FAILED',
   CREATE_VEHICLE_FULFILLED: 'CREATE_VEHICLE_FULFILLED',
 
-  REMOVE_VEHICLE: 'REMOVE_VEHICLE',
-  REMOVE_VEHICLE_FAILED: 'REMOVE_VEHICLE_FAILED',
-  REMOVE_VEHICLE_FULFILLED: 'REMOVE_VEHICLE_FULFILLED',
+  TOGGLE_IS_ACTIVE_VEHICLE: 'TOGGLE_IS_ACTIVE_VEHICLE',
+  TOGGLE_IS_ACTIVE_VEHICLE_FAILED: 'TOGGLE_IS_ACTIVE_VEHICLE_FAILED',
+  TOGGLE_IS_ACTIVE_VEHICLE_FULFILLED: 'TOGGLE_IS_ACTIVE_VEHICLE_FULFILLED',
 
   UPDATE_VEHICLE: 'UPDATE_VEHICLE',
   UPDATE_VEHICLE_FAILED: 'UPDATE_VEHICLE_FAILED',
@@ -35,18 +35,18 @@ export const vehicleActions = {
     payload: { vehicle }
   }),
 
-  removeVehicle: vehicle => ({
-    type: vehicleActions.REMOVE_VEHICLE,
+  toggleIsActiveVehicle: vehicle => ({
+    type: vehicleActions.TOGGLE_IS_ACTIVE_VEHICLE,
     payload: { vehicle }
   }),
 
-  removeVehicleFailed: error => ({
-    type: vehicleActions.REMOVE_VEHICLE_FAILED,
+  toggleIsActiveVehicleFailed: error => ({
+    type: vehicleActions.TOGGLE_IS_ACTIVE_VEHICLE_FAILED,
     payload: { error }
   }),
 
-  removeVehicleFulfilled: vehicle => ({
-    type: vehicleActions.REMOVE_VEHICLE_FULFILLED,
+  toggleIsActiveVehicleFulfilled: vehicle => ({
+    type: vehicleActions.TOGGLE_IS_ACTIVE_VEHICLE_FULFILLED,
     payload: { vehicle }
   }),
 

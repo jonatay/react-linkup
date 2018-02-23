@@ -26,7 +26,7 @@ const renderField = props => {
       {...formItemLayout}
       label={props.placeholder}
       hasFeedback
-      validateStatus={error ? 'error' : 'success'}
+      validateStatus={error && touched ? 'error' : 'success'}
       help={error}
     >
       <Input {...props.input} />

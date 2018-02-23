@@ -25,6 +25,7 @@ const IntVehicleTable = ({
   vehicles,
   vehicleFilter,
   filterVehicles,
+  removeVehicle,
   onEditVehicle
 }) => (
   <div>
@@ -32,6 +33,7 @@ const IntVehicleTable = ({
     <VehicleTable
       vehicles={vehicles}
       onEditVehicle={vehicle => onEditVehicle(vehicle)}
+      removeVehicle={removeVehicle}
     />
   </div>
 );
@@ -135,7 +137,8 @@ VehicleContainer.propTypes = {
   vehicles: PropTypes.instanceOf(List).isRequired,
   loadVehicles: PropTypes.func.isRequired,
   filterVehicles: PropTypes.func.isRequired,
-  updateVehicle: PropTypes.func.isRequired
+  updateVehicle: PropTypes.func.isRequired,
+  removeVehicle: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -146,7 +149,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   loadVehicles: vehicleActions.loadVehicles,
   filterVehicles: vehicleActions.filterVehicles,
-  updateVehicle: vehicleActions.updateVehicle
+  updateVehicle: vehicleActions.updateVehicle,
+  removeVehicle: vehicleActions.toggleIsActiveVehicle
 };
 
 export default withRouter(

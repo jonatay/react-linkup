@@ -4,8 +4,8 @@ const validate = values => {
 
   if (!values.name) {
     errors.name = 'Required';
-  } else if (values.name.length > 25) {
-    errors.name = 'Must be 25 chars or less';
+  } else if (values.name.length > 30) {
+    errors.name = 'Must be 30 chars or less';
   }
 
   if (!values.registration) {
@@ -25,8 +25,8 @@ const validate = values => {
 
   if (!values.model) {
     errors.model = 'Required';
-  } else if (values.model.length > 20) {
-    errors.model = 'Must be 20 chars or less';
+  } else if (values.model.length > 30) {
+    errors.model = 'Must be 30 chars or less';
   }
 
   if (!values.year) {

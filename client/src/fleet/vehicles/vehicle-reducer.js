@@ -6,7 +6,7 @@ export const VehiclesState = new Record({
   list: new List()
 });
 
-export function vehicleReducer(state = new VehiclesState(), {payload, type}) {
+export function vehicleReducer(state = new VehiclesState(), { payload, type }) {
   switch (type) {
     case vehicleActions.CREATE_VEHICLE_FULFILLED:
       return state.set('list', state.list.unshift(payload.vehicle));
@@ -18,14 +18,21 @@ export function vehicleReducer(state = new VehiclesState(), {payload, type}) {
       return state.set('list', new List(payload.vehicles));
 
     case vehicleActions.REMOVE_VEHICLE_FULFILLED:
-      return state.set('list', state.list.filter(vehicle => {
-        return vehicle.id !== payload.vehicle.id;
-      }));
+      return state.set(
+        'list',
+        state.list.filter(vehicle => {
+          return vehicle.id !== payload.vehicle.id;
+        })
+      );
 
     case vehicleActions.UPDATE_VEHICLE_FULFILLED:
-      return state.set('list', state.list.map(vehicle => {
-        return vehicle.id === payload.vehicle.id ? payload.vehicle : vehicle;
-      }));
+    case vehicleActions.TOGGLE_IS_ACTIVE_VEHICLE_FULFILLED:
+      return state.set(
+        'list',
+        state.list.map(vehicle => {
+          return vehicle.id === payload.vehicle.id ? payload.vehicle : vehicle;
+        })
+      );
 
     default:
       return state;
