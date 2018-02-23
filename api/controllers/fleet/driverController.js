@@ -4,7 +4,7 @@ const sqlGetDrivers = `
 SELECT * FROM fleet.driver
 `;
 
-exports.driverList = (req, res) => {
+exports.list = (req, res) => {
   db
     .any(sqlGetDrivers)
     .then(data => res.json(data))

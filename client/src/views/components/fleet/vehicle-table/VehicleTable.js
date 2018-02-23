@@ -4,7 +4,7 @@
 */
 import React from 'react';
 
-import { Table, Tag, Button } from 'antd';
+import { Table, Tag, Button, Modal } from 'antd';
 
 import './style.css';
 
@@ -18,73 +18,108 @@ class VehicleTable extends React.Component {
     this.setState({ data: vehicles.toArray() });
   };
 
+  showToggleVehicleActiveConfirm = (vehicle, toggleVehicleIsActive) => {
+    Modal.confirm({
+      title: 'Are you sure toggle active on this vehicle?',
+      content: `reg: ${vehicle.registration} name: ${vehicle.name}`,
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        toggleVehicleIsActive(vehicle);
+      },
+      onCancel() {
+        console.log('Cancel');
+      }
+    });
+  };
+
   columns = [
     {
-      title: 'name',
-      dataIndex: 'name',
-      sorter: (a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-    },
-    {
-      title: 'reg',
+      title: 'Reg.',
       dataIndex: 'registration',
+      width: 100,
       defaultSortOrder: 'ascend',
+      //fixed: 'left',
       sorter: (a, b) =>
         a.registration.toLowerCase().localeCompare(b.registration.toLowerCase())
     },
     {
-      title: 'make:model:year',
-      dataIndex: 'make',
+      title: 'Name',
+      dataIndex: 'name',
+      width: 250,
+      sorter: (a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+    },
+
+    {
+      title: 'Cost Centres',
+      dataIndex: 'cost_centres',
       render: (text, record) => (
         <div>
-          {record.make ? (
-            record.make
-          ) : (
-            <Tag color="magenta">
-              {record.fims_names[0]
-                .split(' ')[0]
-                .toLowerCase()
-                .replace(/^(.)|\s(.)/g, $1 => $1.toUpperCase())}
+          {record.cost_centres.map(cc => (
+            <Tag key={cc.vccId}>
+              {cc.name.length < 13 ? cc.name : cc.name.substr(0, 13) + '...'}
             </Tag>
-          )}
-          :{record.model ? (
-            record.model
-          ) : (
-            <Tag color="magenta">
-              {record.fims_names[0]
-                .split(' ')
-                .slice(1)
-                .map(str =>
-                  str
-                    .toLowerCase()
-                    .replace(/^(.)|\s(.)/g, $1 => $1.toUpperCase())
-                )
-                .join(' ')}
-            </Tag>
-          )}:{record.year}
+          ))}
         </div>
       )
     },
     {
       title: 'Fims Driver(s)',
       dataIndex: 'fims_drivers',
+      width: 200,
       render: (text, record) => <p>{text.join(',')}</p>
     },
     {
+      //fixed: 'right',
+      width: 70,
       render: (text, record) => (
-        <Button
-          type="primary"
-          ghost={true}
-          size="small"
-          shape="circle"
-          icon="edit"
-          onClick={() => this.props.onEditVehicle(record)}
-        />
+        <span>
+          <Button
+            type="primary"
+            ghost={true}
+            size="small"
+            shape="circle"
+            icon="edit"
+            onClick={() => this.props.onEditVehicle(record)}
+          />
+          <Button
+            style={{ marginLeft: 5 }}
+            type={record.is_active ? 'danger' : 'primary'}
+            ghost={true}
+            size="small"
+            shape="circle"
+            icon={record.is_active ? 'delete' : 'plus-circle-o'}
+            onClick={() =>
+              this.showToggleVehicleActiveConfirm(
+                record,
+                this.props.toggleVehicleIsActive
+              )
+            }
+          />
+        </span>
       )
     }
   ];
   render() {
     const { data } = this.state;
-    return <Table rowKey="id" dataSource={data} columns={this.columns} />;
+    return (
+      <Table
+        size="middle"
+        rowKey="id"
+        dataSource={data}
+        columns={this.columns}
+        scroll={{ y: 590, x: 800 }}
+        pagination={{
+          size: 'small',
+          showSizeChanger: true,
+          pageSize: 16,
+          pageSizeOptions: ['16', '32', '64', '128', '256'],
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} vehicles`
+        }}
+      />
+    );
   }
 }
 

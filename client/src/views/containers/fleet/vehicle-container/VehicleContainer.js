@@ -10,6 +10,7 @@ import { withRouter } from 'react-router-dom';
 
 import {
   getVehicleFilter,
+  getVehcleShowInactive,
   getVisibleVehicles,
   vehicleActions
 } from 'src/fleet';
@@ -18,22 +19,38 @@ import FilterInput from 'src/views/components/common/filter-input/index';
 import VehicleTable from 'src/views/components/fleet/vehicle-table';
 import VehicleForm from 'src/views/components/fleet/vehicle-form';
 
-import { Tabs, Icon } from 'antd';
+import { Tabs, Icon, Switch, Row, Col } from 'antd';
 const TabPane = Tabs.TabPane;
 
 const IntVehicleTable = ({
   vehicles,
   vehicleFilter,
   filterVehicles,
-  onEditVehicle
+  toggleVehicleIsActive,
+  onEditVehicle,
+  showInactive,
+  toggleShowInactive
 }) => (
-  <div>
-    <FilterInput filterText={vehicleFilter} onTextChange={filterVehicles} />
+  <Row>
+    <Row style={{marginBottom:12}}>
+      <Col span={8}>
+        <FilterInput filterText={vehicleFilter} onTextChange={filterVehicles} />
+      </Col>
+      <Col span={4}>
+        <Switch
+          checkedChildren="Show Inactive"
+          unCheckedChildren="Hide Inactive"
+          checked={showInactive}
+          onChange={toggleShowInactive}
+        />
+      </Col>
+    </Row>
     <VehicleTable
       vehicles={vehicles}
       onEditVehicle={vehicle => onEditVehicle(vehicle)}
+      toggleVehicleIsActive={toggleVehicleIsActive}
     />
-  </div>
+  </Row>
 );
 
 class VehicleContainer extends React.Component {
@@ -135,18 +152,24 @@ VehicleContainer.propTypes = {
   vehicles: PropTypes.instanceOf(List).isRequired,
   loadVehicles: PropTypes.func.isRequired,
   filterVehicles: PropTypes.func.isRequired,
-  updateVehicle: PropTypes.func.isRequired
+  updateVehicle: PropTypes.func.isRequired,
+  toggleVehicleIsActive: PropTypes.func.isRequired,
+  showInactive: PropTypes.bool.isRequired,
+  toggleShowInactive: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   vehicles: getVisibleVehicles(state),
-  vehicleFilter: getVehicleFilter(state)
+  vehicleFilter: getVehicleFilter(state),
+  showInactive: getVehcleShowInactive(state)
 });
 
 const mapDispatchToProps = {
   loadVehicles: vehicleActions.loadVehicles,
   filterVehicles: vehicleActions.filterVehicles,
-  updateVehicle: vehicleActions.updateVehicle
+  updateVehicle: vehicleActions.updateVehicle,
+  toggleVehicleIsActive: vehicleActions.toggleVehicleIsActive,
+  toggleShowInactive: vehicleActions.vehicleToggleShowInactive
 };
 
 export default withRouter(

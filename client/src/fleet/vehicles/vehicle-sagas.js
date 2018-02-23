@@ -34,16 +34,19 @@ function* watchLoadVehicles() {
   yield takeEvery(vehicleActions.LOAD_VEHICLES, loadAllVehicles);
 }
 
-function* removeVehicle({ payload }) {
+function* toggleVehicleIsActive({ payload }) {
   let result = yield call(
     [vehicleList, vehicleList.remove],
-    payload.vehicle.uid
+    payload.vehicle.id
   );
-  yield put(vehicleActions.removeVehicleFulfilled(result));
+  yield put(vehicleActions.toggleVehicleIsActiveFulfilled(result.vehicle));
 }
 
-function* watchRemoveVehicle() {
-  yield takeEvery(vehicleActions.REMOVE_VEHICLE, removeVehicle);
+function* watchToggleVehicleIsActive() {
+  yield takeEvery(
+    vehicleActions.TOGGLE_VEHICLE_IS_ACTIVE,
+    toggleVehicleIsActive
+  );
 }
 
 function* updateVehicle({ payload }) {
@@ -69,6 +72,6 @@ export const vehicleSagas = [
   fork(watchIdTokenRefresh),
   fork(watchLoadVehicles),
   //fork(watchCreateVehicle),
-  fork(watchRemoveVehicle),
+  fork(watchToggleVehicleIsActive),
   fork(watchUpdateVehicle)
 ];

@@ -5,14 +5,14 @@
 import React from 'react';
 
 import { Input } from 'antd';
-const Search = Input.Search;
+// const Search = Input.Search;
 
 class FilterInput extends React.Component {
   render() {
     const { filterText, onTextChange } = this.props;
     return (
       <div>
-        <Search
+        <Input
           placeholder="search"
           onChange={e => onTextChange(e.target.value)}
           style={{ width: 200 }}
