@@ -4,5 +4,6 @@ export { vehicleSagas } from './vehicle-sagas';
 export {
   getVisibleVehicles,
   getVehiclesList,
-  getVehicleFilter
+  getVehicleFilter,
+  getVehcleShowInactive
 } from './vehicle-selectors';

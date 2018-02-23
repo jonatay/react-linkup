@@ -3,9 +3,9 @@ export const vehicleActions = {
   CREATE_VEHICLE_FAILED: 'CREATE_VEHICLE_FAILED',
   CREATE_VEHICLE_FULFILLED: 'CREATE_VEHICLE_FULFILLED',
 
-  TOGGLE_IS_ACTIVE_VEHICLE: 'TOGGLE_IS_ACTIVE_VEHICLE',
-  TOGGLE_IS_ACTIVE_VEHICLE_FAILED: 'TOGGLE_IS_ACTIVE_VEHICLE_FAILED',
-  TOGGLE_IS_ACTIVE_VEHICLE_FULFILLED: 'TOGGLE_IS_ACTIVE_VEHICLE_FULFILLED',
+  TOGGLE_VEHICLE_IS_ACTIVE: 'TOGGLE_VEHICLE_IS_ACTIVE',
+  TOGGLE_VEHICLE_IS_ACTIVE_FAILED: 'TOGGLE_VEHICLE_IS_ACTIVE_FAILED',
+  TOGGLE_VEHICLE_IS_ACTIVE_FULFILLED: 'TOGGLE_VEHICLE_IS_ACTIVE_FULFILLED',
 
   UPDATE_VEHICLE: 'UPDATE_VEHICLE',
   UPDATE_VEHICLE_FAILED: 'UPDATE_VEHICLE_FAILED',
@@ -15,6 +15,8 @@ export const vehicleActions = {
   FILTER_VEHICLES: 'FILTER_VEHICLES',
   LOAD_VEHICLES_FULFILLED: 'LOAD_VEHICLES_FULFILLED',
   LOAD_VEHICLES_FAILED: 'LOAD_VEHICLES_FAILED',
+
+  VEHICLE_TOGGLE_SHOW_INACTIVE: 'VEHICLE_TOGGLE_SHOW_INACTIVE',
 
   loadVehicles: () => ({
     type: vehicleActions.LOAD_VEHICLES
@@ -35,18 +37,18 @@ export const vehicleActions = {
     payload: { vehicle }
   }),
 
-  toggleIsActiveVehicle: vehicle => ({
-    type: vehicleActions.TOGGLE_IS_ACTIVE_VEHICLE,
+  toggleVehicleIsActive: vehicle => ({
+    type: vehicleActions.TOGGLE_VEHICLE_IS_ACTIVE,
     payload: { vehicle }
   }),
 
-  toggleIsActiveVehicleFailed: error => ({
-    type: vehicleActions.TOGGLE_IS_ACTIVE_VEHICLE_FAILED,
+  toggleVehicleIsActiveFailed: error => ({
+    type: vehicleActions.TOGGLE_VEHICLE_IS_ACTIVE_FAILED,
     payload: { error }
   }),
 
-  toggleIsActiveVehicleFulfilled: vehicle => ({
-    type: vehicleActions.TOGGLE_IS_ACTIVE_VEHICLE_FULFILLED,
+  toggleVehicleIsActiveFulfilled: vehicle => ({
+    type: vehicleActions.TOGGLE_VEHICLE_IS_ACTIVE_FULFILLED,
     payload: { vehicle }
   }),
 
@@ -78,5 +80,10 @@ export const vehicleActions = {
   loadVehiclesFailed: error => ({
     type: vehicleActions.LOAD_VEHICLES_FAILED,
     payload: { error }
+  }),
+
+  vehicleToggleShowInactive: () => ({
+    type: vehicleActions.VEHICLE_TOGGLE_SHOW_INACTIVE,
+    payload: {}
   })
 };

@@ -27,7 +27,7 @@ WHERE id=$[id]
 
 const sqlToggleIsActive = `
 UPDATE fleet.vehicle 
-SET is_active = NOT(COALESCE(is_active, FLASE)) 
+SET is_active = NOT(is_active) 
 WHERE id=$[id]
 `;
 

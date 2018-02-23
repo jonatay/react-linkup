@@ -18,15 +18,15 @@ class VehicleTable extends React.Component {
     this.setState({ data: vehicles.toArray() });
   };
 
-  showDeleteConfirm = (vehicle, removeVehicle) => {
+  showToggleVehicleActiveConfirm = (vehicle, toggleVehicleIsActive) => {
     Modal.confirm({
-      title: 'Are you sure delete this vehicle?',
+      title: 'Are you sure toggle active on this vehicle?',
       content: `reg: ${vehicle.registration} name: ${vehicle.name}`,
       okText: 'Yes',
       okType: 'danger',
       cancelText: 'No',
       onOk() {
-        removeVehicle(vehicle);
+        toggleVehicleIsActive(vehicle);
       },
       onCancel() {
         console.log('Cancel');
@@ -36,25 +36,31 @@ class VehicleTable extends React.Component {
 
   columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      width: 200,
-      sorter: (a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-    },
-    {
-      title: 'Registration',
+      title: 'Reg.',
       dataIndex: 'registration',
       width: 100,
       defaultSortOrder: 'ascend',
+      //fixed: 'left',
       sorter: (a, b) =>
         a.registration.toLowerCase().localeCompare(b.registration.toLowerCase())
     },
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      width: 250,
+      sorter: (a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+    },
+
     {
       title: 'Cost Centres',
       dataIndex: 'cost_centres',
       render: (text, record) => (
         <div>
-          {record.cost_centres.map(cc => <Tag key={cc.vccId}>{cc.name}</Tag>)}
+          {record.cost_centres.map(cc => (
+            <Tag key={cc.vccId}>
+              {cc.name.length < 13 ? cc.name : cc.name.substr(0, 13) + '...'}
+            </Tag>
+          ))}
         </div>
       )
     },
@@ -65,15 +71,33 @@ class VehicleTable extends React.Component {
       render: (text, record) => <p>{text.join(',')}</p>
     },
     {
+      //fixed: 'right',
+      width: 70,
       render: (text, record) => (
-        <Button
-          type="primary"
-          ghost={true}
-          size="small"
-          shape="circle"
-          icon="edit"
-          onClick={() => this.props.onEditVehicle(record)}
-        />
+        <span>
+          <Button
+            type="primary"
+            ghost={true}
+            size="small"
+            shape="circle"
+            icon="edit"
+            onClick={() => this.props.onEditVehicle(record)}
+          />
+          <Button
+            style={{ marginLeft: 5 }}
+            type={record.is_active ? 'danger' : 'primary'}
+            ghost={true}
+            size="small"
+            shape="circle"
+            icon={record.is_active ? 'delete' : 'plus-circle-o'}
+            onClick={() =>
+              this.showToggleVehicleActiveConfirm(
+                record,
+                this.props.toggleVehicleIsActive
+              )
+            }
+          />
+        </span>
       )
     }
   ];
@@ -81,10 +105,19 @@ class VehicleTable extends React.Component {
     const { data } = this.state;
     return (
       <Table
-        size="small"
+        size="middle"
         rowKey="id"
         dataSource={data}
         columns={this.columns}
+        scroll={{ y: 590, x: 800 }}
+        pagination={{
+          size: 'small',
+          showSizeChanger: true,
+          pageSize: 16,
+          pageSizeOptions: ['16', '32', '64', '128', '256'],
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} vehicles`
+        }}
       />
     );
   }

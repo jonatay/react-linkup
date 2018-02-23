@@ -10,5 +10,6 @@ export const Vehicle = new Record({
   fims_registrations: null,
   fims_names: null,
   fims_drivers: [],
-  jdata: {}
+  jdata: {},
+  is_active: null
 });
