@@ -25,5 +25,6 @@
     "raven": "^2.4.0",
     "rollbar": "^2.3.7",
     "serve-favicon": "~2.4.5"
-  }
+  },
+  "devDependencies": {}
 }

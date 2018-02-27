@@ -13,31 +13,27 @@ import { driverActions, getVisibleDrivers } from 'src/fleet/index';
 import VehicleContainer from '../vehicle-container';
 import DriversTable from '../../../components/fleet/drivers-table/index';
 import TransactionsTable from '../../../components/fleet/transactions-table/index';
-import FleetSettings from '../fleet-settings';
+import FleetSettings from '../fleet-settings-container';
+import Cookies from 'js-cookie';
 
 import { Tabs, Icon } from 'antd';
 const TabPane = Tabs.TabPane;
 
 class FleetContainer extends React.Component {
-  state = { activeKey: 'vehicles' };
+  state = { activeKey: Cookies.get('fleetActiveKey') || 'vehicles' };
   componentDidMount() {
     this.props.loadDrivers();
   }
 
   render() {
-    const { drivers, loadDrivers } = this.props;
+    const { drivers } = this.props;
     return (
       <Tabs
         theme="dark"
         size="small"
+        activeKey={this.state.activeKey}
         onChange={activeKey => {
-          switch (activeKey) {
-            case 'drivers':
-              loadDrivers();
-              break;
-            default:
-              break;
-          }
+          Cookies.set('fleetActiveKey', activeKey, { expires: 7 });
           this.setState({ activeKey });
         }}
       >

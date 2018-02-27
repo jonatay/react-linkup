@@ -60,7 +60,7 @@ export class UsersTable extends Component {
       title: 'Roles',
       render: (text, record) => (
         <span>
-          {Array.isArray(record.customClaims.roles) ? (
+          {record.customClaims && Array.isArray(record.customClaims.roles) ? (
             record.customClaims.roles.map(role => (
               <Tag color="geekblue" key={role}>
                 {role}`

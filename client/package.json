@@ -27,7 +27,8 @@
     "redux-saga": "^0.16.0",
     "redux-saga-requests-axios": "^0.5.0",
     "redux-thunk": "^2.2.0",
-    "reselect": "^3.0.1"
+    "reselect": "^3.0.1",
+    "tailwindcss": "^0.4.1"
   },
   "scripts": {
     "eject": "react-scripts eject",

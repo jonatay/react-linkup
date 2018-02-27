@@ -58,6 +58,7 @@ class VehicleContainer extends React.Component {
     editVehicles: [],
     activeKey: 'vehicles'
   };
+
   componentDidMount() {
     this.props.loadVehicles();
   }
