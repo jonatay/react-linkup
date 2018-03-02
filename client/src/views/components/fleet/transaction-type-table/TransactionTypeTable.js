@@ -1,27 +1,26 @@
 /*
     Jono : 18 02 23
-    CostCentreTable : React Class Component
+    TransactionTypeTable : React Class Component
 */
 import React from 'react';
 import { Table } from 'antd';
 
 import './style.css';
 
-class CostCentreTable extends React.Component {
+class TransactionTypeTable extends React.Component {
   state = {
     data: []
   };
   componentDidMount() {
-    this.props.loadCostCentres();
+    this.props.loadTransactionTypes();
   }
 
   componentWillReceiveProps = nextProps => {
-    const { costCentres } = nextProps;
-    this.setState({ data: costCentres });
+    const { transactionTypes } = nextProps;
+    this.setState({ data: transactionTypes });
   };
 
   columns = [
-    { title: 'Group', dataIndex: 'cost_centre_group', width: 120 },
     {
       title: 'Name',
       dataIndex: 'name',
@@ -31,12 +30,16 @@ class CostCentreTable extends React.Component {
       width: 240
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
+      title: 'Fims Purchase Types',
+      dataIndex: 'fims_purchase_types',
       defaultSortOrder: 'ascend',
       sorter: (a, b) =>
         a.description.toLowerCase().localeCompare(b.description.toLowerCase()),
       width: 240
+    },
+    {
+      title: 'Vat',
+      dataIndex: 'vat_rate'
     }
   ];
 
@@ -49,7 +52,7 @@ class CostCentreTable extends React.Component {
         dataSource={data}
         columns={this.columns}
         scroll={{ y: 590, x: 800 }}
-        rowClassName={record => record.cost_centre_group}
+        rowClassName={record => record.name}
         pagination={{
           size: 'small',
           showSizeChanger: true,
@@ -63,4 +66,4 @@ class CostCentreTable extends React.Component {
   }
 }
 
-export default CostCentreTable;
+export default TransactionTypeTable;

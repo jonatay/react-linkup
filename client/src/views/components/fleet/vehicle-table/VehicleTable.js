@@ -52,13 +52,13 @@ class VehicleTable extends React.Component {
     },
 
     {
-      title: 'Cost Centres',
-      dataIndex: 'cost_centres',
+      title: 'Cost Centre Groups',
+      dataIndex: 'cost_centre_groups',
       render: (text, record) => (
         <div>
-          {record.cost_centres.map(cc => (
-            <Tag key={cc.vccId}>
-              {cc.name.length < 13 ? cc.name : cc.name.substr(0, 13) + '...'}
+          {record.cost_centre_groups.map(ccg => (
+            <Tag key={ccg.id}>
+              {ccg.name.length < 13 ? ccg.name : ccg.name.substr(0, 13) + '...'}
             </Tag>
           ))}
         </div>
@@ -109,15 +109,18 @@ class VehicleTable extends React.Component {
         rowKey="id"
         dataSource={data}
         columns={this.columns}
-        scroll={{ y: 590, x: 800 }}
-        pagination={{
-          size: 'small',
-          showSizeChanger: true,
-          pageSize: 16,
-          pageSizeOptions: ['16', '32', '64', '128', '256'],
-          showTotal: (total, range) =>
-            `${range[0]}-${range[1]} of ${total} vehicles`
-        }}
+        scroll={{ y: 590 }}
+        // rowClassName={(record, index) => (index % 2 === 0 ? "even" : "odd")}
+        rowClassName={record => record.cost_centre_groups[0].name}
+        pagination={false}
+        // pagination={{
+        //   size: 'small',
+        //   showSizeChanger: true,
+        //   pageSize: pageSize,
+        //   pageSizeOptions: ['16', '32', '64', '128', '256'],
+        //   showTotal: (total, range) =>
+        //     `${range[0]}-${range[1]} of ${total} vehicles`
+        // }}
       />
     );
   }

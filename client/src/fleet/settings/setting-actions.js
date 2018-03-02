@@ -16,11 +16,21 @@ export const settingActions = {
   LOAD_COST_CENTRES_FULFILLED: 'FLEET_LOAD_COST_CENTRES_FULFILLED',
   LOAD_COST_CENTRES_FAILED: 'FLEET_LOAD_COST_CENTRES_FAILED',
 
-  CostCentre_TOGGLE_SHOW_INACTIVE: 'FLEET_CostCentre_TOGGLE_SHOW_INACTIVE',
-
   LOAD_COST_CENTRE_GROUPS: 'FLEET_LOAD_COST_CENTRE_GROUPS',
   LOAD_COST_CENTRE_GROUPS_FULFILLED: 'FLEET_LOAD_COST_CENTRE_GROUPS_FULFILLED',
   LOAD_COST_CENTRE_GROUPS_FAILED: 'FLEET_LOAD_COST_CENTRE_GROUPS_FAILED',
+
+  LOAD_TRANSACTION_TYPES: 'FLEET_LOAD_TRANSACTION_TYPES',
+  LOAD_TRANSACTION_TYPES_FULFILLED: 'FLEET_LOAD_TRANSACTION_TYPES_FULFILLED',
+  LOAD_TRANSACTION_TYPES_FAILED: 'FLEET_LOAD_TRANSACTION_TYPES_FAILED',
+
+  LOAD_FIRMS_PERIODS: 'FLEET_LOAD_FIRMS_PERIODS',
+  LOAD_FIRMS_PERIODS_FULFILLED: 'FLEET_LOAD_FIRMS_PERIODS_FULFILLED',
+  LOAD_FIRMS_PERIODS_FAILED: 'FLEET_LOAD_FIRMS_PERIODS_FAILED',
+
+  POST_FIMS_BATCH: 'FLEET_POST_FIMS_BATCH',
+  POST_FIMS_BATCH_FULFILLED: 'FLEET_POST_FIMS_BATCH_FULFILLED',
+  POST_FIMS_BATCH_FAILED: 'FLEET_POST_FIMS_BATCH_FAILED',
 
   loadCostCentres: () => ({
     type: settingActions.LOAD_COST_CENTRES
@@ -96,6 +106,44 @@ export const settingActions = {
 
   loadCostCentreGroupsFailed: error => ({
     type: settingActions.LOAD_COST_CENTRE_GROUPS_FAILED,
+    payload: { error }
+  }),
+
+  loadTransactionTypes: () => ({
+    type: settingActions.LOAD_TRANSACTION_TYPES
+  }),
+  loadTransactionTypesFulfilled: transactionTypes => ({
+    type: settingActions.LOAD_TRANSACTION_TYPES_FULFILLED,
+    payload: { transactionTypes }
+  }),
+
+  loadTransactionTypesFailed: error => ({
+    type: settingActions.LOAD_TRANSACTION_TYPES_FAILED,
+    payload: { error }
+  }),
+
+  loadFimsPeriods: () => ({
+    type: settingActions.LOAD_FIRMS_PERIODS
+  }),
+  loadFimsPeriodsFulfilled: fimsPeriods => ({
+    type: settingActions.LOAD_FIRMS_PERIODS_FULFILLED,
+    payload: { fimsPeriods }
+  }),
+  loadFimsPeriodsFailed: error => ({
+    type: settingActions.LOAD_FIRMS_PERIODS_FAILED,
+    payload: { error }
+  }),
+
+  postFimsBatch: fimsBatch => ({
+    type: settingActions.LOAD_FIRMS_PERIODS,
+    payload: fimsBatch
+  }),
+  postFimsBatchFulfilled: fimsPeriod => ({
+    type: settingActions.LOAD_FIRMS_PERIODS_FULFILLED,
+    payload: { fimsPeriod }
+  }),
+  postFimsBatchFailed: error => ({
+    type: settingActions.LOAD_FIRMS_PERIODS_FAILED,
     payload: { error }
   })
 };

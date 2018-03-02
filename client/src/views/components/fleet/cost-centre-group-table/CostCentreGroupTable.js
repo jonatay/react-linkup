@@ -1,27 +1,26 @@
 /*
     Jono : 18 02 23
-    CostCentreTable : React Class Component
+    CostCentreGroupTable : React Class Component
 */
 import React from 'react';
 import { Table } from 'antd';
 
 import './style.css';
 
-class CostCentreTable extends React.Component {
+class CostCentreGroupTable extends React.Component {
   state = {
     data: []
   };
   componentDidMount() {
-    this.props.loadCostCentres();
+    this.props.loadCostCentreGroups();
   }
 
   componentWillReceiveProps = nextProps => {
-    const { costCentres } = nextProps;
-    this.setState({ data: costCentres });
+    const { costCentreGroups } = nextProps;
+    this.setState({ data: costCentreGroups });
   };
 
   columns = [
-    { title: 'Group', dataIndex: 'cost_centre_group', width: 120 },
     {
       title: 'Name',
       dataIndex: 'name',
@@ -49,7 +48,7 @@ class CostCentreTable extends React.Component {
         dataSource={data}
         columns={this.columns}
         scroll={{ y: 590, x: 800 }}
-        rowClassName={record => record.cost_centre_group}
+        rowClassName={record => record.name}
         pagination={{
           size: 'small',
           showSizeChanger: true,
@@ -63,4 +62,4 @@ class CostCentreTable extends React.Component {
   }
 }
 
-export default CostCentreTable;
+export default CostCentreGroupTable;

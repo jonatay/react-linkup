@@ -3,5 +3,6 @@ export { settingReducer } from './setting-reducer';
 export { settingSagas } from './setting-sagas';
 export {
   getCostCentres,
-  getCostCentreGroups
+  getCostCentreGroups,
+  getTransactionTypes
 } from './setting-selectors';

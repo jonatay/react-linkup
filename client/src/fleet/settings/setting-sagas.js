@@ -3,6 +3,7 @@ import { authActions } from 'src/common/auth/index';
 import { settingActions } from './setting-actions';
 import { costCentreList } from './cost-centre-list';
 import { costCentreGroupList } from './cost-centre-group-list';
+import { transactionTypeList } from './transaction-type-list';
 
 //=====================================
 //  WATCHERS
@@ -13,9 +14,11 @@ function* watchAuthentication() {
     let { payload } = yield take(authActions.SIGN_IN_FULFILLED);
     costCentreList.token = payload.idToken;
     costCentreGroupList.token = payload.idToken;
+    transactionTypeList.token = payload.idToken;
     yield take([authActions.SIGN_OUT_FULFILLED]);
     costCentreList.token = null;
     costCentreGroupList.token = payload.null;
+    transactionTypeList.token = null;
   }
 }
 
@@ -24,6 +27,7 @@ function* watchIdTokenRefresh() {
     const { payload } = yield take(authActions.REFRESH_ID_TOKEN_FULFILLED);
     costCentreList.token = payload.idToken;
     costCentreGroupList.token = payload.idToken;
+    transactionTypeList.token = payload.idToken;
   }
 }
 
@@ -79,6 +83,21 @@ function* watchLoadCostCentreGroups() {
   );
 }
 
+function* loadAllTransactionTypes() {
+  const transactionTypes = yield call([
+    transactionTypeList,
+    transactionTypeList.list
+  ]);
+  yield put(settingActions.loadTransactionTypesFulfilled(transactionTypes));
+}
+
+function* watchLoadTransactionTypes() {
+  yield takeEvery(
+    settingActions.LOAD_TRANSACTION_TYPES,
+    loadAllTransactionTypes
+  );
+}
+
 //=====================================
 //  COST_CENTRE SAGAS
 //-------------------------------------
@@ -90,5 +109,6 @@ export const settingSagas = [
   //fork(watchCreateCostCentre),
   fork(watchRemoveCostCentre),
   fork(watchUpdateCostCentre),
-  fork(watchLoadCostCentreGroups)
+  fork(watchLoadCostCentreGroups),
+  fork(watchLoadTransactionTypes)
 ];

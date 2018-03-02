@@ -7,6 +7,7 @@ import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 import { driverActions, getVisibleDrivers } from 'src/fleet/index';
 
@@ -14,7 +15,6 @@ import VehicleContainer from '../vehicle-container';
 import DriversTable from '../../../components/fleet/drivers-table/index';
 import TransactionsTable from '../../../components/fleet/transactions-table/index';
 import FleetSettings from '../fleet-settings-container';
-import Cookies from 'js-cookie';
 
 import { Tabs, Icon } from 'antd';
 const TabPane = Tabs.TabPane;
