@@ -4,5 +4,6 @@ export { settingSagas } from './setting-sagas';
 export {
   getCostCentres,
   getCostCentreGroups,
-  getTransactionTypes
+  getTransactionTypes,
+  getFimsPeriods
 } from './setting-selectors';

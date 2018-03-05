@@ -7,25 +7,12 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Upload, Icon, message, Button } from 'antd';
+
+import FimsPeriodTable from 'src/views/components/fleet/fims-period-table';
+
+import { Upload, Icon, Button, Row, Col } from 'antd';
 const Dragger = Upload.Dragger;
 
-// const props = {
-//   name: 'file',
-//   multiple: true,
-//   action: 'http://localhost:3000/api-fims/fims/voucher-post-batch',
-//   onChange(info) {
-//     const status = info.file.status;
-//     if (status !== 'uploading') {
-//       console.log(info.file, info.fileList);
-//     }
-//     if (status === 'done') {
-//       message.success(`${info.file.name} file uploaded successfully.`);
-//     } else if (status === 'error') {
-//       message.error(`${info.file.name} file upload failed.`);
-//     }
-//   }
-// };
 const inclCsvCols = [
   'cut_off_date',
   'registration',
@@ -64,7 +51,7 @@ function csvToJSON(csv) {
       .replace('-', '_')
       .replace('\r', '');
   });
-  console.log(`got ${aCsv.length} lines`);
+  // console.log(`got ${aCsv.length} lines`);
   let jsonRes = [];
   for (let i = 1; i <= aCsv.length - 1; i++) {
     // aCsv.length
@@ -72,10 +59,12 @@ function csvToJSON(csv) {
     if (aLine.length > 1) {
       let jsonLine = {};
       for (var j = 0; j < aLine.length; j++) {
-        jsonLine[aHead[j]] = aLine[j]
-          .replace(/"/g, '')
-          .replace(/&/g, '+')
-          .trim();
+        if (inclCsvCols.includes(aHead[j])) {
+          jsonLine[aHead[j]] = aLine[j]
+            .replace(/"/g, '')
+            .replace(/&/g, '+')
+            .trim();
+        }
       }
       jsonRes.push(jsonLine);
     }
@@ -90,47 +79,26 @@ class FimsImport extends React.Component {
     uploading: false
   };
 
+  componentDidMount() {
+    this.props.loadFimsPeriods();
+  }
+
   handleUpload = () => {
-    const { fileList } = this.state;
+    let { fileList } = this.state;
     // const formData = new FormData();
-
-    fileList.forEach(file => {
-      console.log(file);
-
+    this.setState({ uploading: true });
+    for (let i = fileList.length - 1; i >= 0; i--) {
+      let file = fileList[i];
       let reader = new FileReader();
       reader.onload = event => {
         let data = csvToJSON(event.target.result);
-        console.log('data...', data);
+        this.props.postFimsBatch(data);
       };
       reader.readAsText(file);
-
-      // formData.append('files[]', file);
-    });
-    message.success('upload successfully.');
-
-    // this.setState({
-    //   uploading: true
-    // });
-    //
-    // // You can use any AJAX library you like
-    // fetch('/api-fims/fims/voucher-post-batch', {
-    //   method: 'post',
-    //   processData: false,
-    //   body: formData
-    // })
-    //   .then(data => {
-    //     this.setState({
-    //       fileList: [],
-    //       uploading: false
-    //     });
-    //     message.success('upload successfully.');
-    //   })
-    //   .catch(err => {
-    //     this.setState({
-    //       uploading: false
-    //     });
-    //     message.error('upload failed.');
-    //   });
+      fileList = fileList.filter(f => f.name !== file.name);
+      this.setState({ fileList });
+    }
+    this.setState({ uploading: false });
   };
 
   render() {
@@ -138,6 +106,7 @@ class FimsImport extends React.Component {
     const props = {
       action: '/api-fims/fims/voucher-post-batch',
       multiple: true,
+      accept: '.csv',
       onRemove: file => {
         this.setState(({ fileList }) => {
           const index = fileList.indexOf(file);
@@ -158,29 +127,39 @@ class FimsImport extends React.Component {
     };
 
     return (
-      <div>
-        <Dragger {...props}>
-          <p className="ant-upload-drag-icon">
-            <Icon type="inbox" />
-          </p>
-          <p className="ant-upload-text">
-            Click or drag file to this area to upload
-          </p>
-          <p className="ant-upload-hint">
-            Support for a single or bulk upload. Must be csv files exported from
-            FIMS voucher exception search.
-          </p>
-        </Dragger>
-        <Button
-          className="upload-demo-start"
-          type="primary"
-          onClick={this.handleUpload}
-          disabled={this.state.fileList.length === 0}
-          loading={uploading}
-        >
-          {uploading ? 'Uploading' : 'Start Upload'}
-        </Button>
-      </div>
+      <Row type="flex" justify="left" align="top">
+        <Col span={18}>
+          <FimsPeriodTable fimsPeriods={this.props.fimsPeriods} />
+        </Col>
+        <Col span={6}>
+          <Dragger {...props} style={{ padding: 10 }}>
+            <p className="ant-upload-drag-icon">
+              <Icon type="inbox" />
+            </p>
+            <p className="ant-upload-text">
+              Click or drag file to this area to upload
+            </p>
+            <p className="ant-upload-hint">
+              Support for a single or bulk upload.
+            </p>
+            <p
+              className="ant-upload-hint"
+              style={{ color: 'red', fontWeight: 'bolder' }}
+            >
+              Must be csv files exported from FIMS voucher exception search.
+            </p>
+          </Dragger>
+          <Button
+            className="upload-start"
+            type="primary"
+            onClick={this.handleUpload}
+            disabled={this.state.fileList.length === 0}
+            loading={uploading}
+          >
+            {uploading ? 'Uploading' : 'Start Upload'}
+          </Button>
+        </Col>
+      </Row>
     );
   }
 }

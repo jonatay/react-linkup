@@ -4,9 +4,9 @@ import { CostCentreGroup } from './cost-centre-group';
 
 const costCentreGroupPath = 'fleet/cost-centre-groups';
 
-class DriverApiList extends ApiList {}
+class CostCentreGroupList extends ApiList {}
 
-export const costCentreGroupList = new DriverApiList(
+export const costCentreGroupList = new CostCentreGroupList(
   {
     // onAdd: settingActions.createCostCentreFulfilled(),
     // onChange: settingActions.updateCostCentreFulfilled(),

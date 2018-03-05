@@ -7,6 +7,7 @@ const transactionsController = require('../controllers/fleet/transactionsControl
 const costCentreController = require('../controllers/fleet/costCentreController');
 const costCentreGroupController = require('../controllers/fleet/costCentreGroupController');
 const transactionTypeController = require('../controllers/fleet/transactionTypeController');
+const fimsController = require('../controllers/fleet/fimsController');
 
 router.get('/vehicles', vehicleController.list);
 router.put('/vehicles/:id', vehicleController.update);
@@ -19,5 +20,8 @@ router.get('/transactions', transactionsController.list);
 router.get('/cost-centres', costCentreController.list);
 router.get('/cost-centre-groups', costCentreGroupController.list);
 router.get('/transaction-types', transactionTypeController.list);
+
+router.get('/fims-periods', fimsController.list);
+router.post('/fims-periods/post-fims-batch', fimsController.post_fims_batch);
 
 module.exports = router;

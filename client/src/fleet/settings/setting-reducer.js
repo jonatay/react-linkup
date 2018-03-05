@@ -48,6 +48,12 @@ export function settingReducer(state = new SettingState(), { payload, type }) {
         new List(payload.transactionTypes)
       );
 
+    case settingActions.LOAD_FIRMS_PERIODS_FULFILLED:
+      return state.set(
+        'fimsPeriodList',
+        new List(payload.fimsPeriods)
+      );
+
     default:
       return state;
   }

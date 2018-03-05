@@ -135,15 +135,15 @@ export const settingActions = {
   }),
 
   postFimsBatch: fimsBatch => ({
-    type: settingActions.LOAD_FIRMS_PERIODS,
-    payload: fimsBatch
+    type: settingActions.POST_FIMS_BATCH,
+    payload: { fimsBatch }
   }),
   postFimsBatchFulfilled: fimsPeriod => ({
-    type: settingActions.LOAD_FIRMS_PERIODS_FULFILLED,
+    type: settingActions.POST_FIMS_BATCH_FULFILLED,
     payload: { fimsPeriod }
   }),
   postFimsBatchFailed: error => ({
-    type: settingActions.LOAD_FIRMS_PERIODS_FAILED,
+    type: settingActions.POST_FIMS_BATCH_FAILED,
     payload: { error }
   })
 };

@@ -4,7 +4,7 @@ import { CostCentre } from './cost-centre';
 
 const costCentrePath = 'fleet/cost-centres';
 
-class DriverApiList extends ApiList {
+class CostCentreList extends ApiList {
   // addDriverRoles(uid, roles) {
   //   return this.customApiCall(uid, 'add-costCentre-roles', roles, 'POST')
   //     .then(res => res)
@@ -17,7 +17,7 @@ class DriverApiList extends ApiList {
   // }
 }
 
-export const costCentreList = new DriverApiList(
+export const costCentreList = new CostCentreList(
   {
     onAdd: settingActions.createCostCentreFulfilled(),
     onChange: settingActions.updateCostCentreFulfilled(),

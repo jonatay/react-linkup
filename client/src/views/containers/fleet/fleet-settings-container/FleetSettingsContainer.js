@@ -18,7 +18,8 @@ import {
   settingActions,
   getCostCentres,
   getCostCentreGroups,
-  getTransactionTypes
+  getTransactionTypes,
+  getFimsPeriods
 } from 'src/fleet/settings';
 
 import { Tabs, Icon } from 'antd';
@@ -78,7 +79,7 @@ class FleetSettingsContainer extends React.Component {
             </span>
           }
         >
-          <FimpImport />
+          <FimpImport {...this.props} />
         </TabPane>
       </Tabs>
     );
@@ -94,13 +95,17 @@ FleetSettingsContainer.propTypes = {
   loadCostCentreGroups: PropTypes.func.isRequired,
   //transaction types
   transactionTypes: PropTypes.instanceOf(Array).isRequired,
-  loadTransactionTypes: PropTypes.func.isRequired
+  loadTransactionTypes: PropTypes.func.isRequired,
+  //fims
+  fimsPeriods: PropTypes.instanceOf(Array).isRequired,
+  postFimsBatch: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   costCentres: getCostCentres(state),
   costCentreGroups: getCostCentreGroups(state),
-  transactionTypes: getTransactionTypes(state)
+  transactionTypes: getTransactionTypes(state),
+  fimsPeriods: getFimsPeriods(state)
 });
 
 const mapDispatchToProps = {

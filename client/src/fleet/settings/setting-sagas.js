@@ -4,6 +4,7 @@ import { settingActions } from './setting-actions';
 import { costCentreList } from './cost-centre-list';
 import { costCentreGroupList } from './cost-centre-group-list';
 import { transactionTypeList } from './transaction-type-list';
+import { fimsPeriodList } from './fims-period-list';
 
 //=====================================
 //  WATCHERS
@@ -15,10 +16,12 @@ function* watchAuthentication() {
     costCentreList.token = payload.idToken;
     costCentreGroupList.token = payload.idToken;
     transactionTypeList.token = payload.idToken;
+    fimsPeriodList.token = payload.idToken;
     yield take([authActions.SIGN_OUT_FULFILLED]);
     costCentreList.token = null;
     costCentreGroupList.token = payload.null;
     transactionTypeList.token = null;
+    fimsPeriodList.token = null;
   }
 }
 
@@ -28,6 +31,7 @@ function* watchIdTokenRefresh() {
     costCentreList.token = payload.idToken;
     costCentreGroupList.token = payload.idToken;
     transactionTypeList.token = payload.idToken;
+    fimsPeriodList.token = payload.idToken;
   }
 }
 
@@ -98,6 +102,28 @@ function* watchLoadTransactionTypes() {
   );
 }
 
+function* loadFimsPeriods() {
+  const fimsPeriods = yield call([fimsPeriodList, fimsPeriodList.list]);
+  yield put(settingActions.loadFimsPeriodsFulfilled(fimsPeriods));
+}
+
+function* watchFimsLoadPeriods() {
+  yield takeEvery(settingActions.LOAD_FIRMS_PERIODS, loadFimsPeriods);
+}
+
+function* postFimsBatch({ payload }) {
+  const { fimsBatch } = payload;
+  const postFimsBatchResult = yield call(
+    [fimsPeriodList, fimsPeriodList.postFimsBatch],
+    { fimsBatch }
+  );
+  yield put(settingActions.postFimsBatchFulfilled(postFimsBatchResult));
+}
+
+function* watchPostFimsBatch() {
+  yield takeEvery(settingActions.POST_FIMS_BATCH, postFimsBatch);
+}
+
 //=====================================
 //  COST_CENTRE SAGAS
 //-------------------------------------
@@ -110,5 +136,7 @@ export const settingSagas = [
   fork(watchRemoveCostCentre),
   fork(watchUpdateCostCentre),
   fork(watchLoadCostCentreGroups),
-  fork(watchLoadTransactionTypes)
+  fork(watchLoadTransactionTypes),
+  fork(watchFimsLoadPeriods),
+  fork(watchPostFimsBatch)
 ];

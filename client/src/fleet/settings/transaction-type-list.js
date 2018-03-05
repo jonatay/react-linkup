@@ -4,9 +4,9 @@ import { TransactionType } from './transaction-type';
 
 const transactionTypePath = 'fleet/transaction-types';
 
-class DriverApiList extends ApiList {}
+class TransactionTypeList extends ApiList {}
 
-export const transactionTypeList = new DriverApiList(
+export const transactionTypeList = new TransactionTypeList(
   {
     // onAdd: settingActions.createCostCentreFulfilled(),
     // onChange: settingActions.updateCostCentreFulfilled(),

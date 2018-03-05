@@ -1,19 +1,23 @@
 import { createSelector } from 'reselect';
 
-export function getSettings(state) {
+export const getSettings = state => {
   return state.fleet.settings;
-}
+};
 
-export function getCostCentreList(state) {
+export const getCostCentreList = state => {
   return getSettings(state).costCentreList;
-}
+};
 
-export function getCostCentreGroupList(state) {
+export const getCostCentreGroupList = state => {
   return getSettings(state).costCentreGroupList;
-}
+};
 
-export function getTransactionTypeList(state) {
+export const getTransactionTypeList = state => {
   return getSettings(state).transactionTypeList;
+};
+
+export function getFimsPeriodList(state) {
+  return getSettings(state).fimsPeriodList;
 }
 
 //=====================================
@@ -39,4 +43,9 @@ export const getCostCentreGroups = createSelector(
 export const getTransactionTypes = createSelector(
   getTransactionTypeList,
   transactionTypeList => transactionTypeList.toArray()
+);
+
+export const getFimsPeriods = createSelector(
+  getFimsPeriodList,
+  fimsPeriodList => fimsPeriodList.toArray()
 );
