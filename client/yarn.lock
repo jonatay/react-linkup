@@ -8082,6 +8082,10 @@ react-moment@^0.6.8:
   version "0.6.8"
   resolved "https://registry.yarnpkg.com/react-moment/-/react-moment-0.6.8.tgz#8612a90f3c8afec26fef6844806d84b9d9e3b212"
 
+react-recaptcha@^2.3.7:
+  version "2.3.7"
+  resolved "https://registry.yarnpkg.com/react-recaptcha/-/react-recaptcha-2.3.7.tgz#5a10ea4a7a7f59e6b602d4d385caf73a9bd15043"
+
 react-redux@^5.0.6:
   version "5.0.6"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-5.0.6.tgz#23ed3a4f986359d68b5212eaaa681e60d6574946"

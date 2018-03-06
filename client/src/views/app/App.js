@@ -17,7 +17,8 @@ import {
 import AppHeader from '../components/common/header';
 import RequireAuthRoute from '../components/common/require-auth-route';
 import RequireUnauthRoute from '../components/common/require-unauth-route';
-import SignInPage from '../pages/sign-in';
+import SignInPage from '../pages/sign-in-page';
+import RegisterUserPage from '../pages/register-user-page';
 import RootPage from '../pages/root';
 
 import AdminPage from '../pages/admin-page';
@@ -42,7 +43,12 @@ const App = ({
         <Content>
           <RequireUnauthRoute
             authenticated={authenticated}
-            path="/*"
+            path="/register"
+            component={RegisterUserPage}
+          />
+          <RequireUnauthRoute
+            authenticated={authenticated}
+            path="/login"
             component={SignInPage}
           />
         </Content>

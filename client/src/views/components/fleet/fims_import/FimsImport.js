@@ -96,7 +96,7 @@ class FimsImport extends React.Component {
       };
       reader.readAsText(file);
       fileList = fileList.filter(f => f.name !== file.name);
-      this.setState({ fileList });
+      //this.setState({ fileList });
     }
     this.setState({ uploading: false });
   };

@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { notification } from 'antd';
-
 import { authActions, getAuthError } from 'src/common/auth';
-import { Button } from 'antd';
+import { LoginForm } from 'src/views/components/common/login-form';
+
+import { notification, Button, Row, Col } from 'antd';
 
 import './sign-in-page.css';
 
@@ -30,40 +30,45 @@ const SignInPage = ({
   signInWithFacebook
 }) => {
   return (
-    <div className="g-row sign-in">
+    <Row justify="center" align="top">
       {authError === null ? '' : openNotification(authError)}
-      <div className="g-col">
-        <h1 className="sign-in__heading">Sign in</h1>
-        <Button
-          className="sign-in__button"
-          icon="github"
-          onClick={signInWithGithub}
-        >
-          GitHub
-        </Button>
-        <Button
-          className="sign-in__button"
-          icon="google-plus"
-          onClick={signInWithGoogle}
-        >
-          Google
-        </Button>
-        <Button
-          className="sign-in__button"
-          icon="twitter"
-          onClick={signInWithTwitter}
-        >
-          Twitter
-        </Button>
-        <Button
-          className="sign-in__button"
-          icon="facebook"
-          onClick={signInWithFacebook}
-        >
-          Facebook
-        </Button>
-      </div>
-    </div>
+      <h1 className="sign-in__heading">Sign in</h1>
+      <Row type="flex" justify="center" align="top">
+        <Col span={6}>
+          <LoginForm />
+        </Col>
+        <Col span={6} style={{ paddingLeft: 30, paddingRight: 30 }}>
+          <Button
+            className="sign-in__button"
+            icon="github"
+            onClick={signInWithGithub}
+          >
+            GitHub
+          </Button>
+          <Button
+            className="sign-in__button"
+            icon="google-plus"
+            onClick={signInWithGoogle}
+          >
+            Google
+          </Button>
+          <Button
+            className="sign-in__button"
+            icon="twitter"
+            onClick={signInWithTwitter}
+          >
+            Twitter
+          </Button>
+          <Button
+            className="sign-in__button"
+            icon="facebook"
+            onClick={signInWithFacebook}
+          >
+            Facebook
+          </Button>
+        </Col>
+      </Row>
+    </Row>
   );
 };
 
