@@ -1,4 +1,4 @@
-DROP FUNCTION fleet.import_vehicle_from_vehicles();
+--DROP FUNCTION fleet.import_vehicle_from_vehicles();
 CREATE OR REPLACE FUNCTION fleet.import_vehicle_from_vehicles() returns JSON as $$
 //
 //// select all fleet.vehicles - including c_c_v -> for each {vs} also got {vs_ccids}

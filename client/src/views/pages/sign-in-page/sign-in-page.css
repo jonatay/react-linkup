@@ -16,7 +16,8 @@
   font-family: inherit;
   font-size: 1.125rem;
   line-height: 48px;
-  color: #999; }
+  color: #096dd9;
+  background-color: #e6fffb; }
   .sign-in__button:hover {
     border: 2px solid #aaa;
     line-height: 46px; }

@@ -12,16 +12,18 @@ module.exports.get_period = (req, res) => {
 };
 
 module.exports.post_batch_import = (req, res) => {
-  const data = JSON.parse(req.body.data);
-  postBatch(data, (err, result) => {
-    postBatchImport(data, (err, result) => {
-      getNext((err, result) => {
-        if (err) {
-          res.json(err);
-        } else {
-          res.json(result);
-        }
-      });
-    });
-  });
+  console.log(req.body);
+  res.json('ok');
+  // const data = JSON.parse(req.body.data);
+  // postBatch(data, (err, result) => {
+  //   postBatchImport(data, (err, result) => {
+  //     getNext((err, result) => {
+  //       if (err) {
+  //         res.json(err);
+  //       } else {
+  //         res.json(result);
+  //       }
+  //     });
+  //   });
+  // });
 };

@@ -1,3 +1,3 @@
-import { vehicleSagas, driverSagas } from './';
+import { vehicleSagas, driverSagas, settingSagas } from './';
 
-export const fleetSagas = [...vehicleSagas, ...driverSagas];
+export const fleetSagas = [...vehicleSagas, ...driverSagas, ...settingSagas];

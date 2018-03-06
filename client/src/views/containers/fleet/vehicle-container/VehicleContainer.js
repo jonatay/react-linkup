@@ -32,14 +32,14 @@ const IntVehicleTable = ({
   toggleShowInactive
 }) => (
   <Row>
-    <Row style={{marginBottom:12}}>
+    <Row style={{ marginBottom: 12 }}>
       <Col span={8}>
         <FilterInput filterText={vehicleFilter} onTextChange={filterVehicles} />
       </Col>
       <Col span={4}>
         <Switch
-          checkedChildren="Show Inactive"
-          unCheckedChildren="Hide Inactive"
+          checkedChildren="Hide Inactive"
+          unCheckedChildren="Show Inactive"
           checked={showInactive}
           onChange={toggleShowInactive}
         />
@@ -58,6 +58,7 @@ class VehicleContainer extends React.Component {
     editVehicles: [],
     activeKey: 'vehicles'
   };
+
   componentDidMount() {
     this.props.loadVehicles();
   }

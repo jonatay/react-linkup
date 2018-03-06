@@ -3,9 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "set DEBUG=reactLinkup:* & nodemon ./bin/www",
-    "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "start": "set DEBUG=reactLinkup:* & nodemon ./bin/www"
   },
   "dependencies": {
     "@firebase/app-types": "^0.1.1",
@@ -26,8 +24,7 @@
     "pg-promise": "^7.4.1",
     "raven": "^2.4.0",
     "rollbar": "^2.3.7",
-    "serve-favicon": "~2.4.5",
-    "snyk": "^1.69.7"
+    "serve-favicon": "~2.4.5"
   },
-  "snyk": true
+  "devDependencies": {}
 }

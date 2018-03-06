@@ -1,4 +1,9 @@
-@import './shared', 'minx/src/reset', 'minx/src/elements', './grid';
+//@tailwind preflight;
+
+@import './shared',
+  'node_modules/minx/src/reset',
+  'node_modules/minx/src/elements',
+  './grid';
 
 html {
   //overflow-y: scroll;

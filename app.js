@@ -26,7 +26,12 @@ app.set('view engine', 'jade');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 // app.use(morgan('combined'));
 
-app.use(bodyParser.json());
+app.use(
+  bodyParser.json({
+    parameterLimit: 1000000,
+    limit: '50mb'
+  })
+);
 app.use(
   bodyParser.urlencoded({
     parameterLimit: 1000000,

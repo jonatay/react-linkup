@@ -1,6 +1,5 @@
 @import 'views/styles/shared';
 
-
 .sign-in {
   margin-top: 90px;
   max-width: 300px;
@@ -21,7 +20,8 @@
   font-family: inherit;
   font-size: rem(18px);
   line-height: 48px;
-  color: #999;
+  color: #096dd9;
+  background-color: #e6fffb;
 
   &:hover {
     border: 2px solid #aaa;
