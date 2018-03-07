@@ -9,6 +9,7 @@ export const SettingState = new Record({
 });
 
 export function settingReducer(state = new SettingState(), { payload, type }) {
+  const { fimsPeriodList } = state;
   switch (type) {
     case settingActions.CREATE_COST_CENTRE_FULFILLED:
       return state.set(
@@ -49,9 +50,24 @@ export function settingReducer(state = new SettingState(), { payload, type }) {
       );
 
     case settingActions.LOAD_FIRMS_PERIODS_FULFILLED:
+      return state.set('fimsPeriodList', new List(payload.fimsPeriods));
+
+    case settingActions.POST_FIMS_BATCH_FULFILLED:
       return state.set(
         'fimsPeriodList',
-        new List(payload.fimsPeriods)
+        fimsPeriodList.find(rec => rec.id === payload.fimsPeriod.id)
+          ? fimsPeriodList.map(fimsPeriod => {
+              return fimsPeriod.id === payload.fimsPeriod.id
+                ? payload.fimsPeriod
+                : fimsPeriod;
+            })
+          : fimsPeriodList.push(payload.fimsPeriod)
+      );
+
+    case settingActions.REMOVE_FIRMS_PERIOD_FULFILLED:
+      return state.set(
+        'fimsPeriodList',
+        fimsPeriodList.filter(fp => fp.id !== payload.id)
       );
 
     default:

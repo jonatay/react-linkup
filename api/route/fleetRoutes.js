@@ -21,7 +21,9 @@ router.get('/cost-centres', costCentreController.list);
 router.get('/cost-centre-groups', costCentreGroupController.list);
 router.get('/transaction-types', transactionTypeController.list);
 
-router.get('/fims-periods', fimsController.list);
+router.get('/fims-periods', fimsController.list_fims_periods);
 router.post('/fims-periods/post-fims-batch', fimsController.post_fims_batch);
+
+router.delete('/fims-periods/:id', fimsController.remove_fims_period);
 
 module.exports = router;

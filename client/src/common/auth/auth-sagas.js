@@ -1,5 +1,5 @@
 import { delay } from 'redux-saga';
-import { call, fork, put, take, cancel } from 'redux-saga/effects';
+import { call, fork, put, take, cancel, takeEvery } from 'redux-saga/effects';
 import { firebaseAuth } from '../../firebase/index';
 import history from '../../history';
 import { authActions } from './auth-actions';
@@ -54,6 +54,50 @@ function* refreshToken(user) {
   }
 }
 
+function* signInWithEmailPassword({ payload }) {
+  const { email, password } = payload;
+  console.log(email, password);
+  const authData = yield call(
+    [firebaseAuth, firebaseAuth.signInAndRetrieveDataWithEmailAndPassword],
+    email,
+    password
+  );
+  let idToken = yield call([authData.user, authData.user.getIdToken]);
+  const customClaim = JSON.parse(b64DecodeUnicode(idToken.split('.')[1]));
+  yield put(
+    authActions.signInFulfilled(authData.user, idToken, customClaim.roles)
+  );
+  yield history.push('/');
+}
+
+function* registerNewUser({ payload }) {
+  try {
+    const { user } = payload;
+    const { email, password } = user;
+    const authData = yield call(
+      [
+        firebaseAuth,
+        firebaseAuth.createUserAndRetrieveDataWithEmailAndPassword
+      ],
+      email,
+      password
+    );
+    //get curr user and set up rest of profile
+    authData.user.updateProfile({
+      displayName: user.fullname
+    });
+    yield put(authActions.registerNewUserFulfilled(authData.user));
+    let idToken = yield call([authData.user, authData.user.getIdToken]);
+    const customClaim = JSON.parse(b64DecodeUnicode(idToken.split('.')[1]));
+    yield put(
+      authActions.signInFulfilled(authData.user, idToken, customClaim.roles)
+    );
+    yield history.push('/');
+  } catch (error) {
+    yield put(authActions.registerNewUserFailed(error));
+  }
+}
+
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -63,6 +107,13 @@ function* watchSignIn() {
     let { payload } = yield take(authActions.SIGN_IN);
     yield fork(signIn, payload.authProvider);
   }
+}
+
+function* watchSignInWithEmailPassword() {
+  yield takeEvery(
+    authActions.SIGN_IN_WITH_EMAIL_PASSWORD,
+    signInWithEmailPassword
+  );
 }
 
 //starts (then cancels
@@ -95,6 +146,10 @@ function* watchRefreshIdToken() {
   }
 }
 
+function* watchRegisterNewUser() {
+  yield takeEvery(authActions.REGISTER_NEW_USER, registerNewUser);
+}
+
 //=====================================
 //  AUTH SAGAS
 //-------------------------------------
@@ -103,5 +158,7 @@ export const authSagas = [
   fork(watchSignIn),
   fork(watchSignOut),
   fork(watchSignInFulfilled),
-  fork(watchRefreshIdToken)
+  fork(watchRefreshIdToken),
+  fork(watchRegisterNewUser),
+  fork(watchSignInWithEmailPassword)
 ];

@@ -28,6 +28,10 @@ export const settingActions = {
   LOAD_FIRMS_PERIODS_FULFILLED: 'FLEET_LOAD_FIRMS_PERIODS_FULFILLED',
   LOAD_FIRMS_PERIODS_FAILED: 'FLEET_LOAD_FIRMS_PERIODS_FAILED',
 
+  REMOVE_FIRMS_PERIOD: 'FLEET_REMOVE_FIRMS_PERIOD',
+  REMOVE_FIRMS_PERIOD_FULFILLED: 'FLEET_REMOVE_FIRMS_PERIOD_FULFILLED',
+  REMOVE_FIRMS_PERIOD_FAILED: 'FLEET_REMOVE_FIRMS_PERIOD_FAILED',
+
   POST_FIMS_BATCH: 'FLEET_POST_FIMS_BATCH',
   POST_FIMS_BATCH_FULFILLED: 'FLEET_POST_FIMS_BATCH_FULFILLED',
   POST_FIMS_BATCH_FAILED: 'FLEET_POST_FIMS_BATCH_FAILED',
@@ -131,6 +135,19 @@ export const settingActions = {
   }),
   loadFimsPeriodsFailed: error => ({
     type: settingActions.LOAD_FIRMS_PERIODS_FAILED,
+    payload: { error }
+  }),
+
+  removeFimsPeriod: id => ({
+    type: settingActions.REMOVE_FIRMS_PERIOD,
+    payload: { id }
+  }),
+  removeFimsPeriodFulfilled: id => ({
+    type: settingActions.REMOVE_FIRMS_PERIOD_FULFILLED,
+    payload: id
+  }),
+  removeFimsPeriodFailed: error => ({
+    type: settingActions.REMOVE_FIRMS_PERIOD_FAILED,
     payload: { error }
   }),
 

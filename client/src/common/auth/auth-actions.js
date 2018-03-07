@@ -5,6 +5,12 @@ export const authActions = {
   SIGN_IN_FAILED: 'SIGN_IN_FAILED',
   SIGN_IN_FULFILLED: 'SIGN_IN_FULFILLED',
 
+  REGISTER_NEW_USER: 'REGISTER_NEW_USER',
+  REGISTER_NEW_USER_FULFILLED: 'REGISTER_NEW_USER_FULFILLED',
+  REGISTER_NEW_USER_FAILED: 'REGISTER_NEW_USER_FAILED',
+
+  SIGN_IN_WITH_EMAIL_PASSWORD: 'SIGN_IN_WITH_EMAIL_PASSWORD',
+
   AUTH_ACL_GET: 'AUTH_ACL_GET',
   AUTH_ACL_GET_FULFILLED: 'AUTH_ACL_GET_FULFILLED',
   AUTH_ACL_GET_FAILED: 'AUTH_ACL_GET_FAILED',
@@ -35,6 +41,24 @@ export const authActions = {
   signIn: authProvider => ({
     type: authActions.SIGN_IN,
     payload: { authProvider }
+  }),
+
+  signInWithEmailPassword: (email, password) => ({
+    type: authActions.SIGN_IN_WITH_EMAIL_PASSWORD,
+    payload: { email, password }
+  }),
+
+  registerNewUser: user => ({
+    type: authActions.REGISTER_NEW_USER,
+    payload: { user }
+  }),
+  registerNewUserFulfilled: user => ({
+    type: authActions.REGISTER_NEW_USER_FULFILLED,
+    payload: { user }
+  }),
+  registerNewUserFailed: error => ({
+    type: authActions.REGISTER_NEW_USER_FAILED,
+    payload: { error }
   }),
 
   signInFailed: error => ({

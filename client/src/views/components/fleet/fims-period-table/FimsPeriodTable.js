@@ -4,7 +4,9 @@
 */
 import React from 'react';
 
-import { Table } from 'antd';
+import { Table, Button, Modal } from 'antd';
+
+import dateFormat from 'dateformat';
 
 class FimsPeriodTable extends React.Component {
   columns = [
@@ -27,17 +29,55 @@ class FimsPeriodTable extends React.Component {
     },
     {
       title: 'Last Update',
-      dataIndex: 'when_received'
+      dataIndex: 'when_received',
+      width: 200,
+      render: text => dateFormat(text, 'yy-mm-dd (HH:MM:ss)')
     },
     {
       title: 'Rowcount',
+      width: 100,
       dataIndex: 'rows_received'
     },
     {
       title: 'Batch Total',
-      dataIndex: 'batch_total'
+      dataIndex: 'batch_total',
+      width: 100,
+      render: text => new Intl.NumberFormat().format(text)
+    },
+    {
+      width: 100,
+      align: 'right',
+      render: rec => (
+        <Button
+          style={{ margin: 5, marginRight: 20 }}
+          type="danger"
+          ghost={true}
+          size="small"
+          shape="circle"
+          icon="delete"
+          onClick={() => {
+            this.showRemoveFimsPeriodConfirm(rec, this.props.removeFimsPeriod);
+          }}
+        />
+      )
     }
   ];
+
+  showRemoveFimsPeriodConfirm = (fimsPeriod, removeFimsPeriod) => {
+    Modal.confirm({
+      title: 'Are you sure you want to DELETE this fimsPeriod?',
+      content: `year: ${fimsPeriod.cal_year} month: ${fimsPeriod.cal_month}`,
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        removeFimsPeriod(fimsPeriod.id);
+      },
+      onCancel() {
+        console.log('Cancel');
+      }
+    });
+  };
 
   render() {
     const { fimsPeriods } = this.props;
@@ -48,6 +88,7 @@ class FimsPeriodTable extends React.Component {
         dataSource={fimsPeriods}
         columns={this.columns}
         rowClassName={(record, index) => (index % 2 === 0 ? 'even' : 'odd')}
+        scroll={{ y: 590 }}
         // rowClassName={record => record.cost_centre_groups[0].name}
         pagination={false}
       />
