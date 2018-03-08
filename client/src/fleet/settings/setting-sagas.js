@@ -6,6 +6,70 @@ import { costCentreGroupList } from './cost-centre-group-list';
 import { transactionTypeList } from './transaction-type-list';
 import { fimsPeriodList } from './fims-period-list';
 
+function* importFimsPeriod({ payload }) {
+  //console.log(payload);
+  const fimsPeriod = yield call(
+    [fimsPeriodList, fimsPeriodList.importFimsPeriod],
+    payload.id
+  );
+  yield put(settingActions.importFimsPeriodFulfilled(fimsPeriod));
+}
+
+function* removeFimsPeriod({ payload }) {
+  const id = yield call([fimsPeriodList, fimsPeriodList.remove], payload.id);
+  yield put(settingActions.removeFimsPeriodFulfilled(id));
+}
+
+function* loadFimsPeriods() {
+  const fimsPeriods = yield call([fimsPeriodList, fimsPeriodList.list]);
+  yield put(settingActions.loadFimsPeriodsFulfilled(fimsPeriods));
+}
+
+function* postFimsBatch({ payload }) {
+  const { fimsBatch } = payload;
+  const postFimsBatchResult = yield call(
+    [fimsPeriodList, fimsPeriodList.postFimsBatch],
+    { fimsBatch }
+  );
+  yield put(settingActions.postFimsBatchFulfilled(postFimsBatchResult));
+}
+
+function* removeCostCentre({ payload }) {
+  let result = yield call(
+    [costCentreList, costCentreList.remove],
+    payload.costCentre.uid
+  );
+  yield put(settingActions.removeCostCentreFulfilled(result));
+}
+
+function* updateCostCentre({ payload }) {
+  let result = yield call(
+    [costCentreList, costCentreList.update],
+    payload.costCentre.uid,
+    {
+      costCentre: payload.costCentre,
+      changes: payload.changes
+    }
+  );
+  yield put(settingActions.updateCostCentreFulfilled(result.costCentre));
+}
+
+function* loadAllCostCentreGroups() {
+  const costCentreGroups = yield call([
+    costCentreGroupList,
+    costCentreGroupList.list
+  ]);
+  yield put(settingActions.loadCostCentreGroupsFulfilled(costCentreGroups));
+}
+
+function* loadAllTransactionTypes() {
+  const transactionTypes = yield call([
+    transactionTypeList,
+    transactionTypeList.list
+  ]);
+  yield put(settingActions.loadTransactionTypesFulfilled(transactionTypes));
+}
+
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -44,40 +108,12 @@ function* watchLoadCostCentres() {
   yield takeEvery(settingActions.LOAD_COST_CENTRES, loadAllCostCentres);
 }
 
-function* removeCostCentre({ payload }) {
-  let result = yield call(
-    [costCentreList, costCentreList.remove],
-    payload.costCentre.uid
-  );
-  yield put(settingActions.removeCostCentreFulfilled(result));
-}
-
 function* watchRemoveCostCentre() {
   yield takeEvery(settingActions.REMOVE_COST_CENTRE, removeCostCentre);
 }
 
-function* updateCostCentre({ payload }) {
-  let result = yield call(
-    [costCentreList, costCentreList.update],
-    payload.costCentre.uid,
-    {
-      costCentre: payload.costCentre,
-      changes: payload.changes
-    }
-  );
-  yield put(settingActions.updateCostCentreFulfilled(result.costCentre));
-}
-
 function* watchUpdateCostCentre() {
   yield takeEvery(settingActions.UPDATE_COST_CENTRE, updateCostCentre);
-}
-
-function* loadAllCostCentreGroups() {
-  const costCentreGroups = yield call([
-    costCentreGroupList,
-    costCentreGroupList.list
-  ]);
-  yield put(settingActions.loadCostCentreGroupsFulfilled(costCentreGroups));
 }
 
 function* watchLoadCostCentreGroups() {
@@ -87,14 +123,6 @@ function* watchLoadCostCentreGroups() {
   );
 }
 
-function* loadAllTransactionTypes() {
-  const transactionTypes = yield call([
-    transactionTypeList,
-    transactionTypeList.list
-  ]);
-  yield put(settingActions.loadTransactionTypesFulfilled(transactionTypes));
-}
-
 function* watchLoadTransactionTypes() {
   yield takeEvery(
     settingActions.LOAD_TRANSACTION_TYPES,
@@ -102,26 +130,20 @@ function* watchLoadTransactionTypes() {
   );
 }
 
-function* loadFimsPeriods() {
-  const fimsPeriods = yield call([fimsPeriodList, fimsPeriodList.list]);
-  yield put(settingActions.loadFimsPeriodsFulfilled(fimsPeriods));
-}
-
 function* watchFimsLoadPeriods() {
   yield takeEvery(settingActions.LOAD_FIRMS_PERIODS, loadFimsPeriods);
 }
 
-function* postFimsBatch({ payload }) {
-  const { fimsBatch } = payload;
-  const postFimsBatchResult = yield call(
-    [fimsPeriodList, fimsPeriodList.postFimsBatch],
-    { fimsBatch }
-  );
-  yield put(settingActions.postFimsBatchFulfilled(postFimsBatchResult));
-}
-
 function* watchPostFimsBatch() {
   yield takeEvery(settingActions.POST_FIMS_BATCH, postFimsBatch);
+}
+
+function* watchRemoveFimsPeriod() {
+  yield takeEvery(settingActions.REMOVE_FIRMS_PERIOD, removeFimsPeriod);
+}
+
+function* watchImportFimsPeriod() {
+  yield takeEvery(settingActions.IMPORT_FIRMS_PERIOD, importFimsPeriod);
 }
 
 //=====================================
@@ -138,5 +160,7 @@ export const settingSagas = [
   fork(watchLoadCostCentreGroups),
   fork(watchLoadTransactionTypes),
   fork(watchFimsLoadPeriods),
-  fork(watchPostFimsBatch)
+  fork(watchPostFimsBatch),
+  fork(watchRemoveFimsPeriod),
+  fork(watchImportFimsPeriod)
 ];

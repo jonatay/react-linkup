@@ -4,13 +4,14 @@
 */
 import React from 'react';
 // import { List } from 'immutable';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import FimsPeriodTable from 'src/views/components/fleet/fims-period-table';
 
 import { Upload, Icon, Button, Row, Col } from 'antd';
+import { settingActions } from '../../../../fleet/settings';
 const Dragger = Upload.Dragger;
 
 const inclCsvCols = [
@@ -96,7 +97,7 @@ class FimsImport extends React.Component {
       };
       reader.readAsText(file);
       fileList = fileList.filter(f => f.name !== file.name);
-      //this.setState({ fileList });
+      this.setState({ fileList });
     }
     this.setState({ uploading: false });
   };
@@ -128,10 +129,10 @@ class FimsImport extends React.Component {
 
     return (
       <Row type="flex" justify="left" align="top">
-        <Col span={18}>
-          <FimsPeriodTable fimsPeriods={this.props.fimsPeriods} />
+        <Col span={20}>
+          <FimsPeriodTable {...this.props} />
         </Col>
-        <Col span={6}>
+        <Col span={4}>
           <Dragger {...props} style={{ padding: 10 }}>
             <p className="ant-upload-drag-icon">
               <Icon type="inbox" />
@@ -164,11 +165,17 @@ class FimsImport extends React.Component {
   }
 }
 
-FimsImport.propTypes = {};
+FimsImport.propTypes = {
+  removeFimsPeriod: PropTypes.func.isRequired,
+  importFimsPeriod: PropTypes.func.isRequired
+};
 
 const mapStateToProps = state => ({});
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  removeFimsPeriod: settingActions.removeFimsPeriod,
+  importFimsPeriod: settingActions.importFimsPeriod
+};
 
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(FimsImport)

@@ -48,7 +48,7 @@ const App = ({
           />
           <RequireUnauthRoute
             authenticated={authenticated}
-            path="/login"
+            path="/sign-in"
             component={SignInPage}
           />
         </Content>

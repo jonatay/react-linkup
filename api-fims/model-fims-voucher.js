@@ -27,32 +27,30 @@ DELETE FROM fleet.fims_voucher WHERE request_period = 0;
 
 const sqlInsertVoucher = `
 INSERT INTO fleet.fims_voucher(
-    cut_off_date, account_number, account_name, cost_centre, 
-    cost_centre_name, registration, batch, driver, vehicle_description, 
+    cut_off_date, registration, batch, driver, vehicle_description, 
     transaction_date, process_date, merchant_name, merchant_town, 
     oil_company, odometer, fuel_litres, oil_litres, private_usage, 
     warnings, purchase_description, toll_lane, toll_vehicle_class, 
-    toll_transaction_type, toll_match_indicator, amount, toll_discount, batch_index, request_period)
+    toll_transaction_type, toll_match_indicator, amount, toll_discount, batch_index, fims_period_id)
   VALUES (
     $[cut_off_date], $[account_number], $[account_name], $[cost_centre], 
     $[cost_centre_name], $[registration], $[batch], $[driver], $[vehicle_description], 
     $[transaction_date], $[process_date], $[merchant_name], $[merchant_town], 
     $[oil_company], $[odometer], $[fuel_litres], $[oil_litres], $[private_usage], 
     $[warnings], $[purchase_description], $[toll_lane], $[toll_vehicle_class], 
-    $[toll_transaction_type], $[toll_match_indicator], $[amount], $[toll_discount], $[batch_index], $[request_period])
+    $[toll_transaction_type], $[toll_match_indicator], $[amount], $[toll_discount], $[batch_index], $[fims_period_id])
 `;
 
 const sqlUpdateVoucher = `
 UPDATE fleet.fims_voucher
-     SET cut_off_date=$[cut_off_date], account_number=$[account_number], account_name=$[account_name], 
-     cost_centre=$[cost_centre], cost_centre_name=$[cost_centre_name], registration=$[registration], 
+     SET cut_off_date=$[cut_off_date], registration=$[registration], 
      batch=$[batch], driver=$[driver], vehicle_description=$[vehicle_description], transaction_date=$[transaction_date], 
      process_date=$[process_date], merchant_name=$[merchant_name], merchant_town=$[merchant_town], 
      oil_company=$[oil_company], odometer=$[odometer], fuel_litres=$[fuel_litres], oil_litres=$[oil_litres], 
      private_usage=$[private_usage], warnings=$[warnings], purchase_description=$[purchase_description], 
      toll_lane=$[toll_lane], toll_vehicle_class=$[toll_vehicle_class], toll_transaction_type=$[toll_transaction_type], 
      toll_match_indicator=$[toll_match_indicator], amount=$[amount], toll_discount=$[toll_discount],
-     batch_index=$[batch_index], request_period=$[request_period]
+     batch_index=$[batch_index], fims_period_id=$[fims_period_id]
   WHERE id=$[id]
 `;
 

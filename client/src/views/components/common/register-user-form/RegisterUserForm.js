@@ -1,18 +1,10 @@
 import React from 'react';
 
-import {
-  Form,
-  Input,
-  Tooltip,
-  Icon,
-  Select,
-  Row,
-  Col,
-  Checkbox,
-  Button
-} from 'antd';
+import { Form, Input, Button } from 'antd';
+
+import './style.css';
+
 const FormItem = Form.Item;
-const Option = Select.Option;
 
 class RegisterUserForm extends React.Component {
   state = {
@@ -23,7 +15,7 @@ class RegisterUserForm extends React.Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        this.props.onSubmit(values);
       }
     });
   };
@@ -46,17 +38,7 @@ class RegisterUserForm extends React.Component {
     }
     callback();
   };
-  // handleWebsiteChange = value => {
-  //   let autoCompleteResult;
-  //   if (!value) {
-  //     autoCompleteResult = [];
-  //   } else {
-  //     autoCompleteResult = ['.com', '.org', '.net'].map(
-  //       domain => `${value}${domain}`
-  //     );
-  //   }
-  //   this.setState({ autoCompleteResult });
-  // };
+
   render() {
     const { getFieldDecorator } = this.props.form;
 
@@ -82,27 +64,6 @@ class RegisterUserForm extends React.Component {
         }
       }
     };
-    const prefixSelector = getFieldDecorator('prefix', {
-      initialValue: '27'
-    })(
-      <Select style={{ width: 70 }}>
-        <Option value="27">+27</Option>
-      </Select>
-    );
-
-    // const websiteOptions = autoCompleteResult.map(website => (
-    //   <AutoCompleteOption key={website}>{website}</AutoCompleteOption>
-    // ));
-
-    // specifying your onload callback function
-    const callback = function() {
-      console.log('Done!!!!');
-    };
-
-    // specifying verify callback function
-    const verifyCallback = function(response) {
-      console.log(response);
-    };
 
     return (
       <Form onSubmit={this.handleSubmit}>
@@ -111,6 +72,7 @@ class RegisterUserForm extends React.Component {
             rules: [{ required: true, message: 'Please input your Full Name!' }]
           })(<Input />)}
         </FormItem>
+        <br />
         <FormItem {...formItemLayout} label="E-mail">
           {getFieldDecorator('email', {
             rules: [
@@ -125,6 +87,7 @@ class RegisterUserForm extends React.Component {
             ]
           })(<Input />)}
         </FormItem>
+        <br />
         <FormItem {...formItemLayout} label="Password">
           {getFieldDecorator('password', {
             rules: [
@@ -151,61 +114,11 @@ class RegisterUserForm extends React.Component {
             ]
           })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
         </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label={
-            <span>
-              Nickname&nbsp;
-              <Tooltip title="What do you want others to call you?">
-                <Icon type="question-circle-o" />
-              </Tooltip>
-            </span>
-          }
-        >
-          {getFieldDecorator('nickname', {
-            rules: [
-              {
-                required: true,
-                message: 'Please input your nickname!',
-                whitespace: true
-              }
-            ]
-          })(<Input />)}
-        </FormItem>
-        <FormItem {...formItemLayout} label="Phone Number">
-          {getFieldDecorator('phone', {
-            rules: [
-              { required: true, message: 'Please input your phone number!' }
-            ]
-          })(<Input addonBefore={prefixSelector} style={{ width: '100%' }} />)}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="Captcha"
-          extra="We must make sure that your are a human."
-        >
-          <Row gutter={8}>
-            <Col span={12} />
-          </Row>
-        </FormItem>
-        <FormItem {...tailFormItemLayout}>
-          {getFieldDecorator('agreement', {
-            valuePropName: 'checked'
-          })(
-            <Checkbox>
-              I have read the <a href="">agreement</a>
-            </Checkbox>
-          )}
-        </FormItem>
         <FormItem {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">
             Register
           </Button>
         </FormItem>
-        <div
-          class="g-recaptcha"
-          data-sitekey="6LfsrkoUAAAAAPIU_vwXtYww_2ydaK4W3dvpLdXf"
-        />
       </Form>
     );
   }

@@ -27,7 +27,8 @@ const SignInPage = ({
   signInWithGithub,
   signInWithGoogle,
   signInWithTwitter,
-  signInWithFacebook
+  signInWithFacebook,
+  signInWithEmailAndPassword
 }) => {
   return (
     <Row justify="center" align="top">
@@ -35,7 +36,7 @@ const SignInPage = ({
       <h1 className="sign-in__heading">Sign in</h1>
       <Row type="flex" justify="center" align="top">
         <Col span={6}>
-          <LoginForm />
+          <LoginForm signInSubmit={signInWithEmailAndPassword}/>
         </Col>
         <Col span={6} style={{ paddingLeft: 30, paddingRight: 30 }}>
           <Button
@@ -77,6 +78,7 @@ SignInPage.propTypes = {
   signInWithGoogle: PropTypes.func.isRequired,
   signInWithTwitter: PropTypes.func.isRequired,
   signInWithFacebook: PropTypes.func.isRequired,
+  signInWithEmailAndPassword: PropTypes.func.isRequired,
   authError: PropTypes.object
 };
 
@@ -92,7 +94,8 @@ const mapDispatchToProps = {
   signInWithGithub: authActions.signInWithGithub,
   signInWithGoogle: authActions.signInWithGoogle,
   signInWithTwitter: authActions.signInWithTwitter,
-  signInWithFacebook: authActions.signInWithFacebook
+  signInWithFacebook: authActions.signInWithFacebook,
+  signInWithEmailAndPassword: authActions.signInWithEmailPassword
 };
 
 export default withRouter(
