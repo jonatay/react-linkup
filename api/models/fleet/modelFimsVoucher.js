@@ -5,6 +5,11 @@ const sqlListFimsVouchers = `
 SELECT * FROM fleet.fims_voucher
 `;
 
+const sqlListFimsVouchersByFimsPeriod = `
+SELECT * FROM fleet.fims_voucher
+WHERE fims_period_id = $[fims_period_id]
+`;
+
 const sqlUpsertFimsVoucher = `
 INSERT INTO fleet.fims_voucher(
     cut_off_date, registration, batch, driver, vehicle_description, 
@@ -37,6 +42,9 @@ WHERE fims_period_id = $[id]
 exports.list = () => {
   return db.any(sqlListFimsVouchers);
 };
+
+exports.listFimsVouchersByFimsPeriod = fims_period_id =>
+  db.any(sqlListFimsVouchersByFimsPeriod, { fims_period_id });
 
 exports.upsertFimsVoucher = fimsVoucher => {
   return db.one(sqlUpsertFimsVoucher, { ...fimsVoucher });

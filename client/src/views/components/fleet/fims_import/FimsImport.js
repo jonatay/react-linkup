@@ -133,6 +133,15 @@ class FimsImport extends React.Component {
           <FimsPeriodTable {...this.props} />
         </Col>
         <Col span={4}>
+          <Button
+            className="upload-start red"
+            type="primary"
+            onClick={this.handleUpload}
+            disabled={this.state.fileList.length === 0}
+            loading={uploading}
+          >
+            {uploading ? 'Uploading' : 'Start Upload'}
+          </Button>
           <Dragger {...props} style={{ padding: 10 }}>
             <p className="ant-upload-drag-icon">
               <Icon type="inbox" />
@@ -144,21 +153,12 @@ class FimsImport extends React.Component {
               Support for a single or bulk upload.
             </p>
             <p
-              className="ant-upload-hint"
-              style={{ color: 'red', fontWeight: 'bolder' }}
+              className=""
+              style={{ color: 'red', fontWeight: 'bold', fontSize: 'small' }}
             >
               Must be csv files exported from FIMS voucher exception search.
             </p>
           </Dragger>
-          <Button
-            className="upload-start"
-            type="primary"
-            onClick={this.handleUpload}
-            disabled={this.state.fileList.length === 0}
-            loading={uploading}
-          >
-            {uploading ? 'Uploading' : 'Start Upload'}
-          </Button>
         </Col>
       </Row>
     );

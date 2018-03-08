@@ -38,14 +38,19 @@ exports.post_fims_batch = (req, res) => {
 
 exports.remove_fims_period = (req, res) => {
   const { id } = req.params;
-  const clearVouchers = async(() => {
-    aWait(FimsVoucher.removeByFimsPeriod(id));
-  });
-  clearVouchers();
-  FimsPeriod.removeFimsPeriod(id).then(data => res.json(data));
+  FimsVoucher.removeByFimsPeriod(id).then(() =>
+    FimsPeriod.removeFimsPeriod(id).then(data => res.json(data))
+  );
 };
 
 exports.import_fims_period = (req, res) => {
   const { id } = req.params;
-  FimsPeriod.getIdFimsPeriod(id).then(data => res.json(data));
+  FimsPeriod.getIdFimsPeriod(id).then(fimsPeriod => {
+    FimsVoucher.listFimsVouchersByFimsPeriod(fims_period.id).then(fimsVouchers=>
+      Promise.each(fimsVouchers, (voucher,idx)=>{
+
+      })
+    )
+    res.json(fimsPeriod);
+  });
 };
