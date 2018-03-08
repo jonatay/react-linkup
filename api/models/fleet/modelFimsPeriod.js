@@ -5,6 +5,11 @@ const sqlListFimsPeriods = `
 SELECT * FROM fleet.fims_period
 `;
 
+const sqlGetIdFimsPeriod = `
+SELECT * FROM fleet.fims_period
+WHERE id =$[id]
+`;
+
 const sqlRequestFimsPeriod = `
 INSERT INTO fleet.fims_period (cal_year, cal_month) VALUES ($[cal_year],$[cal_month])
 ON CONFLICT ON CONSTRAINT fims_period_cal_year_cal_month_key DO UPDATE 
@@ -28,6 +33,8 @@ RETURNING id
 exports.list = () => {
   return db.any(sqlListFimsPeriods);
 };
+
+exports.getIdFimsPeriod = id => db.one(sqlGetIdFimsPeriod, { id });
 
 exports.requestFimsPeriod = (cal_year, cal_month) =>
   db.one(sqlRequestFimsPeriod, { cal_year, cal_month });

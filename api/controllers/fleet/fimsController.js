@@ -44,3 +44,8 @@ exports.remove_fims_period = (req, res) => {
   clearVouchers();
   FimsPeriod.removeFimsPeriod(id).then(data => res.json(data));
 };
+
+exports.import_fims_period = (req, res) => {
+  const { id } = req.params;
+  FimsPeriod.getIdFimsPeriod(id).then(data => res.json(data));
+};

@@ -6,6 +6,15 @@ import { costCentreGroupList } from './cost-centre-group-list';
 import { transactionTypeList } from './transaction-type-list';
 import { fimsPeriodList } from './fims-period-list';
 
+function* importFimsPeriod({ payload }) {
+  //console.log(payload);
+  const fimsPeriod = yield call(
+    [fimsPeriodList, fimsPeriodList.importFimsPeriod],
+    payload.id
+  );
+  yield put(settingActions.importFimsPeriodFulfilled(fimsPeriod));
+}
+
 function* removeFimsPeriod({ payload }) {
   const id = yield call([fimsPeriodList, fimsPeriodList.remove], payload.id);
   yield put(settingActions.removeFimsPeriodFulfilled(id));
@@ -133,6 +142,10 @@ function* watchRemoveFimsPeriod() {
   yield takeEvery(settingActions.REMOVE_FIRMS_PERIOD, removeFimsPeriod);
 }
 
+function* watchImportFimsPeriod() {
+  yield takeEvery(settingActions.IMPORT_FIRMS_PERIOD, importFimsPeriod);
+}
+
 //=====================================
 //  COST_CENTRE SAGAS
 //-------------------------------------
@@ -148,5 +161,6 @@ export const settingSagas = [
   fork(watchLoadTransactionTypes),
   fork(watchFimsLoadPeriods),
   fork(watchPostFimsBatch),
-  fork(watchRemoveFimsPeriod)
+  fork(watchRemoveFimsPeriod),
+  fork(watchImportFimsPeriod)
 ];

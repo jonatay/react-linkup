@@ -53,6 +53,7 @@ export function settingReducer(state = new SettingState(), { payload, type }) {
       return state.set('fimsPeriodList', new List(payload.fimsPeriods));
 
     case settingActions.POST_FIMS_BATCH_FULFILLED:
+    case settingActions.IMPORT_FIRMS_PERIOD_FULFILLED:
       return state.set(
         'fimsPeriodList',
         fimsPeriodList.find(rec => rec.id === payload.fimsPeriod.id)

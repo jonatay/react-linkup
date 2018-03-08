@@ -9,5 +9,8 @@ export const FimsPeriod = new Record({
   must_refresh: null,
   account: null,
   batch_total: null,
-  jdata: {}
+  jdata: {},
+  rows_transactions: null,
+  transactions_total: null,
+  when_imported: null
 });

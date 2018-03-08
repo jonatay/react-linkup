@@ -10,6 +10,11 @@ class FimsPeriodList extends ApiList {
       .then(res => res)
       .catch(e => e);
   };
+  importFimsPeriod = id => {
+    return this.customApiCall(id, 'import-fims-period', {}, 'PUT')
+      .then(res => res)
+      .catch(e => e);
+  };
 }
 
 export const fimsPeriodList = new FimsPeriodList(

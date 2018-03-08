@@ -129,10 +129,10 @@ class FimsImport extends React.Component {
 
     return (
       <Row type="flex" justify="left" align="top">
-        <Col span={18}>
+        <Col span={20}>
           <FimsPeriodTable {...this.props} />
         </Col>
-        <Col span={6}>
+        <Col span={4}>
           <Dragger {...props} style={{ padding: 10 }}>
             <p className="ant-upload-drag-icon">
               <Icon type="inbox" />
@@ -165,12 +165,16 @@ class FimsImport extends React.Component {
   }
 }
 
-FimsImport.propTypes = { removeFimsPeriod: PropTypes.func.isRequired };
+FimsImport.propTypes = {
+  removeFimsPeriod: PropTypes.func.isRequired,
+  importFimsPeriod: PropTypes.func.isRequired
+};
 
 const mapStateToProps = state => ({});
 
 const mapDispatchToProps = {
-  removeFimsPeriod: settingActions.removeFimsPeriod
+  removeFimsPeriod: settingActions.removeFimsPeriod,
+  importFimsPeriod: settingActions.importFimsPeriod
 };
 
 export default withRouter(
