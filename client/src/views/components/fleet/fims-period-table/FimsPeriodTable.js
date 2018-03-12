@@ -9,6 +9,8 @@ import { Table, Button, Modal, Row } from 'antd';
 import dateFormat from 'dateformat';
 
 class FimsPeriodTable extends React.Component {
+  totalsMatch = rec =>
+    Math.round(rec.batch_total) === Math.round(rec.transactions_total);
   columns = [
     {
       title: 'Period',
@@ -43,10 +45,18 @@ class FimsPeriodTable extends React.Component {
       title: 'B Total',
       dataIndex: 'batch_total',
       width: 80,
-      render: text =>
-        new Intl.NumberFormat('en-ZA', { maximumFractionDigits: 0 }).format(
-          text
-        )
+      render: (text, record) => (
+        <span
+          style={{
+            fontWeight: 'bold',
+            color: this.totalsMatch(record) ? 'green' : 'red'
+          }}
+        >
+          {new Intl.NumberFormat('en-ZA', { maximumFractionDigits: 0 }).format(
+            text
+          )}
+        </span>
+      )
     },
     {
       title: 'When Imported',
@@ -64,10 +74,18 @@ class FimsPeriodTable extends React.Component {
       title: 'T Total',
       dataIndex: 'transactions_total',
       width: 80,
-      render: text =>
-        new Intl.NumberFormat('en-ZA', { maximumFractionDigits: 0 }).format(
-          text
-        )
+      render: (text, record) => (
+        <span
+          style={{
+            fontWeight: 'bold',
+            color: this.totalsMatch(record) ? 'green' : 'red'
+          }}
+        >
+          {new Intl.NumberFormat('en-ZA', { maximumFractionDigits: 0 }).format(
+            text
+          )}
+        </span>
+      )
     },
     {
       width: 100,

@@ -26,6 +26,9 @@ router.post('/fims-periods/post-fims-batch', fimsController.post_fims_batch);
 
 router.delete('/fims-periods/:id', fimsController.remove_fims_period);
 
-router.put('/fims-periods/:id/import-fims-period')
+router.put(
+  '/fims-periods/:id/import-fims-period',
+  fimsController.import_fims_period
+);
 
 module.exports = router;
