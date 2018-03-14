@@ -5,7 +5,7 @@ const sqlListFimsPeriods = `
 SELECT * FROM fleet.fims_period
 `;
 
-const sqlGetIdFimsPeriod = `
+exports.sqlGetIdFimsPeriod = `
 SELECT * FROM fleet.fims_period
 WHERE id =$[id]
 `;
