@@ -1,5 +1,5 @@
 DROP FUNCTION fleet.import_fleet_transaction_from_fims_voucher(i_fims_period_id integer);
-CREATE OR REPLACE FUNCTION fleet.import_fleet_transaction_from_fims_voucher(i_fims_period_id integer) returns JSON as $$
+CREATE OR REPLACE FUNCTION fleet.import_fleet_transaction_from_fims_voucher(i_fims_period_id integer) returns SETOF JSON as $$
 //
 // --get vouchers
 const rwsVoucher = plv8.execute(
@@ -77,10 +77,11 @@ _.each(rwsVoucher, function(voucher) {
 		[voucher.driver]
 	)[0].id;
 	tran.jdata = {};
-	res.push(tran);
+	//--res.push(tran);
+	plv8.return_next(tran)
 });
-return res;//
+//--return res;//
 $$ language plv8;
 
-SELECT * FROM fleet.import_fleet_transaction_from_fims_voucher(117);
+SELECT * FROM fleet.import_fleet_transaction_from_fims_voucher(18);
 

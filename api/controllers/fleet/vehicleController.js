@@ -1,17 +1,11 @@
 const db = require('../../services/postgres/db');
 
 const sqlListAllVehicles = `
-SELECT vgl.* FROM fleet.vehicle_get_list() vgl
+SELECT * FROM fleet.vehicle_get_list() v
 `;
 
 const sqlGetVehicle = `
-SELECT v.*,
-   array_agg(vcc.id) AS vcc_ids, array_agg(cc.id) AS cost_centre_ids,array_agg(cc.name) AS cost_centres
-FROM fleet.vehicle v
-LEFT JOIN fleet.vehicle_cost_centre vcc ON vcc.vehicle_id = v.id 
-LEFT JOIN fleet.cost_centre cc ON cc.id = vcc.cost_centre_id
-WHERE v.id = $[id]
-GROUP BY v.id
+SELECT * from fleet.vehicle_get_id($[id]) v
 `;
 
 const sqlUpdateVehicle = `
@@ -37,7 +31,7 @@ function ccList(ccIds, vccIds, names) {
 exports.list = (req, res) => {
   db
     .any(sqlListAllVehicles)
-    .then(data => res.json(data.map(v => v.vgl)))
+    .then(data => res.json(data.map(v => v.v)))
     .catch(e => res.json(e));
 };
 
@@ -59,8 +53,7 @@ exports.update = (req, res) => {
     db.one(sqlGetVehicle, { id }).then(v =>
       res.json({
         vehicle: {
-          ...v,
-          cost_centres: ccList(v.cost_centre_ids, v.vcc_ids, v.cost_centres)
+          ...v.v
         }
       })
     );
@@ -73,8 +66,7 @@ exports.toggleActive = (req, res) => {
     db.one(sqlGetVehicle, { id }).then(v =>
       res.json({
         vehicle: {
-          ...v,
-          cost_centres: ccList(v.cost_centre_ids, v.vcc_ids, v.cost_centres)
+          ...v.v
         }
       })
     );

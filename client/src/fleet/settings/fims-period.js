@@ -12,5 +12,6 @@ export const FimsPeriod = new Record({
   jdata: {},
   rows_transactions: null,
   transactions_total: null,
-  when_imported: null
+  when_imported: null,
+  check_total: 0
 });

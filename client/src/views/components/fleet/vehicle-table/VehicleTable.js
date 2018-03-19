@@ -13,10 +13,10 @@ class VehicleTable extends React.Component {
     data: []
   };
 
-  componentWillReceiveProps = nextProps => {
-    const { vehicles } = nextProps;
-    this.setState({ data: vehicles.toArray() });
-  };
+  // componentWillReceiveProps = nextProps => {
+  //   const { vehicles } = nextProps;
+  //   this.setState({ data: vehicles.toArray() });
+  // };
 
   showToggleVehicleActiveConfirm = (vehicle, toggleVehicleIsActive) => {
     Modal.confirm({
@@ -102,16 +102,17 @@ class VehicleTable extends React.Component {
     }
   ];
   render() {
-    const { data } = this.state;
     return (
       <Table
         size="middle"
         rowKey="id"
-        dataSource={data}
+        dataSource={this.props.vehicles}
         columns={this.columns}
         scroll={{ y: 590 }}
         // rowClassName={(record, index) => (index % 2 === 0 ? "even" : "odd")}
-        rowClassName={record => record.cost_centre_groups[0].name}
+        rowClassName={record =>
+          record.cost_centre_groups[0] ? record.cost_centre_groups[0].name : ''
+        }
         pagination={false}
         // pagination={{
         //   size: 'small',

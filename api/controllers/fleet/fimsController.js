@@ -27,14 +27,13 @@ exports.post_fims_batch = (req, res) => {
     Promise.each(fimsBatch, (voucher, idx) => {
       fimsPeriod.rows_received++;
       fimsPeriod.batch_total +=
-        parseInt(parseFloat(voucher.amount) * 100) / 100;
+        Math.round(parseFloat(voucher.amount) * 100) / 100;
       ModelFimsVoucher.upsertFimsVoucher({
         ...voucher,
         batch_index: idx + 1,
         fims_period_id: fimsPeriod.id
       });
     }).then(() => {
-      fimsPeriod.batch_total = parseInt(fimsPeriod.batch_total * 100) / 100;
       fimsPeriod.when_received = new Date();
       ModelFimsPeriod.updateFimsPeriod(fimsPeriod).then(fimsPeriod =>
         res.json(fimsPeriod)
@@ -53,24 +52,69 @@ exports.remove_fims_period = (req, res) => {
 exports.import_fims_period = (req, res) => {
   const { id } = req.params;
   db
-    .task('import-fims-period', function*(t) {
-      const fimsPeriod = {...yield t.one(
-          'SELECT * FROM fleet.fims_period WHERE id = $1',
-          id
-        )};
-
-
-      return fimsPeriod;
-    })
-    .then(fimsPeriod => {
-      console.log(fimsPeriod);
-        res.json(fimsPeriod);
+    .one('SELECT * FROM fleet.fims_period WHERE id = $1', id)
+    .then(({ ...fimsPeriod }) => {
+      fimsPeriod.rows_transactions = 0;
+      fimsPeriod.transactions_total = 0;
+      let tranData = [];
+      db
+        .each(
+          'SELECT * FROM fleet.import_fleet_transaction_from_fims_voucher($1) ftran',
+          id,
+          ({ ...row }) => {
+            const fTran = row.ftran;
+            fimsPeriod.rows_transactions++;
+            fimsPeriod.transactions_total += fTran.amount;
+            tranData.push(fTran);
+          }
+        )
+        .then(() => {
+          ModelFleetTransaction.insertBatch(tranData).then(e => {
+            ModelFimsPeriod.updateFimsPeriod(fimsPeriod);
+            res.json(fimsPeriod);
+          });
+        });
     });
 };
 
+/*
+exports.import_fims_period = (req, res) => {
+  const { id } = req.params;
+  db
+    .task('import-fims-period', function*(t) {
+      // firts get fimsPeriod by id
+      const fimsPeriod = {
+        ...(yield t.one('SELECT * FROM fleet.fims_period WHERE id = $1', id))
+      };
+      // zero count and sum
+      fimsPeriod.rows_transactions = 0;
+      fimsPeriod.transactions_total = 0;
+      // then for each transactions from fims batch with...
+      t
+        .each(
+          'SELECT * FROM fleet.import_fleet_transaction_from_fims_voucher($1)',
+          id,
+          ({ ...row }) => {
+            const fTran = row.import_fleet_transaction_from_fims_voucher;
+            fimsPeriod.rows_transactions++;
+            fimsPeriod.transactions_total += fTran.amount;
+            //t.one(ModelFleetTransaction.sqlInsert, fTran);
+          }
+        )
+        .then(fimsPeriod => {
+          console.log(fimsPeriod);
+          res.json(fimsPeriod);
+        });
+      // ImpFleetTran[0].import_fleet_transaction_from_fims_voucher.map(fTran => {
+      //   const resIns = yield t.one(ModelFleetTransaction.sqlInsert, fTran)
+      // });
+
+      return fimsPeriod;
+    })
+    .then(fimsPeriod => {});
+};
+*/
 // ModelFimsPeriod.getIdFimsPeriod(id).then(fimsPeriod => {
-//   fimsPeriod.rows_transactions = 0;
-//   fimsPeriod.transactions_total = 0;
 // db
 //   .many(
 //     'SELECT * FROM fleet.import_fleet_transaction_from_fims_voucher($[id])',
