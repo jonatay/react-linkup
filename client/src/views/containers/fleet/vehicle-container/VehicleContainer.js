@@ -3,7 +3,6 @@
     VehicleContainer : Stateless Functional Component
 */
 import React from 'react';
-import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -150,7 +149,7 @@ class VehicleContainer extends React.Component {
 }
 
 VehicleContainer.propTypes = {
-  vehicles: PropTypes.instanceOf(List).isRequired,
+  vehicles: PropTypes.instanceOf(Array).isRequired,
   loadVehicles: PropTypes.func.isRequired,
   filterVehicles: PropTypes.func.isRequired,
   updateVehicle: PropTypes.func.isRequired,

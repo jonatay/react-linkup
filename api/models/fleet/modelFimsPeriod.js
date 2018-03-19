@@ -2,10 +2,13 @@
 const db = require('../../services/postgres/db');
 
 const sqlListFimsPeriods = `
-SELECT * FROM fleet.fims_period
+SELECT fp.*, sum(ft.amount) AS check_total FROM fleet.fims_period fp
+LEFT JOIN fleet.fims_voucher fv ON fv.fims_period_id = fp.id
+LEFT JOIN fleet.fleet_transaction ft ON ft.fims_voucher_id = fv.id
+GROUP BY fp.id
 `;
 
-const sqlGetIdFimsPeriod = `
+exports.sqlGetIdFimsPeriod = `
 SELECT * FROM fleet.fims_period
 WHERE id =$[id]
 `;
@@ -19,8 +22,10 @@ RETURNING *
 
 const sqlUpdateFimsPeriod = `
 UPDATE fleet.fims_period 
- SET when_received=$[when_received], rows_received=$[rows_received], 
- batch_total=$[batch_total], jdata=$[jdata]
+ SET cal_year=$[cal_year], cal_month=$[cal_month], when_received=$[when_received], 
+      rows_received=$[rows_received], must_refresh=$[must_refresh], account=$[account], 
+      batch_total=$[batch_total], jdata=$[jdata], rows_transactions=$[rows_transactions], 
+      transactions_total=$[transactions_total], when_imported=$[when_imported] 
 WHERE id = $[id]
 RETURNING *
 `;

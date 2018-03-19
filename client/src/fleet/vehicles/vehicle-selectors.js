@@ -1,19 +1,20 @@
 import { createSelector } from 'reselect';
+// import { vehicleList } from './vehicle-list';
 
-export function getVehicles(state) {
+export function getVehiclesFromState(state) {
   return state.fleet.vehicles;
 }
 
 export function getVehicleFilter(state) {
-  return getVehicles(state).filter;
+  return getVehiclesFromState(state).filter;
 }
 
 export function getVehcleShowInactive(state) {
-  return getVehicles(state).showInactive;
+  return getVehiclesFromState(state).showInactive;
 }
 
 export function getVehicleList(state) {
-  return getVehicles(state).list;
+  return getVehiclesFromState(state).list;
 }
 
 //=====================================
@@ -25,17 +26,19 @@ export const getVisibleVehicles = createSelector(
   getVehicleFilter,
   getVehcleShowInactive,
   (vehicleList, filter, showInactive) =>
-    vehicleList.filter(
-      vehicle =>
-        ((!showInactive && vehicle.is_active) ||
-          (showInactive && !vehicle.is_active)) &&
-        (vehicle.name.toLowerCase().includes(filter.toLowerCase()) ||
-          vehicle.registration.toLowerCase().includes(filter.toLowerCase()) ||
-          vehicle.fims_drivers
-            .join(' ')
-            .toLowerCase()
-            .includes(filter.toLowerCase()))
-    )
+    vehicleList
+      .filter(
+        vehicle =>
+          ((!showInactive && vehicle.is_active) ||
+            (showInactive && !vehicle.is_active)) &&
+          (vehicle.name.toLowerCase().includes(filter.toLowerCase()) ||
+            vehicle.registration.toLowerCase().includes(filter.toLowerCase()) ||
+            vehicle.fims_drivers
+              .join(' ')
+              .toLowerCase()
+              .includes(filter.toLowerCase()))
+      )
+      .toArray()
 );
 
 export const getVehicleById = createSelector(
@@ -46,4 +49,8 @@ export const getVehicleById = createSelector(
 export const getVehiclesList = createSelector(
   getVehicleList,
   vehicleList => vehicleList
+);
+
+export const getVehicles = createSelector(getVehiclesList, vehicleList =>
+  vehicleList.toArray()
 );

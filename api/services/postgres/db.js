@@ -6,7 +6,7 @@ var options = {
   promiseLib: promise,
   capSQL: true,
   query(e) {
-    //console.log('query:', e.query);
+    console.log('query:', e.query);
   }
 };
 

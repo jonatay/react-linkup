@@ -1,5 +1,5 @@
 DROP FUNCTION fleet.import_fleet_transaction_from_fims_voucher(i_fims_period_id integer);
-CREATE OR REPLACE FUNCTION fleet.import_fleet_transaction_from_fims_voucher(i_fims_period_id integer) returns JSON as $$
+CREATE OR REPLACE FUNCTION fleet.import_fleet_transaction_from_fims_voucher(i_fims_period_id integer) returns SETOF JSON as $$
 //
 // --get vouchers
 const rwsVoucher = plv8.execute(
@@ -11,8 +11,10 @@ res = [];
 _.each(rwsVoucher, function(voucher) {
 	var tran = {};
 	// --now get-create needed
+	tran.invoice_number = "FIMS IMP INV";
 	tran.fims_voucher_id = voucher.id;
-	tran.amount = parseInt(parseFloat(voucher.amount)*100)/100
+	tran.amount = Math.round(parseFloat(voucher.amount) * 100) / 100;
+	tran.registration = voucher.registration;
 	tran.description =
 		voucher.driver.toProperCase() +
 		" in " +
@@ -39,13 +41,26 @@ _.each(rwsVoucher, function(voucher) {
 		"SELECT vehicle_get_fims AS id FROM fleet.vehicle_get_fims($1, $2, $3)",
 		[voucher.vehicle_description, voucher.registration, voucher.driver]
 	)[0].id;
-	// --transaction_type_id (by purchase_type in tt.fims_purchase_types)
-	tran.transaction_type_id = plv8.execute(
-		"SELECT id FROM fleet.transaction_type WHERE $1 = any(fims_purchase_types)",
-		[voucher.purchase_description.toUpperCase()]
+	// --merchant (by name,town,oil)
+	tran.merchant_id = plv8.execute(
+		"SELECT merchant_get_fims AS id FROM fleet.merchant_get_fims($1, $2, $3)",
+		[voucher.merchant_name, voucher.merchant_town, voucher.oil_company]
 	)[0].id;
+	// --transaction_type_id (by purchase_type in tt.fims_purchase_types) INCLUDE VAT RATE =114-(114/1.14) = 14
+	tran.transaction_type_id = plv8.execute(
+		"SELECT transaction_type_get_fims AS id FROM fleet.transaction_type_get_fims($1)",
+		[voucher.purchase_description]
+	)[0].id;
+
+	var vatRate = plv8.execute(
+		"SELECT vat_rate FROM fleet.transaction_type WHERE id = $1",
+		[tran.transaction_type_id]
+	)[0].vat_rate;
+	tran.vat_amount =
+		vatRate === 0 ? 0 : Math.round((tran.amount - tran.amount / (vatRate + 1))*100)/100;
+
 	// --cost_centre_id by combining v -> v_cc_g -> cc_g -> cc & tt -> tt_cc -> cc (LOOK AT ERD TO UNDERSTAND THIS)
-	tran.cost_centre_id = plv8.execute(
+	const rowCC = plv8.execute(
 		"SELECT cc.id FROM fleet.cost_centre cc" +
 			" JOIN fleet.cost_centre_group ccg ON ccg.id = cc.cost_centre_group_id" +
 			" JOIN fleet.vehicle_cost_centre_group vcg ON vcg.cost_centre_group_id = ccg.id" +
@@ -54,17 +69,19 @@ _.each(rwsVoucher, function(voucher) {
 			" JOIN fleet.transaction_type tt ON tt.id = tcc.transaction_type_id" +
 			" WHERE v.id = $1 AND tt.id = $2",
 		[tran.vehicle_id, tran.transaction_type_id]
-	)[0].id;
+	);
+	tran.cost_centre_id = rowCC.length === 1 ? rowCC[0].id : null;
 	// // --driver (by driver in d.fims_names)
 	tran.driver_id = plv8.execute(
 		"SELECT * FROM fleet.driver_get_fims($1) AS id",
 		[voucher.driver]
 	)[0].id;
-	res.push(tran);
+	tran.jdata = {};
+	//--res.push(tran);
+	plv8.return_next(tran)
 });
-return res;
-//
+//--return res;//
 $$ language plv8;
 
-SELECT * FROM fleet.import_fleet_transaction_from_fims_voucher(26);
+SELECT * FROM fleet.import_fleet_transaction_from_fims_voucher(18);
 

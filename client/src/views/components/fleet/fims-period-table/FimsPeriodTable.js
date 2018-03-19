@@ -88,6 +88,18 @@ class FimsPeriodTable extends React.Component {
       )
     },
     {
+      title: 'check tot',
+      width: 80,
+      dataIndex: 'check_total',
+      render: text => (
+        <span>
+          {new Intl.NumberFormat('en-ZA', {
+            maximumFractionDigits: 0
+          }).format(text)}
+        </span>
+      )
+    },
+    {
       width: 100,
       align: 'right',
       render: rec => (
