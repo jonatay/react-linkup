@@ -9,7 +9,7 @@ export function getFleetTransactionFilter(state) {
   return getFleetTransactionsFromState(state).filter;
 }
 
-export function getVehcleShowInactive(state) {
+export function getFleetTransactionShowInactive(state) {
   return getFleetTransactionsFromState(state).showInactive;
 }
 
@@ -24,7 +24,7 @@ export function getFleetTransactionList(state) {
 export const getVisibleFleetTransactions = createSelector(
   getFleetTransactionList,
   getFleetTransactionFilter,
-  getVehcleShowInactive,
+  getFleetTransactionShowInactive,
   (fleetTransactionList, filter, showInactive) =>
     fleetTransactionList
       .filter(
@@ -32,7 +32,9 @@ export const getVisibleFleetTransactions = createSelector(
           ((!showInactive && fleetTransaction.is_active) ||
             (showInactive && !fleetTransaction.is_active)) &&
           (fleetTransaction.name.toLowerCase().includes(filter.toLowerCase()) ||
-            fleetTransaction.registration.toLowerCase().includes(filter.toLowerCase()) ||
+            fleetTransaction.registration
+              .toLowerCase()
+              .includes(filter.toLowerCase()) ||
             fleetTransaction.fims_drivers
               .join(' ')
               .toLowerCase()
@@ -43,7 +45,8 @@ export const getVisibleFleetTransactions = createSelector(
 
 export const getFleetTransactionById = createSelector(
   getFleetTransactionList,
-  (fleetTransactionList, id) => fleetTransactionList.filter(fleetTransaction => fleetTransaction.id === id)
+  (fleetTransactionList, id) =>
+    fleetTransactionList.filter(fleetTransaction => fleetTransaction.id === id)
 );
 
 export const getFleetTransactionsList = createSelector(
@@ -51,6 +54,7 @@ export const getFleetTransactionsList = createSelector(
   fleetTransactionList => fleetTransactionList
 );
 
-export const getFleetTransactions = createSelector(getFleetTransactionsList, fleetTransactionList =>
-  fleetTransactionList.toArray()
+export const getFleetTransactions = createSelector(
+  getFleetTransactionsList,
+  fleetTransactionList => fleetTransactionList.toArray()
 );

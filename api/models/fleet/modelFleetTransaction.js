@@ -1,7 +1,11 @@
 // MODEL fleet_transaction
 const db = require('../../services/postgres/db');
 
-const sqlList = 'SELECT'
+const sqlList = `
+SELECT *
+  FROM fleet.fleet_transaction_joined
+  WHERE tax_year = 0
+`;
 
 const sqlInsert = `
 INSERT INTO fleet.fleet_transaction(
@@ -23,6 +27,8 @@ ON CONFLICT ON CONSTRAINT fleet_transaction_fims_voucher_id_invoice_number_key D
 
  RETURNING *
 `;
+
+exports.list = params => db.many(sqlList, params);
 
 exports.insert = fleetTransaction => db.one(sqlInsert, fleetTransaction);
 

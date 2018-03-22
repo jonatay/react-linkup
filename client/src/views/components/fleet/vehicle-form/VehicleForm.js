@@ -40,6 +40,9 @@ const VehicleForm = props => {
     <Form>
       <Row>
         <Col span={12}>
+          <pre>{JSON.stringify(props.initialValues, null, 4)}</pre>
+        </Col>
+        <Col span={12}>
           <Field
             name="name"
             component={renderField}

@@ -1,6 +1,11 @@
 DROP FUNCTION fleet.import_fleet_transaction_from_fims_voucher(i_fims_period_id integer);
 CREATE OR REPLACE FUNCTION fleet.import_fleet_transaction_from_fims_voucher(i_fims_period_id integer) returns SETOF JSON as $$
 //
+// --get fims_period
+const rowFimsPeriod = plv8.execute(
+	"SELECT * FROM fleet.fims_period WHERE id = $1",
+	[i_fims_period_id]
+);
 // --get vouchers
 const rwsVoucher = plv8.execute(
 	"SELECT * FROM fleet.fims_voucher WHERE fims_period_id = $1",
@@ -25,16 +30,22 @@ _.each(rwsVoucher, function(voucher) {
 		voucher.merchant_name.toProperCase() +
 		" in " +
 		voucher.merchant_town.toProperCase();
+	//tran date
 	var yr = parseInt(voucher.transaction_date.substr(0, 4));
 	var mt = parseInt(voucher.transaction_date.substr(4, 2)) - 1;
 	var dy = parseInt(voucher.transaction_date.substr(6, 2));
 	tran.transaction_date = new Date(Date.UTC(yr, mt, dy));
-	tran.tax_year = mt <= 2 ? yr : yr + 1; // --TODO: Put get tax-yr as SP i.e. sys-config-option:tax-year
-	tran.tax_month = mt;
+	//proc date
 	yr = parseInt(voucher.process_date.substr(0, 4));
 	mt = parseInt(voucher.process_date.substr(4, 2)) - 1;
 	dy = parseInt(voucher.process_date.substr(6, 2));
 	tran.process_date = new Date(Date.UTC(yr, mt, dy));
+	//tax date
+	yr = rowFimsPeriod[0].cal_year;
+	mt = rowFimsPeriod[0].cal_month;
+	tran.tax_year = yr === 0 ? 0 : mt <= 2 ? yr : yr + 1; // --TODO: Put get tax-yr as SP i.e. sys-config-option:tax-year
+	tran.tax_month = mt === 0 ? 0 : mt;
+
 	//--lookups
 	// --vehicle (by registration)
 	tran.vehicle_id = plv8.execute(
@@ -57,7 +68,10 @@ _.each(rwsVoucher, function(voucher) {
 		[tran.transaction_type_id]
 	)[0].vat_rate;
 	tran.vat_amount =
-		vatRate === 0 ? 0 : Math.round((tran.amount - tran.amount / (vatRate + 1))*100)/100;
+		vatRate === 0
+			? 0
+			: Math.round((tran.amount - tran.amount / (vatRate + 1)) * 100) /
+				100;
 
 	// --cost_centre_id by combining v -> v_cc_g -> cc_g -> cc & tt -> tt_cc -> cc (LOOK AT ERD TO UNDERSTAND THIS)
 	const rowCC = plv8.execute(
@@ -78,7 +92,7 @@ _.each(rwsVoucher, function(voucher) {
 	)[0].id;
 	tran.jdata = {};
 	//--res.push(tran);
-	plv8.return_next(tran)
+	plv8.return_next(tran);
 });
 //--return res;//
 $$ language plv8;
