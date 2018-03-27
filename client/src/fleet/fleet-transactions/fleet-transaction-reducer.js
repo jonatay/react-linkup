@@ -15,7 +15,7 @@ export function fleetTransactionReducer(state = new FleetTransactionsState(), { 
     case fleetTransactionActions.FILTER_FLEET_TRANSACTIONS:
       return state.set('filter', payload.filter || '');
 
-    case fleetTransactionActions.LOAD_FleetTransactionS_FULFILLED:
+    case fleetTransactionActions.LOAD_FLEET_TRANSACTIONS_FULFILLED:
       return state.set('list', new List(payload.fleetTransactions));
 
     // case fleetTransactionActions.REMOVE_FLEET_TRANSACTION_FULFILLED:

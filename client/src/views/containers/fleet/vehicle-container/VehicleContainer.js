@@ -11,7 +11,9 @@ import {
   getVehicleFilter,
   getVehcleShowInactive,
   getVisibleVehicles,
-  vehicleActions
+  vehicleActions,
+  settingActions,
+  getCostCentreGroups
 } from 'src/fleet';
 
 import FilterInput from 'src/views/components/common/filter-input/index';
@@ -60,6 +62,7 @@ class VehicleContainer extends React.Component {
 
   componentDidMount() {
     this.props.loadVehicles();
+    this.props.loadCostCentreGroups();
   }
 
   onEditVehicle = vehicle => {
@@ -138,8 +141,10 @@ class VehicleContainer extends React.Component {
             }
           >
             <VehicleForm
+              form={`vehicleForm-${vehicle.id}`}
               initialValues={vehicle}
               onSubmit={data => this.onVehicleFormSubmit(vehicle, data)}
+              costCentreGroups={this.props.costCentreGroups}
             />
           </TabPane>
         ))}
@@ -155,13 +160,16 @@ VehicleContainer.propTypes = {
   updateVehicle: PropTypes.func.isRequired,
   toggleVehicleIsActive: PropTypes.func.isRequired,
   showInactive: PropTypes.bool.isRequired,
-  toggleShowInactive: PropTypes.func.isRequired
+  toggleShowInactive: PropTypes.func.isRequired,
+  costCentreGroups: PropTypes.instanceOf(Array).isRequired,
+  loadCostCentreGroups: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   vehicles: getVisibleVehicles(state),
   vehicleFilter: getVehicleFilter(state),
-  showInactive: getVehcleShowInactive(state)
+  showInactive: getVehcleShowInactive(state),
+  costCentreGroups: getCostCentreGroups(state)
 });
 
 const mapDispatchToProps = {
@@ -169,7 +177,8 @@ const mapDispatchToProps = {
   filterVehicles: vehicleActions.filterVehicles,
   updateVehicle: vehicleActions.updateVehicle,
   toggleVehicleIsActive: vehicleActions.toggleVehicleIsActive,
-  toggleShowInactive: vehicleActions.vehicleToggleShowInactive
+  toggleShowInactive: vehicleActions.vehicleToggleShowInactive,
+  loadCostCentreGroups: settingActions.loadCostCentreGroups
 };
 
 export default withRouter(

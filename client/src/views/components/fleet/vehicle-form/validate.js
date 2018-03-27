@@ -16,29 +16,53 @@ const validate = values => {
   ) {
     errors.registration = 'Must between 5 and 10 characters in length';
   }
-
-  if (!values.make) {
-    errors.make = 'Required';
-  } else if (values.make.length > 20) {
-    errors.make = 'Must be 20 chars or less';
+  // validate ccg
+  if (!values.cost_centre_groups || !values.cost_centre_groups.length) {
+    errors.cost_centre_groups = {
+      _error: 'Must have at least one Cost Centre Group assigned'
+    };
+  } else {
+    const ccgArrayErrors = [];
+    let noStartDateCount = 0;
+    values.cost_centre_groups.forEach((ccg, i) => {
+      if (!ccg.cost_centre_group_id) {
+        ccgArrayErrors[i] = { cost_centre_group_id: 'Required' };
+      }
+      if (!ccg.start_date) {
+        noStartDateCount++;
+      }
+    });
+    if (ccgArrayErrors.length) {
+      errors.cost_centre_groups = ccgArrayErrors;
+    } else if (noStartDateCount > 1) {
+      errors.cost_centre_groups = {
+        _error: 'Can only have ONE Cost Centre Group Link WITHOUT Start Date (assumed 0)'
+      };
+    }
   }
 
-  if (!values.model) {
-    errors.model = 'Required';
-  } else if (values.model.length > 30) {
-    errors.model = 'Must be 30 chars or less';
-  }
-
-  if (!values.year) {
-    errors.year = 'Required';
-  } else if (Number.isNaN(Number(values.year))) {
-    errors.year = 'Must be an Integer';
-  } else if (
-    values.year < 1969 ||
-    values.year > new Date().getUTCFullYear() + 1
-  ) {
-    errors.year = `Must be between 1969 and ${new Date().getUTCFullYear() + 1}`;
-  }
+  // if (!values.make) {
+  //   errors.make = 'Required';
+  // } else if (values.make.length > 20) {
+  //   errors.make = 'Must be 20 chars or less';
+  // }
+  //
+  // if (!values.model) {
+  //   errors.model = 'Required';
+  // } else if (values.model.length > 30) {
+  //   errors.model = 'Must be 30 chars or less';
+  // }
+  //
+  // if (!values.year) {
+  //   errors.year = 'Required';
+  // } else if (Number.isNaN(Number(values.year))) {
+  //   errors.year = 'Must be an Integer';
+  // } else if (
+  //   values.year < 1969 ||
+  //   values.year > new Date().getUTCFullYear() + 1
+  // ) {
+  //   errors.year = `Must be between 1969 and ${new Date().getUTCFullYear() + 1}`;
+  // }
 
   // if (!values.get('name')) {
   //   errors.name = 'Required';

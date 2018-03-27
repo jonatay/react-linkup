@@ -38,6 +38,7 @@ exports.list = (req, res) => {
 exports.update = (req, res) => {
   const id = req.params.id;
   const { changes } = req.body;
+  console.log(JSON.stringify(changes, null, 4));
   let sets = [];
   let vals = { id };
   let i = 2;

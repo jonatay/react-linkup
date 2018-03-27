@@ -6,5 +6,5 @@ export {
   getFleetTransactionsList,
   getFleetTransactions,
   getFleetTransactionFilter,
-  getVehcleShowInactive
+  getFleetTransactionShowInactive
 } from './fleet-transaction-selectors';

@@ -3,33 +3,38 @@
     FleetTransactionContainer : Stateless Functional Component
 */
 import React from 'react';
-import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-const FleetTransactionContainer = (props) => {
+import {
+  fleetTransactionActions,
+  getFleetTransactions
+} from 'src/fleet';
+
+import FleetTransactionsTable from '../../../components/fleet/fleet-transactions-table';
+
+const FleetTransactionContainer = props => {
   return (
-    <div></div>
+    <div>
+      <FleetTransactionsTable {...props} />
+    </div>
   );
 };
 
 FleetTransactionContainer.propTypes = {
-  yadas: PropTypes.PropTypes.instanceOf(List),
-  createYada: PropTypes.func.isRequired
-}
+  loadFleetTransactions: PropTypes.func.isRequired,
+  fleetTransactions: PropTypes.instanceOf(Array).isRequired
+};
 
 const mapStateToProps = state => ({
-  yadas: getVisibleTasks(state)
+  fleetTransactions: getFleetTransactions(state)
 });
 
 const mapDispatchToProps = {
-
+  loadFleetTransactions: fleetTransactionActions.loadFleetTransactions
 };
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(FleetTransactionContainer)
+  connect(mapStateToProps, mapDispatchToProps)(FleetTransactionContainer)
 );
