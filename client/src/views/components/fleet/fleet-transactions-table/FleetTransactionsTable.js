@@ -5,7 +5,7 @@
 import React from 'react';
 import dateFormat from 'dateformat';
 
-import { Table, Button, Modal, Row } from 'antd';
+import { Table } from 'antd';
 
 class FleetTransactionsTable extends React.Component {
   componentDidMount() {

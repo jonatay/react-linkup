@@ -51,6 +51,7 @@ function* watchToggleVehicleIsActive() {
 
 function* updateVehicle({ payload }) {
   const changes = jsondiffpatch.diff(payload.vehicle, payload.changes);
+  console.log(changes);
   let result = yield call(
     [vehicleList, vehicleList.update],
     payload.vehicle.id,
