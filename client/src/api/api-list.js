@@ -1,5 +1,6 @@
 import {
   apiFetch,
+  apiInsert,
   apiRemove,
   apiUpdate,
   statusHelper,
@@ -36,12 +37,18 @@ export class ApiList {
       .catch(error => error);
   }
 
-  push(value) {
-    return new Promise((resolve, reject) => {
-      // firebaseDb.ref(this.path)
-      //   .push(value, error => error ? reject(error) : resolve());
-      resolve('?pushed?');
-    });
+  // push(value) {
+  //   return new Promise((resolve, reject) => {
+  //     // firebaseDb.ref(this.path)
+  //     //   .push(value, error => error ? reject(error) : resolve());
+  //     resolve('?pushed?');
+  //   });
+  // }
+  insert(value) {
+    return apiInsert(this.path, value, this.token)
+      .then(statusHelper)
+      .then(response => response.json())
+      .catch(error => error);
   }
 
   remove(key) {

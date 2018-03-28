@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-// import { vehicleList } from './vehicle-list';
+import { getVehicleCcgList } from '../vehicle-ccg';
 
 export function getVehiclesFromState(state) {
   return state.fleet.vehicles;
@@ -25,7 +25,8 @@ export const getVisibleVehicles = createSelector(
   getVehicleList,
   getVehicleFilter,
   getVehcleShowInactive,
-  (vehicleList, filter, showInactive) =>
+  getVehicleCcgList,
+  (vehicleList, filter, showInactive, vehicleCcgs) =>
     vehicleList
       .filter(
         vehicle =>
@@ -39,6 +40,12 @@ export const getVisibleVehicles = createSelector(
               .includes(filter.toLowerCase()))
       )
       .toArray()
+      .map(v => ({
+        ...v,
+        vehicleCcgs: vehicleCcgs
+          .filter(vccg => vccg.vehicle_id === v.id)
+          .toArray()
+      }))
 );
 
 export const getVehicleById = createSelector(

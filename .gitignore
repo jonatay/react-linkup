@@ -9,3 +9,7 @@ public/javascripts/
 /client/.env
 /.env
 /util/db/dumps/
+/client/yarn-error.log
+/yarn-error.log
+/.snyk
+/out.txt

@@ -76,15 +76,16 @@ const renderDatePickerField = ({
   </FormItem>
 );
 
-const renderCCGFieldArray = ({
+const renderVehicleCccgFieldArray = ({
   fields,
   costCentreGroups,
+  vehicleId,
   meta: { error, submitFailed }
 }) => (
   <div>
     <Row>
       <Button
-        onClick={() => fields.push({})}
+        onClick={() => fields.push({ vehicle_id: vehicleId, start_date: null })}
         type="primary"
         icon="plus-circle-o"
         ghost={true}
@@ -158,10 +159,11 @@ const VehicleForm = props => {
         <Col span={12}>
           {/*<pre>{JSON.stringify(props.initialValues, null, 4)}</pre>*/}
           <FieldArray
-            name="cost_centre_groups"
-            component={renderCCGFieldArray}
-            placeholder="cost centre group"
+            name="vehicleCcgs"
+            component={renderVehicleCccgFieldArray}
+            placeholder="vehicle cost centre group"
             costCentreGroups={costCentreGroups}
+            vehicleId={props.initialValues.id}
           />
         </Col>
         <Col span={12}>

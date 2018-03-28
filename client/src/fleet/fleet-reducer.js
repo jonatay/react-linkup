@@ -3,11 +3,13 @@ import {
   vehicleReducer,
   driverReducer,
   settingReducer,
-  fleetTransactionReducer
+  fleetTransactionReducer,
+  vehicleCcgReducer
 } from './';
 
 export const fleetReducer = combineReducers({
   vehicles: vehicleReducer,
+  vehicleCcgs: vehicleCcgReducer,
   drivers: driverReducer,
   fleetTransactions: fleetTransactionReducer,
   settings: settingReducer

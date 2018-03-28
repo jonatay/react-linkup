@@ -31,6 +31,19 @@ export const apiRemove = (path, key, token) => {
   return fetch(`/api/${path}/${key}`, myInit);
 };
 
+export const apiInsert = (path, value, token) => {
+  let myHeaders = new Headers();
+  myHeaders.append('Content-Type', 'application/json');
+  myHeaders.append('Authorization', 'Bearer ' + token);
+  var myInit = {
+    method: 'POST',
+    headers: myHeaders,
+    body: JSON.stringify(value),
+    accept: 'application/json'
+  };
+  return fetch(`/api/${path}`, myInit);
+};
+
 export const apiUpdate = (path, key, changes, token) => {
   let myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
