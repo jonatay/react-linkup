@@ -1,10 +1,10 @@
 import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
 import { authActions } from 'src/common/auth/index';
 import { vehicleActions } from './vehicle-actions';
+import { vehicleCcgActions } from '../vehicle-ccg';
 import { vehicleList } from './vehicle-list';
 const jsondiffpatch = require('jsondiffpatch').create();
 
-// import * as jsondiffpatch from 'jsondiffpatch';
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -26,6 +26,7 @@ function* watchIdTokenRefresh() {
 }
 
 function* loadAllVehicles() {
+  yield put(vehicleCcgActions.loadVehicleCcgs());
   const vehicles = yield call([vehicleList, vehicleList.list]);
   yield put(vehicleActions.loadVehiclesFulfilled(vehicles));
 }
@@ -49,15 +50,24 @@ function* watchToggleVehicleIsActive() {
   );
 }
 
-function* updateVehicle({ payload }) {
-  const changes = jsondiffpatch.diff(payload.vehicle, payload.changes);
-  console.log(changes);
-  let result = yield call(
-    [vehicleList, vehicleList.update],
-    payload.vehicle.id,
-    { changes }
-  );
-  yield put(vehicleActions.updateVehicleFulfilled(result.vehicle));
+function* updateVehicle({
+  payload: {
+    vehicle: { vehicleCcgs: vCcgs, ...vehicle },
+    changes: { vehicleCcgs: cCcgs, ...changes }
+  }
+}) {
+  // console.log({ vCcgs, cCcgs });
+  if (JSON.stringify(vCcgs) !== JSON.stringify(cCcgs)) {
+    yield put(vehicleCcgActions.updateVehicleCcgArray(vCcgs, cCcgs));
+  }
+  const vChanges = jsondiffpatch.diff(vehicle, changes);
+  console.log(vChanges);
+  if (vChanges) {
+    let result = yield call([vehicleList, vehicleList.update], vehicle.id, {
+      changes: vChanges
+    });
+    yield put(vehicleActions.updateVehicleFulfilled(result.vehicle));
+  }
 }
 
 function* watchUpdateVehicle() {

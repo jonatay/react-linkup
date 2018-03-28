@@ -8,10 +8,16 @@ const costCentreController = require('../controllers/fleet/costCentreController'
 const costCentreGroupController = require('../controllers/fleet/costCentreGroupController');
 const transactionTypeController = require('../controllers/fleet/transactionTypeController');
 const fimsController = require('../controllers/fleet/fimsController');
+const vehicleCcgController = require('../controllers/fleet/vehicleCcgController');
 
 router.get('/vehicles', vehicleController.list);
 router.put('/vehicles/:id', vehicleController.update);
 router.delete('/vehicles/:id', vehicleController.toggleActive);
+
+router.get('/vehicle-ccgs', vehicleCcgController.list);
+router.post('/vehicle-ccgs/:id', vehicleCcgController.insert);
+router.put('/vehicle-ccgs/:id', vehicleCcgController.update);
+router.delete('/vehicle-ccgs/:id', vehicleCcgController.delete);
 
 router.get('/drivers', driverController.list);
 

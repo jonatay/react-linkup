@@ -17,14 +17,14 @@ const validate = values => {
     errors.registration = 'Must between 5 and 10 characters in length';
   }
   // validate ccg
-  if (!values.cost_centre_groups || !values.cost_centre_groups.length) {
-    errors.cost_centre_groups = {
+  if (!values.vehicleCcgs || !values.vehicleCcgs.length) {
+    errors.vehicleCcgs = {
       _error: 'Must have at least one Cost Centre Group assigned'
     };
   } else {
     const ccgArrayErrors = [];
     let noStartDateCount = 0;
-    values.cost_centre_groups.forEach((ccg, i) => {
+    values.vehicleCcgs.forEach((ccg, i) => {
       if (!ccg.cost_centre_group_id) {
         ccgArrayErrors[i] = { cost_centre_group_id: 'Required' };
       }
@@ -33,10 +33,11 @@ const validate = values => {
       }
     });
     if (ccgArrayErrors.length) {
-      errors.cost_centre_groups = ccgArrayErrors;
+      errors.vehicleCcgs = ccgArrayErrors;
     } else if (noStartDateCount > 1) {
-      errors.cost_centre_groups = {
-        _error: 'Can only have ONE Cost Centre Group Link WITHOUT Start Date (assumed 0)'
+      errors.vehicleCcgs = {
+        _error:
+          'Can only have ONE Cost Centre Group Assigned WITHOUT Start Date (which would be the first)'
       };
     }
   }
