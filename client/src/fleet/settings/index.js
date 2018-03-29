@@ -5,5 +5,6 @@ export {
   getCostCentres,
   getCostCentreGroups,
   getTransactionTypes,
-  getFimsPeriods
+  getFimsPeriods,
+  getCostCentreGroupList
 } from './setting-selectors';

@@ -7,7 +7,6 @@ export const vehicleCcgActions = {
   REMOVE_VEHICLE_CCG_FAILED: 'REMOVE_VEHICLE_CCG_FAILED',
   REMOVE_VEHICLE_CCG_FULFILLED: 'REMOVE_VEHICLE_CCG_FULFILLED',
 
-
   UPDATE_VEHICLE_CCG_ARRAY: 'UPDATE_VEHICLE_CCG_ARRAY',
   UPDATE_VEHICLE_CCG: 'UPDATE_VEHICLE_CCG',
   UPDATE_VEHICLE_CCG_FAILED: 'UPDATE_VEHICLE_CCG_FAILED',
@@ -22,9 +21,9 @@ export const vehicleCcgActions = {
     type: vehicleCcgActions.LOAD_VEHICLE_CCGS
   }),
 
-  createVehicleCcg: title => ({
+  createVehicleCcg: vehicleCcg => ({
     type: vehicleCcgActions.CREATE_VEHICLE_CCG,
-    payload: { vehicleCcg: { title, completed: false } }
+    payload: { vehicleCcg }
   }),
 
   createVehicleCcgFailed: error => ({
@@ -47,9 +46,9 @@ export const vehicleCcgActions = {
     payload: { error }
   }),
 
-  removeVehicleCcgFulfilled: vehicleCcg => ({
+  removeVehicleCcgFulfilled: id => ({
     type: vehicleCcgActions.REMOVE_VEHICLE_CCG_FULFILLED,
-    payload: { vehicleCcg }
+    payload: { id }
   }),
 
   updateVehicleCcgArray: (vehicleCcgs, changes) => ({
@@ -57,9 +56,9 @@ export const vehicleCcgActions = {
     payload: { vehicleCcgs, changes }
   }),
 
-  updateVehicleCcg: (vehicleCcg, changes) => ({
+  updateVehicleCcg: vehicleCcg => ({
     type: vehicleCcgActions.UPDATE_VEHICLE_CCG,
-    payload: { vehicleCcg, changes }
+    payload: { vehicleCcg }
   }),
 
   updateVehicleCcgFailed: error => ({

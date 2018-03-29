@@ -24,7 +24,7 @@ export function vehicleCcgReducer(
       return state.set(
         'list',
         state.list.filter(vehicleCcg => {
-          return vehicleCcg.id !== payload.vehicleCcg.id;
+          return vehicleCcg.id !== payload.id;
         })
       );
 

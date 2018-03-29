@@ -15,7 +15,9 @@ exports.insert = (req, res) => {
 
 exports.update = (req, res) => {
   const id = req.params.id;
-  const vehicleCcg = req.body;
+  console.log(id);
+  const {vehicleCcg} = req.body;
+  console.log(vehicleCcg);
   ModelVehicleCcg.update(id, vehicleCcg)
     .then(data => res.json({ status: 'updated', vehicleCcg: data }))
     .catch(err => res.json({ status: 'error', msg: err }));

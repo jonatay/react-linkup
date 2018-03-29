@@ -3,6 +3,8 @@ import { authActions } from 'src/common/auth/index';
 import { vehicleActions } from './vehicle-actions';
 import { vehicleCcgActions } from '../vehicle-ccg';
 import { vehicleList } from './vehicle-list';
+import { settingActions } from '../settings';
+
 const jsondiffpatch = require('jsondiffpatch').create();
 
 //=====================================
@@ -26,6 +28,7 @@ function* watchIdTokenRefresh() {
 }
 
 function* loadAllVehicles() {
+  yield put(settingActions.loadCostCentreGroups());
   yield put(vehicleCcgActions.loadVehicleCcgs());
   const vehicles = yield call([vehicleList, vehicleList.list]);
   yield put(vehicleActions.loadVehiclesFulfilled(vehicles));
@@ -61,7 +64,6 @@ function* updateVehicle({
     yield put(vehicleCcgActions.updateVehicleCcgArray(vCcgs, cCcgs));
   }
   const vChanges = jsondiffpatch.diff(vehicle, changes);
-  console.log(vChanges);
   if (vChanges) {
     let result = yield call([vehicleList, vehicleList.update], vehicle.id, {
       changes: vChanges
