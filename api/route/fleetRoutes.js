@@ -15,7 +15,7 @@ router.put('/vehicles/:id', vehicleController.update);
 router.delete('/vehicles/:id', vehicleController.toggleActive);
 
 router.get('/vehicle-ccgs', vehicleCcgController.list);
-router.post('/vehicle-ccgs/:id', vehicleCcgController.insert);
+router.post('/vehicle-ccgs', vehicleCcgController.insert);
 router.put('/vehicle-ccgs/:id', vehicleCcgController.update);
 router.delete('/vehicle-ccgs/:id', vehicleCcgController.delete);
 

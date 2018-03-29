@@ -56,11 +56,20 @@ class VehicleTable extends React.Component {
       dataIndex: 'cost_centre_groups',
       render: (text, record) => (
         <div>
-          {record.cost_centre_groups.map(ccg => (
-            <Tag key={ccg.id}>
-              {ccg.name.length < 13 ? ccg.name : ccg.name.substr(0, 13) + '...'}
-            </Tag>
-          ))}
+          {record.vehicleCcgs.map(
+            ccg =>
+              ccg.cost_centre_group ? (
+                <Tag key={ccg.cost_centre_group.id}>
+                  {ccg.cost_centre_group.name
+                    ? ccg.cost_centre_group.name.length < 13
+                      ? ccg.cost_centre_group.name
+                      : ccg.cost_centre_group.name.substr(0, 13) + '...'
+                    : ''}
+                </Tag>
+              ) : (
+                'none'
+              )
+          )}
         </div>
       )
     },

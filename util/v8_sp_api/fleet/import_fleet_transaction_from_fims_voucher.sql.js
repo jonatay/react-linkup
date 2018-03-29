@@ -1,4 +1,4 @@
-DROP FUNCTION fleet.import_fleet_transaction_from_fims_voucher(i_fims_period_id integer);
+--DROP FUNCTION fleet.import_fleet_transaction_from_fims_voucher(i_fims_period_id integer);
 CREATE OR REPLACE FUNCTION fleet.import_fleet_transaction_from_fims_voucher(i_fims_period_id integer) returns SETOF JSON as $$
 //
 // --get fims_period
@@ -97,5 +97,5 @@ _.each(rwsVoucher, function(voucher) {
 //--return res;//
 $$ language plv8;
 
-SELECT * FROM fleet.import_fleet_transaction_from_fims_voucher(18);
+SELECT * FROM fleet.import_fleet_transaction_from_fims_voucher(832);
 

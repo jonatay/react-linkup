@@ -8,12 +8,12 @@ function* loadAllVehicleCcgs() {
   yield put(vehicleCcgActions.loadVehicleCcgsFulfilled(vehicleCcgs));
 }
 
-function* createVehicleCcg({ payload: { vehicleCcg: values } }) {
-  let { vehicleCcg } = yield call(
-    [vehicleCcgList, vehicleCcgList.create],
-    values
+function* createVehicleCcg({ payload: { vehicleCcg } }) {
+  let { vehicleCcg: newCcg } = yield call(
+    [vehicleCcgList, vehicleCcgList.insert],
+    vehicleCcg
   );
-  yield put(vehicleCcgActions.createVehicleCcgFulfilled(vehicleCcg));
+  yield put(vehicleCcgActions.createVehicleCcgFulfilled(newCcg));
 }
 
 function* updateVehicleCcg({ payload: { vehicleCcg, changes } }) {
@@ -21,19 +21,18 @@ function* updateVehicleCcg({ payload: { vehicleCcg, changes } }) {
     [vehicleCcgList, vehicleCcgList.update],
     vehicleCcg.id,
     {
-      vehicleCcg: vehicleCcg,
-      changes: changes
+      vehicleCcg: vehicleCcg
     }
   );
   yield put(vehicleCcgActions.updateVehicleCcgFulfilled(result.vehicleCcg));
 }
 
-function* removeVehicleCcg({ payload }) {
-  let result = yield call(
+function* removeVehicleCcg({ payload: { vehicleCcg } }) {
+  let { id } = yield call(
     [vehicleCcgList, vehicleCcgList.remove],
-    payload.vehicleCcg.uid
+    vehicleCcg.id
   );
-  yield put(vehicleCcgActions.removeVehicleCcgFulfilled(result));
+  yield put(vehicleCcgActions.removeVehicleCcgFulfilled(id));
 }
 
 function* updateVehicleCcgArray({ payload: { vehicleCcgs, changes } }) {
@@ -41,14 +40,25 @@ function* updateVehicleCcgArray({ payload: { vehicleCcgs, changes } }) {
   // look for changes without id - add
   const addCcg = changes.filter(ccg => !ccg.id);
   // look for matching v.id = c.id where different - modify
-  console.log(addCcg);
   const modCcg = changes.filter(ccg => {
     const vCcg = vehicleCcgs.find(vc => vc.id === ccg.id);
-    return !vCcg ? false : JSON.stringify(vCcg) === JSON.stringify(ccg);
-  });
-  console.log(modCcg);
-  // look for v.id missing in c - delete
 
+    return !vCcg ? false : JSON.stringify(vCcg) !== JSON.stringify(ccg);
+  });
+  // look for v.id missing in c - delete
+  const delCcg = vehicleCcgs.filter(
+    vc => !changes.find(ccg => ccg.id === vc.id)
+  );
+  // console.log({ add: addCcg, mod: modCcg, del: delCcg });
+  for (let ccg of addCcg) {
+    yield put(vehicleCcgActions.createVehicleCcg(ccg));
+  }
+  for (let ccg of modCcg) {
+    yield put(vehicleCcgActions.updateVehicleCcg(ccg));
+  }
+  for (let ccg of delCcg) {
+    yield put(vehicleCcgActions.removeVehicleCcg(ccg));
+  }
 }
 
 //=====================================

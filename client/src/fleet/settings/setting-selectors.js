@@ -40,6 +40,12 @@ export const getCostCentreGroups = createSelector(
   costCentreGroupList => costCentreGroupList.toArray()
 );
 
+export const getCostCentreGroupById = createSelector(
+  getCostCentreGroupList,
+  (id, costCentreGroupList) =>
+    costCentreGroupList.toArray().find(ccg => ccg.id === id)
+);
+
 export const getTransactionTypes = createSelector(
   getTransactionTypeList,
   transactionTypeList => transactionTypeList.toArray()

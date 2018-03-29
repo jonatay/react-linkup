@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { getCostCentreGroups } from '../settings';
 
 export function getVehicleCcgs(state) {
   return state.vehicleCcgs;
@@ -23,11 +24,19 @@ export const getVisibleVehicleCcgs = createSelector(
 
 export const getVehicleCcgById = createSelector(
   getVehicleCcgsList,
-  (vehicleCcgList, uid) =>
-    vehicleCcgList.filter(vehicleCcg => vehicleCcg.uid === uid)
+  (vehicleCcgList, id) =>
+    vehicleCcgList.filter(vehicleCcg => vehicleCcg.id === id)
 );
 
 export const getVehicleCcgList = createSelector(
   getVehicleCcgsList,
-  vehicleCcgList => vehicleCcgList
+  getCostCentreGroups,
+  (vehicleCcgList, costCentreGroups) =>
+    vehicleCcgList.map(vccg => ({
+      ...vccg,
+      cost_centre_group: costCentreGroups.find(
+        ccg => ccg.id === vccg.cost_centre_group_id
+      )
+    }))
 );
+
