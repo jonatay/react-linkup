@@ -14,7 +14,7 @@ import {
   getCurrentLocation
 } from 'src/common';
 
-import AppHeader from '../components/common/header';
+import AppHeader from '../components/common/app-header';
 import RequireAuthRoute from '../components/common/require-auth-route';
 import RequireUnauthRoute from '../components/common/require-unauth-route';
 import SignInPage from '../pages/sign-in-page';

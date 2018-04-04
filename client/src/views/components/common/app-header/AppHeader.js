@@ -8,7 +8,17 @@ const SubMenu = Menu.SubMenu;
 const iconCheat = {
   Admin: 'tool',
   Fleet: 'car',
-  HR: 'team'
+  HR: 'team',
+  Drivers: 'idcard',
+  Vehicles: 'car',
+  Transactions: 'table',
+  Employees: 'contacts',
+  EmpTran: 'table',
+  Advances: 'wallet',
+  Shifts: 'calendar',
+  Leave: 'smile-o',
+  Rights: 'lock',
+  Users: 'user'
 };
 
 const { Header } = Layout;
@@ -27,6 +37,16 @@ const AppHeader = ({
       navigateTo(`/${key}`);
     }
   };
+  const mapMenuChildren = parent => {
+    return child => (
+      <Menu.Item key={`${parent.toLowerCase()}/${child.toLowerCase()}`}>
+        <span>
+          <Icon type={iconCheat[child]} />
+        </span>
+        {child}
+      </Menu.Item>
+    );
+  };
   return (
     <Header
       style={{
@@ -44,7 +64,9 @@ const AppHeader = ({
         theme="dark"
         style={{ position: 'fixed', width: '100%', left: 0 }}
         selectedKeys={
-          typeof currentNavPath === 'string' ? [currentNavPath.replace('/','')] : []
+          typeof currentNavPath === 'string'
+            ? [currentNavPath.replace('/', '')]
+            : []
         }
       >
         <SubMenu
@@ -57,12 +79,17 @@ const AppHeader = ({
         </SubMenu>
 
         {aclFront.map(menu => (
-          <Menu.Item key={menu.resource.toLowerCase()}>
-            <span>
-              <Icon type={iconCheat[menu.resource]} />
-            </span>
-            {menu.resource}
-          </Menu.Item>
+          <SubMenu
+            key={menu.resource.toLowerCase()}
+            title={
+              <span>
+                <Icon type={iconCheat[menu.resource]} />
+                {menu.resource}
+              </span>
+            }
+          >
+            {menu.children.map(mapMenuChildren(menu.resource))}
+          </SubMenu>
         ))}
       </Menu>
     </Header>
