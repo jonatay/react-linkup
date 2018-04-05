@@ -18,7 +18,6 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
-    "react-router-tabs": "^1.1.1",
     "react-scripts": "^1.1.1",
     "react-sortable-tree": "^1.5.5",
     "react-sortable-tree-theme-file-explorer": "^1.1.2",
