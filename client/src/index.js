@@ -8,7 +8,7 @@ import { ConnectedRouter } from 'react-router-redux';
 import { initAuth } from './common/auth';
 import history from './history';
 import configureStore from './store';
-import App from './views/app';
+import Routes from './views/routes';
 import registerServiceWorker from './registerServiceWorker';
 // import './index.css';
 
@@ -37,5 +37,5 @@ if (module.hot) {
 registerServiceWorker();
 
 initAuth(store.dispatch)
-  .then(() => render(App))
+  .then(() => render(Routes))
   .catch(error => console.error(error));
