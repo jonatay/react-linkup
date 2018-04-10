@@ -1,6 +1,6 @@
 /*
-    Jono : 18 02 22
-    FleetSettings : Stateless Functional Component
+    Jono : 18 04 06
+    FleetVehiclesPage : Stateless Functional Component
 */
 import React from 'react';
 //import { List } from 'immutable';
@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 import CostCentreTable from '../../../components/fleet/cost-centre-table';
 import CostCentreGroupTable from '../../../components/fleet/cost-centre-group-table';
 import TransactionTypeTable from '../../../components/fleet/transaction-type-table';
-import FimpImport from 'src/views/components/fleet/fims_import';
+import FimsImport from 'src/views/components/fleet/fims_import';
 
 import {
   settingActions,
@@ -23,70 +23,74 @@ import {
 } from 'src/fleet/settings';
 
 import { Tabs, Icon } from 'antd';
+import PageHeader from '../../../components/common/page-header/PageHeader';
 const TabPane = Tabs.TabPane;
 
-class FleetSettingsContainer extends React.Component {
+class FleetSettingsPage extends React.Component {
   state = {
     activeKey: Cookies.get('fleetSettingsActiveKey') || 'cost-centre-groups'
   };
 
   render() {
     return (
-      <Tabs
-        theme="dark"
-        size="small"
-        activeKey={this.state.activeKey}
-        onChange={activeKey => {
-          Cookies.set('fleetSettingsActiveKey', activeKey, { expires: 7 });
-          this.setState({ activeKey });
-        }}
-      >
-        <TabPane
-          key="cost-centre-groups"
-          tab={
-            <span>
-              <Icon type="tags" />Cost Centre Groups
-            </span>
-          }
+      <div>
+        <PageHeader>fleet-settings</PageHeader>
+        <Tabs
+          theme="dark"
+          size="small"
+          activeKey={this.state.activeKey}
+          onChange={activeKey => {
+            Cookies.set('fleetSettingsActiveKey', activeKey, { expires: 7 });
+            this.setState({ activeKey });
+          }}
         >
-          <CostCentreGroupTable {...this.props} />
-        </TabPane>
-        <TabPane
-          key="cost-centres"
-          tab={
-            <span>
-              <Icon type="tags-o" />Cost Centres
-            </span>
-          }
-        >
-          <CostCentreTable {...this.props} />
-        </TabPane>
-        <TabPane
-          key="transaction-types"
-          tab={
-            <span>
-              <Icon type="tags" />Transaction Types
-            </span>
-          }
-        >
-          <TransactionTypeTable {...this.props} />
-        </TabPane>
-        <TabPane
-          key="fims-import"
-          tab={
-            <span>
-              <Icon type="tags" />Fims Import
-            </span>
-          }
-        >
-          <FimpImport {...this.props} />
-        </TabPane>
-      </Tabs>
+          <TabPane
+            key="cost-centre-groups"
+            tab={
+              <span>
+                <Icon type="tags" />Cost Centre Groups
+              </span>
+            }
+          >
+            <CostCentreGroupTable {...this.props} />
+          </TabPane>
+          <TabPane
+            key="cost-centres"
+            tab={
+              <span>
+                <Icon type="tags-o" />Cost Centres
+              </span>
+            }
+          >
+            <CostCentreTable {...this.props} />
+          </TabPane>
+          <TabPane
+            key="transaction-types"
+            tab={
+              <span>
+                <Icon type="tags" />Transaction Types
+              </span>
+            }
+          >
+            <TransactionTypeTable {...this.props} />
+          </TabPane>
+          <TabPane
+            key="fims-import"
+            tab={
+              <span>
+                <Icon type="tags" />Fims Import
+              </span>
+            }
+          >
+            <FimsImport {...this.props} />
+          </TabPane>
+        </Tabs>
+      </div>
     );
   }
 }
 
-FleetSettingsContainer.propTypes = {
+FleetSettingsPage.propTypes = {
   //cost centre
   costCentres: PropTypes.instanceOf(Array).isRequired,
   loadCostCentres: PropTypes.func.isRequired,
@@ -117,5 +121,5 @@ const mapDispatchToProps = {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(FleetSettingsContainer)
+  connect(mapStateToProps, mapDispatchToProps)(FleetSettingsPage)
 );

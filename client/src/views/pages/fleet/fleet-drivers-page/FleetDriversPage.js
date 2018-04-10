@@ -7,9 +7,14 @@ import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import PageHeader from '../../../components/common/page-header/PageHeader';
 
 const FleetDriversPage = props => {
-  return <div>Fleet Drivers Page</div>;
+  return (
+    <div>
+      <PageHeader>fleet-drivers</PageHeader>
+    </div>
+  );
 };
 
 FleetDriversPage.propTypes = {};

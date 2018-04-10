@@ -1,8 +1,10 @@
-.header {
-  padding: 10px 0;
-  height: 60px;
+.ant-layout-header {
   overflow: hidden;
-  line-height: 40px; }
+  line-height: 30px;
+  position: fixed;
+  width: 100%;
+  height: 40px;
+  z-index: 999; }
 
 .header__title {
   float: left;

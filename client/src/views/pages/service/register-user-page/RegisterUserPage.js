@@ -6,7 +6,6 @@ import React from 'react';
 // import { List } from 'immutable';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { Row, Col } from 'antd';
 
 import './style.css';
@@ -36,6 +35,4 @@ const mapDispatchToProps = {
   registerNewUser: authActions.registerNewUser
 };
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(RegisterUserPage)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterUserPage);

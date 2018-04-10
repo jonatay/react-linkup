@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Layout, Menu, Avatar, Icon } from 'antd';
-//import './header.css';
+import './header.css';
 
 const SubMenu = Menu.SubMenu;
 
@@ -18,7 +18,9 @@ const iconCheat = {
   Shifts: 'calendar',
   Leave: 'smile-o',
   Rights: 'lock',
-  Users: 'user'
+  Users: 'user',
+  Attendance: 'clock-circle-o',
+  Settings: 'setting'
 };
 
 const { Header } = Layout;
@@ -48,20 +50,12 @@ const AppHeader = ({
     );
   };
   return (
-    <Header
-      style={{
-        position: 'fixed',
-        width: '100%',
-        lineHeight: 40,
-        height: 40,
-        zIndex: 999
-      }}
-    >
+    <Header>
       {/*<div className="logo" />*/}
       <Menu
         onClick={handleMenuClick}
         mode="horizontal"
-        theme="dark"
+        // theme="dark"
         style={{ position: 'fixed', width: '100%', left: 0 }}
         selectedKeys={
           typeof currentNavPath === 'string'

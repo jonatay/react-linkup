@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
 
-import { Layout } from 'antd';
+import { privateRoutes, serviceRoutes } from '../../routes';
+import RequireAuthRoute from '../components/common/require-auth-route';
+import RequireUnauthRoute from '../components/common/require-unauth-route';
 
 import {
   authActions,
@@ -13,10 +16,12 @@ import {
   getCurrentLocation
 } from 'src/common';
 
+import NoMatch from '../pages/common/no-match';
 import AppHeader from '../components/common/app-header';
 
 import './app.css';
 
+import { Layout } from 'antd';
 const { Content } = Layout;
 
 const App = ({
@@ -25,12 +30,30 @@ const App = ({
   photoURL,
   navigateTo,
   aclFront,
-  currentNavPath
+  currentNavPath,
+  location
 }) => {
   if (!authenticated)
     return (
-      <Layout style={{ height: '100%' }}>
-        <Content />
+      <Layout>
+        <Content>
+          <Switch>
+            {serviceRoutes.map((route, idx) => (
+              <RequireUnauthRoute
+                key={idx}
+                path={route.path}
+                component={route.component}
+                {...authenticated}
+              />
+            ))}
+            <Redirect
+              to={{
+                pathname: '/sign-in',
+                state: { from: location }
+              }}
+            />
+          </Switch>
+        </Content>
       </Layout>
     );
   return (
@@ -44,7 +67,19 @@ const App = ({
         currentNavPath={currentNavPath}
       />
       <Content style={{ padding: '0 10px', marginTop: 60 }}>
-        <div style={{ background: '#fff', padding: 5, minHeight: 700 }} />
+        <div style={{ background: '#fff', padding: 5 }}>
+          <Switch>
+            {privateRoutes.map((route, idx) => (
+              <RequireAuthRoute
+                key={idx}
+                path={route.path}
+                component={route.component}
+                authenticated={authenticated}
+              />
+            ))}
+            <Route component={NoMatch} />
+          </Switch>
+        </div>
       </Content>
     </Layout>
   );
@@ -74,4 +109,4 @@ const mapDispatchToProps = {
   navigateTo: navActions.navigateTo
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

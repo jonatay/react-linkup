@@ -34,6 +34,12 @@ SET cut_off_date=$[cut_off_date], registration=$[registration],
 RETURNING *
 `;
 
+const sqlRemoveTranByFimsPeriod = `
+DELETE FROM fleet.fleet_transaction 
+   WHERE fims_voucher_id IN 
+     ( SELECT id FROM fleet.fims_voucher WHERE fims_period_id = $[id] )
+`;
+
 const sqlRemoveByFimsPeriod = `
 DELETE FROM fleet.fims_voucher
 WHERE fims_period_id = $[id]
@@ -50,4 +56,7 @@ exports.upsertFimsVoucher = fimsVoucher => {
   return db.one(sqlUpsertFimsVoucher, { ...fimsVoucher });
 };
 
-exports.removeByFimsPeriod = id => db.none(sqlRemoveByFimsPeriod, { id });
+exports.removeByFimsPeriod = id =>
+  db
+    .none(sqlRemoveTranByFimsPeriod, { id })
+    .then(() => db.none(sqlRemoveByFimsPeriod, { id }));

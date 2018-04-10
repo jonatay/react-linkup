@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { authActions, getAuthError } from 'src/common/auth';
-import { LoginForm } from 'src/views/components/common/login-form';
+import { authActions, getAuthError } from 'src/common/auth/index';
+import { LoginForm } from 'src/views/components/common/login-form/index';
 
 import { notification, Button, Row, Col } from 'antd';
 

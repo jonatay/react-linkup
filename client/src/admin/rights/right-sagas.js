@@ -63,21 +63,21 @@ function* watchCreateRight() {
   }
 }
 
-function* watchLocationChange() {
-  while (true) {
-    let { payload } = yield take(LOCATION_CHANGE);
-    if (payload.pathname === navActions.modules.navToAdminRights.url) {
-      rightList.path = `rights`;
-      const job = yield fork(read);
-
-      yield take([authActions.SIGN_OUT_FULFILLED]);
-      yield cancel(job);
-      // const params = new URLSearchParams(payload.search);
-      // const filter = params.get('filter');
-      // yield put(rightActions.filterRights(filter));
-    }
-  }
-}
+// function* watchLocationChange() {
+//   while (true) {
+//     let { payload } = yield take(LOCATION_CHANGE);
+//     if (payload.pathname === navActions.modules.navToAdminRights.url) {
+//       rightList.path = `rights`;
+//       const job = yield fork(read);
+//
+//       yield take([authActions.SIGN_OUT_FULFILLED]);
+//       yield cancel(job);
+//       // const params = new URLSearchParams(payload.search);
+//       // const filter = params.get('filter');
+//       // yield put(rightActions.filterRights(filter));
+//     }
+//   }
+// }
 
 function* watchRemoveRight() {
   while (true) {
@@ -99,7 +99,7 @@ function* watchUpdateRight() {
 export const rightSagas = [
   // fork(watchAuthentication),
   fork(watchCreateRight),
-  fork(watchLocationChange),
+  // fork(watchLocationChange),
   fork(watchRemoveRight),
   fork(watchUpdateRight)
 ];
