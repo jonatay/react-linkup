@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
 
-import { Layout } from 'antd';
+import { privateRoutes, serviceRoutes } from '../../routes';
+import RequireAuthRoute from '../components/common/require-auth-route';
+import RequireUnauthRoute from '../components/common/require-unauth-route';
 
 import {
   authActions,
@@ -14,19 +16,12 @@ import {
   getCurrentLocation
 } from 'src/common';
 
-import AppHeader from '../components/common/header';
-import RequireAuthRoute from '../components/common/require-auth-route';
-import RequireUnauthRoute from '../components/common/require-unauth-route';
-import SignInPage from '../pages/sign-in-page';
-import RegisterUserPage from '../pages/register-user-page';
-import RootPage from '../pages/root';
-
-import AdminPage from '../pages/admin-page';
-import FleetPage from '../pages/fleet-page';
-import HRPage from '../pages/hr-page';
+import NoMatch from '../pages/common/no-match';
+import AppHeader from '../components/common/app-header';
 
 import './app.css';
 
+import { Layout } from 'antd';
 const { Content } = Layout;
 
 const App = ({
@@ -35,22 +30,29 @@ const App = ({
   photoURL,
   navigateTo,
   aclFront,
-  currentNavPath
+  currentNavPath,
+  location
 }) => {
   if (!authenticated)
     return (
-      <Layout style={{ height: '100%' }}>
+      <Layout>
         <Content>
-          <RequireUnauthRoute
-            authenticated={authenticated}
-            path="/register"
-            component={RegisterUserPage}
-          />
-          <RequireUnauthRoute
-            authenticated={authenticated}
-            path="/sign-in"
-            component={SignInPage}
-          />
+          <Switch>
+            {serviceRoutes.map((route, idx) => (
+              <RequireUnauthRoute
+                key={idx}
+                path={route.path}
+                component={route.component}
+                {...authenticated}
+              />
+            ))}
+            <Redirect
+              to={{
+                pathname: '/sign-in',
+                state: { from: location }
+              }}
+            />
+          </Switch>
         </Content>
       </Layout>
     );
@@ -65,31 +67,18 @@ const App = ({
         currentNavPath={currentNavPath}
       />
       <Content style={{ padding: '0 10px', marginTop: 60 }}>
-        <div style={{ background: '#fff', padding: 5, minHeight: 700 }}>
-          <RequireAuthRoute
-            authenticated={authenticated}
-            exact
-            path="/"
-            component={RootPage}
-          />
-          <RequireAuthRoute
-            authenticated={authenticated}
-            exact
-            path="/admin"
-            component={AdminPage}
-          />
-          <RequireAuthRoute
-            authenticated={authenticated}
-            exact
-            path="/fleet"
-            component={FleetPage}
-          />
-          <RequireAuthRoute
-            authenticated={authenticated}
-            exact
-            path="/hr"
-            component={HRPage}
-          />
+        <div style={{ background: '#fff', padding: 5 }}>
+          <Switch>
+            {privateRoutes.map((route, idx) => (
+              <RequireAuthRoute
+                key={idx}
+                path={route.path}
+                component={route.component}
+                authenticated={authenticated}
+              />
+            ))}
+            <Route component={NoMatch} />
+          </Switch>
         </div>
       </Content>
     </Layout>

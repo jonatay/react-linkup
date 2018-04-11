@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import _ from 'lodash/array';
 
 const getAcl = state => {
   return state.common.acl.acl;
@@ -36,7 +37,20 @@ export const getAclRoles = createSelector(getAcl, getUid, (acl, uid) => {
     typeof acl.users === 'object' &&
     typeof acl.users[uid] === 'object'
   ) {
-    return Object.keys(acl.users[uid]);
+    const pRoles = acl.parents;
+    const roles = Object.keys(acl.users[uid]);
+    return _.flatten(
+      roles.concat(
+        roles
+          .map(r =>
+            Object.keys(pRoles).map(
+              p => (p === r ? Object.keys(pRoles[p]) : null)
+            )
+          )
+          .reduce((r, v) => r.concat(v))
+          .filter(r => r !== null)
+      )
+    );
   }
 });
 /*
@@ -47,7 +61,12 @@ const extractFront = (node, roles) => {
     if (roles.indexOf(r) >= 0 && typeof node[r].front === 'object') {
       let front = node[r].front;
       for (let res of Object.keys(front)) {
-        ret.push({ resource: res, children: Object.keys(front[res]) });
+        let fEle = ret.find(f => f.resource === res);
+        if (fEle) {
+          fEle.children = Object.keys(front[res]).concat(fEle.children);
+        } else {
+          ret.push({ resource: res, children: Object.keys(front[res]) });
+        }
       }
     }
   }

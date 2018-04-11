@@ -31,7 +31,7 @@ RETURNING *
 `;
 
 const sqlRemovefimsPeriod = `
-DELETE FROM fleet.fims_period CASCADE WHERE id = $[id]
+DELETE FROM fleet.fims_period WHERE id = $[id]
 RETURNING id
 `;
 

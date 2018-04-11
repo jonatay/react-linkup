@@ -83,7 +83,6 @@ function* removeResource({ payload }) {
 }
 
 function* removeResources({ payload }) {
-  console.log(payload);
   for (let resource of payload.resources) {
     const task = yield put(aclActions.aclRemoveResource(resource));
     const { error } = yield race({
