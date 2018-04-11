@@ -11,13 +11,13 @@ import { withRouter } from 'react-router-dom';
 import { fleetTransactionActions, getFleetTransactions } from 'src/fleet';
 
 import PageHeader from 'src/views/components/common/page-header';
-import FleetTransactionsTable from '../../../components/fleet/fleet-transactions-table';
+import FleetTransactionGrid from '../../../components/fleet/fleet-transaction-grid/FleetTransactionGrid';
 
 const FleetTransactionsPage = props => {
   return (
     <div>
       <PageHeader>fleet-transactions</PageHeader>
-      <FleetTransactionsTable {...props} />
+      <FleetTransactionGrid {...props} />
     </div>
   );
 };
