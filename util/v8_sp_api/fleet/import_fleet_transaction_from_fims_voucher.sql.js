@@ -30,6 +30,7 @@ _.each(rwsVoucher, function(voucher) {
 		voucher.merchant_name.toProperCase() +
 		" in " +
 		voucher.merchant_town.toProperCase();
+	tran.odometer = voucher.odometer;
 	//tran date
 	var yr = parseInt(voucher.transaction_date.substr(0, 4));
 	var mt = parseInt(voucher.transaction_date.substr(4, 2)) - 1;
@@ -62,11 +63,28 @@ _.each(rwsVoucher, function(voucher) {
 		"SELECT transaction_type_get_fims AS id FROM fleet.transaction_type_get_fims($1)",
 		[voucher.purchase_description]
 	)[0].id;
-
-	var vatRate = plv8.execute(
-		"SELECT vat_rate FROM fleet.transaction_type WHERE id = $1",
+	//jrt 180412- make provision for earlier vat rate
+	const ttRec = plv8.execute(
+		"SELECT vat_rate, jdata FROM fleet.transaction_type WHERE id = $1",
 		[tran.transaction_type_id]
-	)[0].vat_rate;
+	)[0];
+	const vatRate = ttRec.vat_rate;
+	// jdata has this in: {"previousVat": [{"vatRate":0.14, "untilDate":"2018-03-31"}]}
+	if (
+		ttRec.jdata &&
+		ttRec.jdata.previousVat &&
+		ttRec.jdata.previousVat.length === 1
+	) {
+		//vat prev date
+		const untilDate = ttRec.jdata.previousVat[0].untilDate;
+		yr = parseInt(untilDate.substr(0, 4));
+		mt = parseInt(untilDate.substr(4, 2)) - 1;
+		dy = parseInt(untilDate.substr(6, 2));
+		const prevVatDate = new Date(Date.UTC(yr, mt, dy));
+		if (prevVatDate <= tran.transaction_date) {
+			vatRate = ttRec.jdata.previousVat[0].vatRate;
+		}
+	}
 	tran.vat_amount =
 		vatRate === 0
 			? 0
@@ -97,5 +115,5 @@ _.each(rwsVoucher, function(voucher) {
 //--return res;//
 $$ language plv8;
 
-SELECT * FROM fleet.import_fleet_transaction_from_fims_voucher(832);
+SELECT * FROM fleet.import_fleet_transaction_from_fims_voucher(854);
 

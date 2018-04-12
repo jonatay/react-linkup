@@ -8,111 +8,224 @@ import 'react-table/react-table.css';
 import dateFormat from 'dateformat';
 import _ from 'lodash';
 
+import { Select, DatePicker } from 'antd';
+const Option = Select.Option;
+
+const getLkpArray = (array, key) =>
+  _.uniqBy(array, ai => ai[key])
+    .map(ai => ai[key])
+    .sort();
+
+const SelectFilter = ({ filter, onChange, optionArray }) => (
+  <Select
+    onChange={value => onChange(value)}
+    style={{ width: '100%' }}
+    value={filter ? filter.value : 'All'}
+  >
+    <Option value="all">All</Option>
+    {optionArray.map(v => <Option key={v}>{v}</Option>)}
+  </Select>
+);
+
+const FormatNumber = ({ value, decimals, style }) => (
+  <span style={{ float: 'right', ...style }}>
+    {new Intl.NumberFormat('en-ZA', {
+      maximumFractionDigits: decimals,
+      minimumFractionDigits: decimals
+    }).format(value)}
+  </span>
+);
+
+const selectFilterMethod = (filter, row) =>
+  filter.value === 'all' ? true : filter.value === row[filter.id];
+
 class FleetTransactionGrid extends React.Component {
-  componentDidMount() {
-    this.props.loadFleetTransactions();
+  state = {
+    data: [],
+    tranTypes: [],
+    vehicles: [],
+    drivers: [],
+    merchants: [],
+    towns: [],
+    costCentreGroups: []
+  };
+
+  static getDerivedStateFromProps({ fleetTransactions }, prevState) {
+    if (fleetTransactions && fleetTransactions.length > 0) {
+      return {
+        ...prevState,
+        data: fleetTransactions,
+        tranTypes: getLkpArray(fleetTransactions, 'transaction_type'),
+        vehicles: getLkpArray(fleetTransactions, 'vehicle'),
+        drivers: getLkpArray(fleetTransactions, 'driver'),
+        merchants: getLkpArray(fleetTransactions, 'merchant'),
+        towns: getLkpArray(fleetTransactions, 'town'),
+        costCentreGroups: getLkpArray(fleetTransactions, 'cost_centre_group')
+      };
+    }
+    return false;
   }
+
   render() {
+    const {
+      data,
+      tranTypes,
+      towns,
+      costCentreGroups,
+      merchants,
+      drivers,
+      vehicles
+    } = this.state;
+
     const columns = [
       {
         Header: 'Date',
         accessor: 'transaction_date', // String-based value accessors!
         Cell: props => <span>{dateFormat(props.value, 'yy-mm-dd')}</span>,
-        maxWidth: 80
+        minWidth: 100,
+        maxWidth: 120,
+        filterMethod: (filter, row) =>
+          filter.value === null
+            ? true
+            : dateFormat(row[filter.id], 'yy-mm-dd') ===
+              dateFormat(filter.value, 'yy-mm-dd'),
+        Filter: ({ filter, onChange }) => (
+          <div style={{ height: 30 }}>
+            <DatePicker
+              placeholder=""
+              value={filter ? filter.value : null}
+              onChange={val => onChange(val)}
+            />
+          </div>
+        )
       },
       {
         Header: 'Reg',
         accessor: 'registration',
-        maxWidth: 80
+        minWidth: 80,
+        maxWidth: 100
       },
       {
         Header: 'Vehicle Name',
         accessor: 'vehicle',
-        maxWidth: 150
+        minWidth: 200,
+        maxWidth: 120,
+        filterMethod: selectFilterMethod,
+        Filter: props => <SelectFilter {...props} optionArray={vehicles} />
       },
       {
         Header: 'Driver',
         accessor: 'driver',
-        maxWidth: 100
+        minWidth: 200,
+        maxWidth: 120,
+        filterMethod: selectFilterMethod,
+        Filter: props => <SelectFilter {...props} optionArray={drivers} />
       },
       {
         Header: 'CC Grp',
         accessor: 'cost_centre_group',
-        maxWidth: 100
+        minWidth: 100,
+        maxWidth: 120,
+        filterMethod: selectFilterMethod,
+        Filter: props => (
+          <SelectFilter {...props} optionArray={costCentreGroups} />
+        )
       },
       {
         Header: 'Tran Type',
         accessor: 'transaction_type',
-        maxWidth: 80
+        maxWidth: 120,
+        minWidth: 100,
+        filterMethod: selectFilterMethod,
+        Filter: props => <SelectFilter {...props} optionArray={tranTypes} />
       },
       {
         Header: 'Amount',
         accessor: 'amount',
         Cell: props => (
-          <span style={{ float: 'right' }}>
-            {' '}
-            {new Intl.NumberFormat('en-ZA', {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2
-            }).format(props.value)}
-          </span>
+          <FormatNumber
+            {...props}
+            decimals={2}
+            style={{ color: 'navy', fontWeight: 'bold' }}
+          />
         ),
-        maxWidth: 80,
+        minWidth: 80,
+        maxWidth: 120,
         sortMethod: (a, b) => a - b,
         Footer: (
-          <span style={{ float: 'right' }}>
-            {new Intl.NumberFormat('en-ZA', {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2
-            }).format(_.sumBy(this.props.fleetTransactions, 'amount'))}
-          </span>
+          <FormatNumber
+            style={{ color: 'navy', fontWeight: 'bold' }}
+            decimals={2}
+            value={_.sumBy(data, 'amount')}
+          />
         )
       },
       {
         Header: 'Vat',
         accessor: 'vat_amount',
-        Cell: props => (
-          <span style={{ float: 'right' }}>
-            {new Intl.NumberFormat('en-ZA', {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2
-            }).format(props.value)}
-          </span>
-        ),
-        maxWidth: 60,
+        Cell: props => <FormatNumber value={props.value} decimals={2} />,
+        minWidth: 60,
+        maxWidth: 100,
         sortMethod: (a, b) => a - b,
         Footer: (
           <span style={{ float: 'right' }}>
             {new Intl.NumberFormat('en-ZA', {
               maximumFractionDigits: 2,
               minimumFractionDigits: 2
-            }).format(_.sumBy(this.props.fleetTransactions, 'vat_amount'))}
+            }).format(_.sumBy(data, 'vat_amount'))}
           </span>
+        )
+      },
+      {
+        Header: 'Odometer',
+        accessor: 'odometer',
+        minWidth: 60,
+        maxWidth: 80,
+        filterable: false,
+        Cell: props => (
+          <FormatNumber
+            {...props}
+            decimals={0}
+            style={{ color: 'darkgreen', fontWeight: 400 }}
+          />
         )
       },
       {
         Header: 'Merchant',
         accessor: 'merchant',
-        maxWidth: 120
+        minWidth: 120,
+        maxWidth: 180,
+        filterMethod: selectFilterMethod,
+        Filter: props => <SelectFilter {...props} optionArray={merchants} />
       },
       {
         Header: 'Town',
         accessor: 'town',
-        maxWidth: 80
+        minWidth: 80,
+        maxWidth: 120,
+        filterMethod: selectFilterMethod,
+        Filter: props => <SelectFilter {...props} optionArray={towns} />
       }
-
-      // {
-      //   id: 'friendName', // Required because our accessor is not a string
-      //   Header: 'Friend Name',
-      //   accessor: d => d.friend.name // Custom value accessors!
-      // },
-      // {
-      //   Header: props => <span>Friend Age</span>, // Custom header components!
-      //   accessor: 'friend.age'
-      // }
     ];
-
-    return <ReactTable data={this.props.fleetTransactions} columns={columns} />;
+    return (
+      <ReactTable
+        data={data}
+        columns={columns}
+        filterable
+        defaultFilterMethod={(filter, row) => {
+          return (
+            String(row[filter.id])
+              .toLowerCase()
+              .indexOf(filter.value.toLowerCase()) >= 0
+          );
+        }}
+        defaultPageSize={data && data.length > 0 ? data.length : 100}
+        style={{
+          height: window.innerHeight - 110 // This will force the table body to overflow and scroll, since there is not enough room
+        }}
+        className="-striped -highlight"
+      />
+    );
   }
 }
 

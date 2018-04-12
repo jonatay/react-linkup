@@ -2,9 +2,45 @@ import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
 import { authActions } from 'src/common/auth/index';
 import { fleetTransactionActions } from './fleet-transaction-actions';
 import { fleetTransactionList } from './fleet-transaction-list';
+import { LOCATION_CHANGE } from 'react-router-redux';
 const jsondiffpatch = require('jsondiffpatch').create();
 
-// import * as jsondiffpatch from 'jsondiffpatch';
+function* loadAllFleetTransactions() {
+  const fleetTransactions = yield call([
+    fleetTransactionList,
+    fleetTransactionList.list
+  ]);
+  yield put(
+    fleetTransactionActions.loadFleetTransactionsFulfilled(fleetTransactions)
+  );
+}
+
+function* updateFleetTransaction({ payload }) {
+  const changes = jsondiffpatch.diff(payload.fleetTransaction, payload.changes);
+  let result = yield call(
+    [fleetTransactionList, fleetTransactionList.update],
+    payload.fleetTransaction.id,
+    { changes }
+  );
+  yield put(
+    fleetTransactionActions.updateFleetTransactionFulfilled(
+      result.fleetTransaction
+    )
+  );
+}
+
+function* toggleFleetTransactionIsActive({ payload }) {
+  let result = yield call(
+    [fleetTransactionList, fleetTransactionList.remove],
+    payload.fleetTransaction.id
+  );
+  yield put(
+    fleetTransactionActions.toggleFleetTransactionIsActiveFulfilled(
+      result.fleetTransaction
+    )
+  );
+}
+
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -18,6 +54,15 @@ function* watchAuthentication() {
   }
 }
 
+function* watchLocationChange() {
+  while (true) {
+    let { payload } = yield take(LOCATION_CHANGE);
+    if (payload.pathname.indexOf('fleet/transactions') === 1) {
+      yield put(fleetTransactionActions.loadFleetTransactions());
+    }
+  }
+}
+
 function* watchIdTokenRefresh() {
   while (true) {
     const { payload } = yield take(authActions.REFRESH_ID_TOKEN_FULFILLED);
@@ -25,21 +70,11 @@ function* watchIdTokenRefresh() {
   }
 }
 
-function* loadAllFleetTransactions() {
-  const fleetTransactions = yield call([fleetTransactionList, fleetTransactionList.list]);
-  yield put(fleetTransactionActions.loadFleetTransactionsFulfilled(fleetTransactions));
-}
-
 function* watchLoadFleetTransactions() {
-  yield takeEvery(fleetTransactionActions.LOAD_FLEET_TRANSACTIONS, loadAllFleetTransactions);
-}
-
-function* toggleFleetTransactionIsActive({ payload }) {
-  let result = yield call(
-    [fleetTransactionList, fleetTransactionList.remove],
-    payload.fleetTransaction.id
+  yield takeEvery(
+    fleetTransactionActions.LOAD_FLEET_TRANSACTIONS,
+    loadAllFleetTransactions
   );
-  yield put(fleetTransactionActions.toggleFleetTransactionIsActiveFulfilled(result.fleetTransaction));
 }
 
 function* watchToggleFleetTransactionIsActive() {
@@ -49,18 +84,11 @@ function* watchToggleFleetTransactionIsActive() {
   );
 }
 
-function* updateFleetTransaction({ payload }) {
-  const changes = jsondiffpatch.diff(payload.fleetTransaction, payload.changes);
-  let result = yield call(
-    [fleetTransactionList, fleetTransactionList.update],
-    payload.fleetTransaction.id,
-    { changes }
-  );
-  yield put(fleetTransactionActions.updateFleetTransactionFulfilled(result.fleetTransaction));
-}
-
 function* watchUpdateFleetTransaction() {
-  yield takeEvery(fleetTransactionActions.UPDATE_FLEET_TRANSACTION, updateFleetTransaction);
+  yield takeEvery(
+    fleetTransactionActions.UPDATE_FLEET_TRANSACTION,
+    updateFleetTransaction
+  );
 }
 
 //=====================================
@@ -71,7 +99,7 @@ export const fleetTransactionSagas = [
   fork(watchAuthentication),
   fork(watchIdTokenRefresh),
   fork(watchLoadFleetTransactions),
-  //fork(watchCreateFleetTransaction),
+  fork(watchLocationChange),
   fork(watchToggleFleetTransactionIsActive),
   fork(watchUpdateFleetTransaction)
 ];
