@@ -7,15 +7,21 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { fleetTransactionActions, getFleetTransactions } from 'src/fleet';
+import {
+  fleetTransactionActions,
+  getVisibleFleetTransactions,
+  getFleetTransactionFilter
+} from 'src/fleet';
 
 import PageHeader from 'src/views/components/common/page-header';
-import FleetTransactionGrid from '../../../components/fleet/fleet-transaction-grid/FleetTransactionGrid';
+import FleetTransactionGrid from '../../../components/fleet/fleet-transaction-grid';
+import FleetTransactionFilter from '../../../components/fleet/fleet-transaction-filter';
 
 const FleetTransactionsPage = props => {
   return (
     <div>
       <PageHeader>fleet-transactions</PageHeader>
+      <FleetTransactionFilter {...props} />
       <FleetTransactionGrid {...props} />
     </div>
   );
@@ -23,15 +29,19 @@ const FleetTransactionsPage = props => {
 
 FleetTransactionsPage.propTypes = {
   loadFleetTransactions: PropTypes.func.isRequired,
-  fleetTransactions: PropTypes.instanceOf(Array).isRequired
+  filterFleetTransactions: PropTypes.func.isRequired,
+  fleetTransactions: PropTypes.instanceOf(Array).isRequired,
+  fleetTransactionFilter: PropTypes.instanceOf(Object).isRequired
 };
 
 const mapStateToProps = state => ({
-  fleetTransactions: getFleetTransactions(state)
+  fleetTransactions: getVisibleFleetTransactions(state),
+  fleetTransactionFilter: getFleetTransactionFilter(state)
 });
 
 const mapDispatchToProps = {
-  loadFleetTransactions: fleetTransactionActions.loadFleetTransactions
+  loadFleetTransactions: fleetTransactionActions.loadFleetTransactions,
+  filterFleetTransactions: fleetTransactionActions.filterFleetTransactions
 };
 
 export default withRouter(

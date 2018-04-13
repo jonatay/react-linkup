@@ -42,6 +42,8 @@ const selectFilterMethod = (filter, row) =>
 class FleetTransactionGrid extends React.Component {
   state = {
     data: [],
+    pages: -1,
+    loading: false,
     tranTypes: [],
     vehicles: [],
     drivers: [],
@@ -55,6 +57,7 @@ class FleetTransactionGrid extends React.Component {
       return {
         ...prevState,
         data: fleetTransactions,
+        loading:false,
         tranTypes: getLkpArray(fleetTransactions, 'transaction_type'),
         vehicles: getLkpArray(fleetTransactions, 'vehicle'),
         drivers: getLkpArray(fleetTransactions, 'driver'),
@@ -212,16 +215,30 @@ class FleetTransactionGrid extends React.Component {
         data={data}
         columns={columns}
         filterable
-        defaultFilterMethod={(filter, row) => {
-          return (
-            String(row[filter.id])
-              .toLowerCase()
-              .indexOf(filter.value.toLowerCase()) >= 0
-          );
+        defaultPageSize={20}
+        showPaginationTop={false}
+        showPaginationBottom={true}
+        manual
+        pages={this.state.pages} // should default to -1 (which means we don't know how many pages we have)
+        loading={this.state.loading}
+        onFetchData={(state, instance) => {
+          this.setState({ loading: true });
+
+          if (data.length === 0) {
+            this.props.loadFleetTransactions();
+          }
+
+          this.props.filterFleetTransactions({
+            page: state.page,
+            pageSize: state.pageSize,
+            sorted: state.sorted,
+            filtered: state.filtered
+          });
+
         }}
-        defaultPageSize={data && data.length > 0 ? data.length : 100}
+        getTrGroupProps={() => ({ style: { lineHeight: 1 } })}
         style={{
-          height: window.innerHeight - 110 // This will force the table body to overflow and scroll, since there is not enough room
+          height: window.innerHeight - 155 // This will force the table body to overflow and scroll, since there is not enough room
         }}
         className="-striped -highlight"
       />
@@ -230,3 +247,20 @@ class FleetTransactionGrid extends React.Component {
 }
 
 export default FleetTransactionGrid;
+
+/* taken out
+
+defaultFilterMethod={(filter, row) => {
+          return (
+            String(row[filter.id])
+              .toLowerCase()
+              .indexOf(filter.value.toLowerCase()) >= 0
+          );
+        }}
+
+
+
+
+
+
+ */

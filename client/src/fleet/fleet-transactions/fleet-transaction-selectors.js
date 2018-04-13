@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 // import { fleetTransactionList } from './fleetTransaction-list';
 
 export function getFleetTransactionsFromState(state) {
@@ -21,26 +21,28 @@ export function getFleetTransactionList(state) {
 //  MEMOIZED SELECTORS
 //-------------------------------------
 
-export const getVisibleFleetTransactions = createSelector(
+const getFilteredFleetTransactions = createSelector(
   getFleetTransactionList,
   getFleetTransactionFilter,
-  getFleetTransactionShowInactive,
-  (fleetTransactionList, filter, showInactive) =>
+  (list, { filtered }) =>
+    !filtered
+      ? list
+      : filtered.length === 0
+        ? list
+        : list.filter((val, key) =>
+            filtered.reduce((r, v, k) => {
+              return true;
+            })
+          )
+);
+
+export const getVisibleFleetTransactions = createSelector(
+  getFilteredFleetTransactions,
+  getFleetTransactionFilter,
+  (fleetTransactionList, { page, pageSize, sorted, filtered }) =>
     fleetTransactionList
-      .filter(
-        fleetTransaction =>
-          ((!showInactive && fleetTransaction.is_active) ||
-            (showInactive && !fleetTransaction.is_active)) &&
-          (fleetTransaction.name.toLowerCase().includes(filter.toLowerCase()) ||
-            fleetTransaction.registration
-              .toLowerCase()
-              .includes(filter.toLowerCase()) ||
-            fleetTransaction.fims_drivers
-              .join(' ')
-              .toLowerCase()
-              .includes(filter.toLowerCase()))
-      )
       .toArray()
+      .slice(page * pageSize, page * pageSize + pageSize)
 );
 
 export const getFleetTransactionById = createSelector(

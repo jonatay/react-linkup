@@ -99,7 +99,7 @@ export const fleetTransactionSagas = [
   fork(watchAuthentication),
   fork(watchIdTokenRefresh),
   fork(watchLoadFleetTransactions),
-  fork(watchLocationChange),
+  // fork(watchLocationChange),
   fork(watchToggleFleetTransactionIsActive),
   fork(watchUpdateFleetTransaction)
 ];

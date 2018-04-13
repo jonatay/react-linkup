@@ -4,7 +4,7 @@ const db = require('../../services/postgres/db');
 const sqlList = `
 SELECT *
   FROM fleet.fleet_transaction_joined
-  WHERE tax_year = 0
+  WHERE tax_year = 2019
 `;
 
 const sqlInsert = `
