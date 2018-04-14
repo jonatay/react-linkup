@@ -52,12 +52,16 @@ class FleetTransactionGrid extends React.Component {
     costCentreGroups: []
   };
 
-  static getDerivedStateFromProps({ fleetTransactions }, prevState) {
+  static getDerivedStateFromProps(
+    { fleetTransactions, fleetTransactionsPageCount },
+    prevState
+  ) {
     if (fleetTransactions && fleetTransactions.length > 0) {
       return {
         ...prevState,
         data: fleetTransactions,
-        loading:false,
+        pages: fleetTransactionsPageCount,
+        loading: false,
         tranTypes: getLkpArray(fleetTransactions, 'transaction_type'),
         vehicles: getLkpArray(fleetTransactions, 'vehicle'),
         drivers: getLkpArray(fleetTransactions, 'driver'),
@@ -227,14 +231,14 @@ class FleetTransactionGrid extends React.Component {
           if (data.length === 0) {
             this.props.loadFleetTransactions();
           }
+          const filtered = state.filtered.filter(v => v.value !== 'all');
 
           this.props.filterFleetTransactions({
             page: state.page,
             pageSize: state.pageSize,
             sorted: state.sorted,
-            filtered: state.filtered
+            filtered: filtered
           });
-
         }}
         getTrGroupProps={() => ({ style: { lineHeight: 1 } })}
         style={{

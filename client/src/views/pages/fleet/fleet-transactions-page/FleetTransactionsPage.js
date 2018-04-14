@@ -10,7 +10,8 @@ import { withRouter } from 'react-router-dom';
 import {
   fleetTransactionActions,
   getVisibleFleetTransactions,
-  getFleetTransactionFilter
+  getFleetTransactionFilter,
+  getFleetTransactionsPageCount
 } from 'src/fleet';
 
 import PageHeader from 'src/views/components/common/page-header';
@@ -31,12 +32,14 @@ FleetTransactionsPage.propTypes = {
   loadFleetTransactions: PropTypes.func.isRequired,
   filterFleetTransactions: PropTypes.func.isRequired,
   fleetTransactions: PropTypes.instanceOf(Array).isRequired,
-  fleetTransactionFilter: PropTypes.instanceOf(Object).isRequired
+  fleetTransactionFilter: PropTypes.instanceOf(Object).isRequired,
+  fleetTransactionsPageCount: PropTypes.number.isRequired
 };
 
 const mapStateToProps = state => ({
   fleetTransactions: getVisibleFleetTransactions(state),
-  fleetTransactionFilter: getFleetTransactionFilter(state)
+  fleetTransactionFilter: getFleetTransactionFilter(state),
+  fleetTransactionsPageCount: getFleetTransactionsPageCount(state)
 });
 
 const mapDispatchToProps = {

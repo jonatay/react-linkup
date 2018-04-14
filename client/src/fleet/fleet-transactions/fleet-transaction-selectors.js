@@ -1,4 +1,5 @@
-import { createSelector } from "reselect";
+import { createSelector } from 'reselect';
+import _ from 'lodash';
 // import { fleetTransactionList } from './fleetTransaction-list';
 
 export function getFleetTransactionsFromState(state) {
@@ -21,7 +22,7 @@ export function getFleetTransactionList(state) {
 //  MEMOIZED SELECTORS
 //-------------------------------------
 
-const getFilteredFleetTransactions = createSelector(
+export const getFilteredFleetTransactions = createSelector(
   getFleetTransactionList,
   getFleetTransactionFilter,
   (list, { filtered }) =>
@@ -30,19 +31,32 @@ const getFilteredFleetTransactions = createSelector(
       : filtered.length === 0
         ? list
         : list.filter((val, key) =>
-            filtered.reduce((r, v, k) => {
-              return true;
-            })
+            filtered.reduce((r, v, k) => (!r ? r : val[v.id] === v.value), true)
           )
+);
+
+const getSortedFleetTransactions = createSelector(
+  getFilteredFleetTransactions,
+  getFleetTransactionFilter,
+  (list, { sorted }) =>
+    !sorted
+      ? list
+      : sorted.length === 0
+        ? list
+        : sorted.reduce((r, v) => _.sortBy(list, v.id))
+);
+
+export const getFleetTransactionsPageCount = createSelector(
+  getFilteredFleetTransactions,
+  getFleetTransactionFilter,
+  (list, { pageSize }) => parseInt(list.size / pageSize)
 );
 
 export const getVisibleFleetTransactions = createSelector(
   getFilteredFleetTransactions,
-  getFleetTransactionFilter,
-  (fleetTransactionList, { page, pageSize, sorted, filtered }) =>
-    fleetTransactionList
-      .toArray()
-      .slice(page * pageSize, page * pageSize + pageSize)
+  getSortedFleetTransactions,
+  (list, { page, pageSize, sorted, filtered }) =>
+    list.toArray().slice(page * pageSize, page * pageSize + pageSize)
 );
 
 export const getFleetTransactionById = createSelector(
