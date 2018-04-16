@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect';
-import _ from 'lodash';
 // import { fleetTransactionList } from './fleetTransaction-list';
 
 export function getFleetTransactionsFromState(state) {
@@ -10,12 +9,12 @@ export function getFleetTransactionFilter(state) {
   return getFleetTransactionsFromState(state).filter;
 }
 
-export function getFleetTransactionShowInactive(state) {
-  return getFleetTransactionsFromState(state).showInactive;
-}
-
 export function getFleetTransactionList(state) {
   return getFleetTransactionsFromState(state).list;
+}
+
+export function getDateRangeFromState(state) {
+  return getFleetTransactionsFromState(state).dateRange;
 }
 
 //=====================================
@@ -43,18 +42,24 @@ const getSortedFleetTransactions = createSelector(
       ? list
       : sorted.length === 0
         ? list
-        : sorted.reduce((r, v) => _.sortBy(list, v.id))
+        : sorted.reduceRight(
+            (r, v) =>
+              v.desc
+                ? r.sortBy(rec => rec[v.id]).reverse()
+                : r.sortBy(rec => rec[v.id]),
+            list
+          )
 );
 
 export const getFleetTransactionsPageCount = createSelector(
   getFilteredFleetTransactions,
   getFleetTransactionFilter,
-  (list, { pageSize }) => parseInt(list.size / pageSize)
+  (list, { pageSize }) => parseInt(list.size / pageSize, 10)
 );
 
 export const getVisibleFleetTransactions = createSelector(
-  getFilteredFleetTransactions,
   getSortedFleetTransactions,
+  getFleetTransactionFilter,
   (list, { page, pageSize, sorted, filtered }) =>
     list.toArray().slice(page * pageSize, page * pageSize + pageSize)
 );
@@ -74,3 +79,5 @@ export const getFleetTransactions = createSelector(
   getFleetTransactionsList,
   fleetTransactionList => fleetTransactionList.toArray()
 );
+
+export const getDateRange = createSelector(getDateRangeFromState, dr => dr);

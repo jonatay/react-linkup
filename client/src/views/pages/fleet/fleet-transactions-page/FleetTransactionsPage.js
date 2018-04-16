@@ -4,6 +4,7 @@
 */
 import React from 'react';
 import PropTypes from 'prop-types';
+import { List } from 'immutable';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
@@ -11,7 +12,10 @@ import {
   fleetTransactionActions,
   getVisibleFleetTransactions,
   getFleetTransactionFilter,
-  getFleetTransactionsPageCount
+  getFleetTransactionsPageCount,
+  getFilteredFleetTransactions,
+  getFleetTransactions,
+  getDateRange
 } from 'src/fleet';
 
 import PageHeader from 'src/views/components/common/page-header';
@@ -33,13 +37,19 @@ FleetTransactionsPage.propTypes = {
   filterFleetTransactions: PropTypes.func.isRequired,
   fleetTransactions: PropTypes.instanceOf(Array).isRequired,
   fleetTransactionFilter: PropTypes.instanceOf(Object).isRequired,
-  fleetTransactionsPageCount: PropTypes.number.isRequired
+  fleetTransactionsPageCount: PropTypes.number.isRequired,
+  filteredFleetTransactions: PropTypes.instanceOf(List).isRequired,
+  allFleetTransactions: PropTypes.instanceOf(Array).isRequired,
+  dateRange: PropTypes.instanceOf(Array).isRequired
 };
 
 const mapStateToProps = state => ({
   fleetTransactions: getVisibleFleetTransactions(state),
   fleetTransactionFilter: getFleetTransactionFilter(state),
-  fleetTransactionsPageCount: getFleetTransactionsPageCount(state)
+  fleetTransactionsPageCount: getFleetTransactionsPageCount(state),
+  filteredFleetTransactions: getFilteredFleetTransactions(state),
+  allFleetTransactions: getFleetTransactions(state),
+  dateRange: getDateRange(state)
 });
 
 const mapDispatchToProps = {

@@ -2,7 +2,7 @@ import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
 import { authActions } from 'src/common/auth/index';
 import { fleetTransactionActions } from './fleet-transaction-actions';
 import { fleetTransactionList } from './fleet-transaction-list';
-import { LOCATION_CHANGE } from 'react-router-redux';
+// import { LOCATION_CHANGE } from 'react-router-redux';
 const jsondiffpatch = require('jsondiffpatch').create();
 
 function* loadAllFleetTransactions() {
@@ -53,15 +53,15 @@ function* watchAuthentication() {
     fleetTransactionList.token = null;
   }
 }
-
-function* watchLocationChange() {
-  while (true) {
-    let { payload } = yield take(LOCATION_CHANGE);
-    if (payload.pathname.indexOf('fleet/transactions') === 1) {
-      yield put(fleetTransactionActions.loadFleetTransactions());
-    }
-  }
-}
+//
+// function* watchLocationChange() {
+//   while (true) {
+//     let { payload } = yield take(LOCATION_CHANGE);
+//     if (payload.pathname.indexOf('fleet/transactions') === 1) {
+//       yield put(fleetTransactionActions.loadFleetTransactions());
+//     }
+//   }
+// }
 
 function* watchIdTokenRefresh() {
   while (true) {
