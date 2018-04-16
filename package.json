@@ -20,6 +20,7 @@
     "firebase": "^4.8.2",
     "firebase-admin": "^5.8.0",
     "jade": "^1.11.0",
+    "moment": "^2.22.0",
     "morgan": "~1.9.0",
     "pg-promise": "^7.4.1",
     "raven": "^2.4.0",

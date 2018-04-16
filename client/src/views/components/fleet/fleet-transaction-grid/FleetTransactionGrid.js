@@ -27,7 +27,7 @@ const SelectFilter = ({ filter, onChange, optionArray }) => (
   </Select>
 );
 
-const FormatNumber = ({ value, decimals, style }) => (
+const FormatNumber = ({ value, decimals, style = {} }) => (
   <span style={{ float: 'right', ...style }}>
     {new Intl.NumberFormat('en-ZA', {
       maximumFractionDigits: decimals,
@@ -42,6 +42,9 @@ const selectFilterMethod = (filter, row) =>
 class FleetTransactionGrid extends React.Component {
   state = {
     data: [],
+    filteredFleetTransactions: [],
+    pages: -1,
+    loading: false,
     tranTypes: [],
     vehicles: [],
     drivers: [],
@@ -50,17 +53,29 @@ class FleetTransactionGrid extends React.Component {
     costCentreGroups: []
   };
 
-  static getDerivedStateFromProps({ fleetTransactions }, prevState) {
-    if (fleetTransactions && fleetTransactions.length > 0) {
+  static getDerivedStateFromProps(
+    {
+      fleetTransactions,
+      fleetTransactionsPageCount,
+      filteredFleetTransactions,
+      allFleetTransactions
+    },
+    prevState
+  ) {
+    if (allFleetTransactions && allFleetTransactions.length > 0) {
+      const fft = filteredFleetTransactions.toArray();
       return {
         ...prevState,
         data: fleetTransactions,
-        tranTypes: getLkpArray(fleetTransactions, 'transaction_type'),
-        vehicles: getLkpArray(fleetTransactions, 'vehicle'),
-        drivers: getLkpArray(fleetTransactions, 'driver'),
-        merchants: getLkpArray(fleetTransactions, 'merchant'),
-        towns: getLkpArray(fleetTransactions, 'town'),
-        costCentreGroups: getLkpArray(fleetTransactions, 'cost_centre_group')
+        filteredFleetTransactions: fft,
+        pages: fleetTransactionsPageCount,
+        loading: false,
+        tranTypes: getLkpArray(allFleetTransactions, 'transaction_type'),
+        vehicles: getLkpArray(allFleetTransactions, 'vehicle'),
+        drivers: getLkpArray(allFleetTransactions, 'driver'),
+        merchants: getLkpArray(allFleetTransactions, 'merchant'),
+        towns: getLkpArray(allFleetTransactions, 'town'),
+        costCentreGroups: getLkpArray(allFleetTransactions, 'cost_centre_group')
       };
     }
     return false;
@@ -69,6 +84,7 @@ class FleetTransactionGrid extends React.Component {
   render() {
     const {
       data,
+      filteredFleetTransactions,
       tranTypes,
       towns,
       costCentreGroups,
@@ -156,7 +172,7 @@ class FleetTransactionGrid extends React.Component {
           <FormatNumber
             style={{ color: 'navy', fontWeight: 'bold' }}
             decimals={2}
-            value={_.sumBy(data, 'amount')}
+            value={_.sumBy(filteredFleetTransactions, 'amount')}
           />
         )
       },
@@ -168,12 +184,10 @@ class FleetTransactionGrid extends React.Component {
         maxWidth: 100,
         sortMethod: (a, b) => a - b,
         Footer: (
-          <span style={{ float: 'right' }}>
-            {new Intl.NumberFormat('en-ZA', {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2
-            }).format(_.sumBy(data, 'vat_amount'))}
-          </span>
+          <FormatNumber
+            value={_.sumBy(filteredFleetTransactions, 'vat_amount')}
+            decimals={2}
+          />
         )
       },
       {
@@ -212,16 +226,30 @@ class FleetTransactionGrid extends React.Component {
         data={data}
         columns={columns}
         filterable
-        defaultFilterMethod={(filter, row) => {
-          return (
-            String(row[filter.id])
-              .toLowerCase()
-              .indexOf(filter.value.toLowerCase()) >= 0
-          );
+        defaultPageSize={20}
+        showPaginationTop={false}
+        showPaginationBottom={true}
+        manual
+        pages={this.state.pages} // should default to -1 (which means we don't know how many pages we have)
+        loading={this.state.loading}
+        onFetchData={(state, instance) => {
+          this.setState({ loading: true });
+
+          if (data.length === 0) {
+            this.props.loadFleetTransactions();
+          }
+          const filtered = state.filtered.filter(v => v.value !== 'all');
+
+          this.props.filterFleetTransactions({
+            page: state.page,
+            pageSize: state.pageSize,
+            sorted: state.sorted,
+            filtered: filtered
+          });
         }}
-        defaultPageSize={data && data.length > 0 ? data.length : 100}
+        getTrGroupProps={() => ({ style: { lineHeight: 1 } })}
         style={{
-          height: window.innerHeight - 110 // This will force the table body to overflow and scroll, since there is not enough room
+          height: window.innerHeight - 155 // This will force the table body to overflow and scroll, since there is not enough room
         }}
         className="-striped -highlight"
       />
@@ -230,3 +258,20 @@ class FleetTransactionGrid extends React.Component {
 }
 
 export default FleetTransactionGrid;
+
+/* taken out
+
+defaultFilterMethod={(filter, row) => {
+          return (
+            String(row[filter.id])
+              .toLowerCase()
+              .indexOf(filter.value.toLowerCase()) >= 0
+          );
+        }}
+
+
+
+
+
+
+ */

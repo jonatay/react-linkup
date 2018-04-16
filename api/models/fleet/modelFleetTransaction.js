@@ -1,10 +1,11 @@
 // MODEL fleet_transaction
 const db = require('../../services/postgres/db');
+const moment = require('moment');
 
 const sqlList = `
 SELECT *
   FROM fleet.fleet_transaction_joined
-  WHERE tax_year = 0
+  WHERE transaction_date BETWEEN $[from] AND $[to]
 `;
 
 const sqlInsert = `
@@ -28,7 +29,8 @@ ON CONFLICT ON CONSTRAINT fleet_transaction_fims_voucher_id_invoice_number_key D
  RETURNING *
 `;
 
-exports.list = params => db.many(sqlList, params);
+exports.list = params =>
+  db.many(sqlList, { from: moment().subtract(3, 'years'), to: moment() });
 
 exports.insert = fleetTransaction => db.one(sqlInsert, fleetTransaction);
 
