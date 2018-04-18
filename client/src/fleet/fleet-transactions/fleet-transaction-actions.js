@@ -21,8 +21,9 @@ export const fleetTransactionActions = {
   FLEET_TRANSACTION_TOGGLE_SHOW_INACTIVE:
     'FLEET_TRANSACTION_TOGGLE_SHOW_INACTIVE',
 
-  loadFleetTransactions: () => ({
-    type: fleetTransactionActions.LOAD_FLEET_TRANSACTIONS
+  loadFleetTransactions: listParams => ({
+    type: fleetTransactionActions.LOAD_FLEET_TRANSACTIONS,
+    payload: { listParams }
   }),
 
   createFleetTransaction: title => ({

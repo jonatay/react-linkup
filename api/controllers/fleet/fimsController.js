@@ -43,14 +43,14 @@ exports.post_fims_batch = (req, res) => {
 };
 
 exports.remove_fims_period = (req, res) => {
-  const { id } = req.params;
+  const { id } = req.listParams;
   ModelFimsVoucher.removeByFimsPeriod(id).then(() =>
     ModelFimsPeriod.removeFimsPeriod(id).then(data => res.json(data))
   );
 };
 
 exports.import_fims_period = (req, res) => {
-  const { id } = req.params;
+  const { id } = req.listParams;
   db
     .one('SELECT * FROM fleet.fims_period WHERE id = $1', id)
     .then(({ ...fimsPeriod }) => {
@@ -79,7 +79,7 @@ exports.import_fims_period = (req, res) => {
 
 /*
 exports.import_fims_period = (req, res) => {
-  const { id } = req.params;
+  const { id } = req.listParams;
   db
     .task('import-fims-period', function*(t) {
       // firts get fimsPeriod by id

@@ -5,11 +5,11 @@ import { fleetTransactionList } from './fleet-transaction-list';
 // import { LOCATION_CHANGE } from 'react-router-redux';
 const jsondiffpatch = require('jsondiffpatch').create();
 
-function* loadAllFleetTransactions() {
-  const fleetTransactions = yield call([
-    fleetTransactionList,
-    fleetTransactionList.list
-  ]);
+function* loadAllFleetTransactions({ payload }) {
+  const fleetTransactions = yield call(
+    [fleetTransactionList, fleetTransactionList.list],
+    payload.listParams
+  );
   yield put(
     fleetTransactionActions.loadFleetTransactionsFulfilled(fleetTransactions)
   );

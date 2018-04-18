@@ -21,7 +21,7 @@ router.delete('/vehicle-ccgs/:id', vehicleCcgController.delete);
 
 router.get('/drivers', driverController.list);
 
-router.get('/fleet-transactions', fleetTransactionController.list);
+router.get('/fleet-transactions/:params', fleetTransactionController.list);
 
 router.get('/cost-centres', costCentreController.list);
 router.get('/cost-centre-groups', costCentreGroupController.list);

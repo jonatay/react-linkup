@@ -4,13 +4,27 @@
 */
 import React from 'react';
 
-import { Table, Button, Modal, Row } from 'antd';
+import { Table, Button, Modal, Row, Icon } from 'antd';
 
 import dateFormat from 'dateformat';
 
 class FimsPeriodTable extends React.Component {
   totalsMatch = rec =>
     Math.round(rec.batch_total) === Math.round(rec.transactions_total);
+  checkTot = rec => (
+    <span style={{ marginLeft: 5 }}>
+      {Math.round(rec.check_total) === Math.round(rec.batch_total) ? (
+        <Icon type="check" style={{ color: 'green' }} />
+      ) : (
+        <Icon type="close" style={{ color: 'red' }} />
+      )}
+      {Math.round(rec.check_total) === Math.round(rec.transactions_total) ? (
+        <Icon type="check" style={{ color: 'green' }} />
+      ) : (
+        <Icon type="close" style={{ color: 'red' }} />
+      )}
+    </span>
+  );
   columns = [
     {
       title: 'Period',
@@ -45,6 +59,7 @@ class FimsPeriodTable extends React.Component {
       title: 'B Total',
       dataIndex: 'batch_total',
       width: 80,
+      style: { textAlign: 'right' },
       render: (text, record) => (
         <span
           style={{
@@ -91,11 +106,12 @@ class FimsPeriodTable extends React.Component {
       title: 'check tot',
       width: 80,
       dataIndex: 'check_total',
-      render: text => (
+      render: (text, record) => (
         <span>
           {new Intl.NumberFormat('en-ZA', {
             maximumFractionDigits: 0
           }).format(text)}
+          {this.checkTot(record)}
         </span>
       )
     },

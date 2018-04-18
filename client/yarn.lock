@@ -2481,7 +2481,7 @@ cssesc@^0.1.0:
     postcss-merge-rules "^2.0.3"
     postcss-minify-font-values "^1.0.2"
     postcss-minify-gradients "^1.0.1"
-    postcss-minify-params "^1.0.4"
+    postcss-minify-listParams "^1.0.4"
     postcss-minify-selectors "^2.0.4"
     postcss-normalize-charset "^1.1.0"
     postcss-normalize-url "^3.0.7"
@@ -7255,7 +7255,7 @@ postcss-minify-gradients@^1.0.1:
 
 postcss-minify-params@^1.0.4:
   version "1.2.2"
-  resolved "https://registry.yarnpkg.com/postcss-minify-params/-/postcss-minify-params-1.2.2.tgz#ad2ce071373b943b3d930a3fa59a358c28d6f1f3"
+  resolved "https://registry.yarnpkg.com/postcss-minify-listParams/-/postcss-minify-listParams-1.2.2.tgz#ad2ce071373b943b3d930a3fa59a358c28d6f1f3"
   dependencies:
     alphanum-sort "^1.0.1"
     postcss "^5.0.2"

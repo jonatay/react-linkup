@@ -5,7 +5,13 @@ const moment = require('moment');
 const sqlList = `
 SELECT *
   FROM fleet.fleet_transaction_joined
-  WHERE transaction_date BETWEEN $[from] AND $[to]
+   WHERE transaction_date BETWEEN $[from] AND $[to]
+`;
+
+const sqlListDateRange = `
+SELECT *
+  FROM fleet.fleet_transaction_joined
+  WHERE transaction_date BETWEEN $1 AND $2
 `;
 
 const sqlInsert = `
@@ -30,7 +36,9 @@ ON CONFLICT ON CONSTRAINT fleet_transaction_fims_voucher_id_invoice_number_key D
 `;
 
 exports.list = params =>
-  db.many(sqlList, { from: moment().subtract(3, 'years'), to: moment() });
+  params.dateRange && params.dateRange.length === 2
+    ? db.many(sqlListDateRange, params.dateRange)
+    : db.many(sqlList, { from: moment().subtract(3, 'months'), to: moment() });
 
 exports.insert = fleetTransaction => db.one(sqlInsert, fleetTransaction);
 
@@ -38,4 +46,5 @@ exports.insertBatch = data =>
   db.task(t => t.batch(data.map(d => t.one(sqlInsert, d))));
 
 /*
+WHERE transaction_date BETWEEN $[from] AND $[to]
  */

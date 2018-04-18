@@ -3,13 +3,35 @@
     FleetTransactionFilter : React Class Component
 */
 import React from 'react';
-import { DatePicker, Row, Col, Select } from 'antd';
+import { DatePicker, Row, Col } from 'antd';
 const { RangePicker } = DatePicker;
-const Option = Select.Option;
+// const Option = Select.Option;
 
 class FleetTransactionFilter extends React.Component {
-  onDateRangeChange(date, dateString) {
-    console.log(date, dateString);
+  state = {
+    params: {
+      dateRange: []
+    }
+  };
+
+  static getDerivedStateFromProps(
+    { allFleetTransactions, listParams, loadFleetTransactions },
+    prevState
+  ) {
+    if (
+      prevState.params &&
+      prevState.params.dateRange &&
+      prevState.params.dateRange.length === 0 &&
+      listParams.dateRange.length === 2
+    ) {
+      loadFleetTransactions(listParams);
+    }
+    return { params: { ...listParams } };
+  }
+
+  onDateRangeChange(date) {
+    console.log(date);
+    this.props.loadFleetTransactions({ dateRange: date });
   }
 
   render() {
@@ -28,8 +50,9 @@ class FleetTransactionFilter extends React.Component {
           </Col>
           <Col span={16}>
             <RangePicker
-              value={this.props.dateRange}
-              onChange={this.onDateRangeChange}
+              value={this.state.params.dateRange}
+              onChange={date => this.onDateRangeChange(date)}
+              allowClear={false}
             />
           </Col>
         </Col>

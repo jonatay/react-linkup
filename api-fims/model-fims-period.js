@@ -80,7 +80,7 @@ module.exports.getNext = callback => {
 
 module.exports.postBatchImport = (params, callback) => {
   console.log([
-    'modelFimsPeriod-postBatchImport params.reqParam got:',
+    'modelFimsPeriod-postBatchImport listParams.reqParam got:',
     params.reqParam
   ]);
 
