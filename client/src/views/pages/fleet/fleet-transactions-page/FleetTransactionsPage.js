@@ -15,7 +15,7 @@ import {
   getFleetTransactionsPageCount,
   getFilteredFleetTransactions,
   getFleetTransactions,
-  getDateRange
+  getListParams
 } from 'src/fleet';
 
 import PageHeader from 'src/views/components/common/page-header';
@@ -39,8 +39,8 @@ FleetTransactionsPage.propTypes = {
   fleetTransactionFilter: PropTypes.instanceOf(Object).isRequired,
   fleetTransactionsPageCount: PropTypes.number.isRequired,
   filteredFleetTransactions: PropTypes.instanceOf(List).isRequired,
-  allFleetTransactions: PropTypes.instanceOf(Array).isRequired,
-  dateRange: PropTypes.instanceOf(Array).isRequired
+  allFleetTransactions: PropTypes.instanceOf(List).isRequired,
+  listParams: PropTypes.instanceOf(Object).isRequired
 };
 
 const mapStateToProps = state => ({
@@ -49,7 +49,7 @@ const mapStateToProps = state => ({
   fleetTransactionsPageCount: getFleetTransactionsPageCount(state),
   filteredFleetTransactions: getFilteredFleetTransactions(state),
   allFleetTransactions: getFleetTransactions(state),
-  dateRange: getDateRange(state)
+  listParams: getListParams(state)
 });
 
 const mapDispatchToProps = {

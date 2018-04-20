@@ -13,8 +13,8 @@ export function getFleetTransactionList(state) {
   return getFleetTransactionsFromState(state).list;
 }
 
-export function getDateRangeFromState(state) {
-  return getFleetTransactionsFromState(state).dateRange;
+export function getListParamsFromState(state) {
+  return getFleetTransactionsFromState(state).listParams;
 }
 
 //=====================================
@@ -77,7 +77,7 @@ export const getFleetTransactionsList = createSelector(
 
 export const getFleetTransactions = createSelector(
   getFleetTransactionsList,
-  fleetTransactionList => fleetTransactionList.toArray()
+  fleetTransactionList => fleetTransactionList
 );
 
-export const getDateRange = createSelector(getDateRangeFromState, dr => dr);
+export const getListParams = createSelector(getListParamsFromState, dr => dr);

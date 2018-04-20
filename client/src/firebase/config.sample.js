@@ -1,4 +1,4 @@
-// todo: set your params and rename config.js
+// todo: set your listParams and rename config.js
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyCUll5AyYba1XL8NDYKZ51RGt90KofQo6c',

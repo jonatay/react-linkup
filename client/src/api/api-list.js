@@ -30,8 +30,8 @@ export class ApiList {
     this._token = value;
   }
 
-  list() {
-    return apiFetch(this.path, this.token)
+  list(params) {
+    return apiFetch(this.path, this.token, params)
       .then(statusHelper)
       .then(response => response.json())
       .catch(error => error);

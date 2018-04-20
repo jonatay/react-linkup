@@ -36,7 +36,7 @@ exports.list = (req, res) => {
 };
 
 exports.update = (req, res) => {
-  const id = req.params.id;
+  const id = req.listParams.id;
   const { changes } = req.body;
   console.log(JSON.stringify(changes, null, 4));
   let sets = [];
@@ -62,7 +62,7 @@ exports.update = (req, res) => {
 };
 
 exports.toggleActive = (req, res) => {
-  const id = req.params.id;
+  const id = req.listParams.id;
   db.none(sqlToggleIsActive, { id }).then(() => {
     db.one(sqlGetVehicle, { id }).then(v =>
       res.json({

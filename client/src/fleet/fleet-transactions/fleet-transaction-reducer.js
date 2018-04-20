@@ -9,7 +9,7 @@ export const FleetTransactionsState = new Record({
     sorted: [],
     filtered: []
   },
-  dateRange: [moment().subtract(3, 'months'), moment()],
+  listParams: { dateRange: [moment().subtract(3, 'months'), moment()] },
   pageCount: -1,
   showInactive: false,
   list: new List()
@@ -25,6 +25,9 @@ export function fleetTransactionReducer(
 
     case fleetTransactionActions.FILTER_FLEET_TRANSACTIONS:
       return state.set('filter', payload);
+
+    case fleetTransactionActions.LOAD_FLEET_TRANSACTIONS:
+      return state.set('listParams', payload.listParams);
 
     case fleetTransactionActions.LOAD_FLEET_TRANSACTIONS_FULFILLED:
       return state.set('list', new List(payload.fleetTransactions));

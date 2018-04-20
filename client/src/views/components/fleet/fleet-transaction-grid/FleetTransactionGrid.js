@@ -8,7 +8,7 @@ import 'react-table/react-table.css';
 import dateFormat from 'dateformat';
 import _ from 'lodash';
 
-import { Select, DatePicker } from 'antd';
+import { Select } from 'antd';
 const Option = Select.Option;
 
 const getLkpArray = (array, key) =>
@@ -62,7 +62,7 @@ class FleetTransactionGrid extends React.Component {
     },
     prevState
   ) {
-    if (allFleetTransactions && allFleetTransactions.length > 0) {
+    if (allFleetTransactions && allFleetTransactions.size > 0) {
       const fft = filteredFleetTransactions.toArray();
       return {
         ...prevState,
@@ -70,12 +70,12 @@ class FleetTransactionGrid extends React.Component {
         filteredFleetTransactions: fft,
         pages: fleetTransactionsPageCount,
         loading: false,
-        tranTypes: getLkpArray(allFleetTransactions, 'transaction_type'),
-        vehicles: getLkpArray(allFleetTransactions, 'vehicle'),
-        drivers: getLkpArray(allFleetTransactions, 'driver'),
-        merchants: getLkpArray(allFleetTransactions, 'merchant'),
-        towns: getLkpArray(allFleetTransactions, 'town'),
-        costCentreGroups: getLkpArray(allFleetTransactions, 'cost_centre_group')
+        tranTypes: getLkpArray(fft, 'transaction_type'),
+        vehicles: getLkpArray(fft, 'vehicle'),
+        drivers: getLkpArray(fft, 'driver'),
+        merchants: getLkpArray(fft, 'merchant'),
+        towns: getLkpArray(fft, 'town'),
+        costCentreGroups: getLkpArray(fft, 'cost_centre_group')
       };
     }
     return false;
@@ -105,15 +105,16 @@ class FleetTransactionGrid extends React.Component {
             ? true
             : dateFormat(row[filter.id], 'yy-mm-dd') ===
               dateFormat(filter.value, 'yy-mm-dd'),
-        Filter: ({ filter, onChange }) => (
-          <div style={{ height: 30 }}>
-            <DatePicker
-              placeholder=""
-              value={filter ? filter.value : null}
-              onChange={val => onChange(val)}
-            />
-          </div>
-        )
+        // Filter: ({ filter, onChange }) => (
+        //   <div style={{ height: 30 }}>
+        //     <RangePicker
+        //     // value={filter ? filter.value : null}
+        //     //defaultValue={[moment().subtract(3,'months'), moment()]}
+        //     // onChange={val => onChange(val)}
+        //     />
+        //   </div>
+        // )
+        filterable: false
       },
       {
         Header: 'Reg',
@@ -235,9 +236,9 @@ class FleetTransactionGrid extends React.Component {
         onFetchData={(state, instance) => {
           this.setState({ loading: true });
 
-          if (data.length === 0) {
-            this.props.loadFleetTransactions();
-          }
+          //if (data.length === 0) {
+          //this.props.loadFleetTransactions();
+          //}
           const filtered = state.filtered.filter(v => v.value !== 'all');
 
           this.props.filterFleetTransactions({

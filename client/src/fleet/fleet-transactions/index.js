@@ -8,5 +8,5 @@ export {
   getFleetTransactionFilter,
   getFilteredFleetTransactions,
   getFleetTransactionsPageCount,
-  getDateRange
+  getListParams
 } from './fleet-transaction-selectors';

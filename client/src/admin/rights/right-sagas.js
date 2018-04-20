@@ -72,8 +72,8 @@ function* watchCreateRight() {
 //
 //       yield take([authActions.SIGN_OUT_FULFILLED]);
 //       yield cancel(job);
-//       // const params = new URLSearchParams(payload.search);
-//       // const filter = params.get('filter');
+//       // const listParams = new URLSearchParams(payload.search);
+//       // const filter = listParams.get('filter');
 //       // yield put(rightActions.filterRights(filter));
 //     }
 //   }

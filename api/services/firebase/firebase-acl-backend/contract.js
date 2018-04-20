@@ -6,8 +6,8 @@
  api?:
 
  contract(arguments)
- .params('string', 'array', '...')
- .params('number')
+ .listParams('string', 'array', '...')
+ .listParams('number')
  .end()
 
  */

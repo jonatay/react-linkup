@@ -6,7 +6,7 @@ export const statusHelper = response => {
   }
 };
 
-export const apiFetch = (path, token) => {
+export const apiFetch = (path, token, params) => {
   let myHeaders = new Headers();
   myHeaders.append('Content-Type', 'json');
   myHeaders.append('Authorization', 'Bearer ' + token);
@@ -16,7 +16,8 @@ export const apiFetch = (path, token) => {
     cache: 'default',
     accept: 'application/json'
   };
-  return fetch('/api/' + path, myInit);
+  var query = params ? '/' + encodeURIComponent(JSON.stringify(params)) : '';
+  return fetch('/api/' + path + query, myInit);
 };
 
 export const apiRemove = (path, key, token) => {

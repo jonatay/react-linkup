@@ -105,8 +105,8 @@ _.each(rwsVoucher, function(voucher) {
 	tran.cost_centre_id = rowCC.length === 1 ? rowCC[0].id : null;
 	// // --driver (by driver in d.fims_names)
 	tran.driver_id = plv8.execute(
-		"SELECT * FROM fleet.driver_get_fims($1) AS id",
-		[voucher.driver]
+		"SELECT * FROM fleet.driver_get_fims($1, $2) AS id",
+		[voucher.driver, voucher.registration]
 	)[0].id;
 	tran.jdata = {};
 	//--res.push(tran);
