@@ -5,8 +5,6 @@ import { vehicleCcgActions } from '../vehicle-ccg';
 import { vehicleList } from './vehicle-list';
 import { settingActions } from '../settings';
 
-const jsondiffpatch = require('jsondiffpatch').create();
-
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -63,7 +61,7 @@ function* updateVehicle({
   if (JSON.stringify(vCcgs) !== JSON.stringify(cCcgs)) {
     yield put(vehicleCcgActions.updateVehicleCcgArray(vCcgs, cCcgs));
   }
-  const vChanges = jsondiffpatch.diff(vehicle, changes);
+  const vChanges = changes;
   if (vChanges) {
     let result = yield call([vehicleList, vehicleList.update], vehicle.id, {
       changes: vChanges
