@@ -50,7 +50,7 @@ exports.remove_fims_period = (req, res) => {
 };
 
 exports.import_fims_period = (req, res) => {
-  const { id } = req.listParams;
+  const { id } = req.params;
   db
     .one('SELECT * FROM fleet.fims_period WHERE id = $1', id)
     .then(({ ...fimsPeriod }) => {
