@@ -64,9 +64,15 @@ const AppHeader = ({
         }
       >
         <SubMenu
-          style={{ position: 'absolute', right: -10, top: 8 }}
+          style={{ position: 'absolute', right: -1, top: -1 }}
           key="subUser"
-          title={<Avatar src={photoURL} shape="square" size="default" />}
+          title={
+            photoURL ? (
+              <Avatar src={photoURL} shape="square" />
+            ) : (
+              <Avatar style={{ paddingLeft: 7 }} icon="user" />
+            )
+          }
         >
           <Menu.Item key="100">User Profile</Menu.Item>
           <Menu.Item key="signOut">Logout</Menu.Item>
@@ -93,7 +99,7 @@ const AppHeader = ({
 AppHeader.propTypes = {
   authenticated: PropTypes.bool.isRequired,
   signOut: PropTypes.func.isRequired,
-  photoURL: PropTypes.string.isRequired,
+  photoURL: PropTypes.string,
   navigateTo: PropTypes.func.isRequired,
   aclFront: PropTypes.array.isRequired,
   currentNavPath: PropTypes.string.isRequired
