@@ -1,8 +1,0 @@
-# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.10.1
-ignore: {}
-# patches apply the minimum changes required to fix a vulnerability
-patch:
-  'npm:uglify-js:20151024':
-    - jade > transformers > uglify-js:
-        patched: '2018-02-14T10:41:27.384Z'
