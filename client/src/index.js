@@ -9,7 +9,7 @@ import { initAuth } from './common/auth';
 import history from './history';
 import configureStore from './store';
 import App from './views/app';
-import registerServiceWorker from './registerServiceWorker';
+// import registerServiceWorker from './registerServiceWorker';
 // import './index.css';
 
 const store = configureStore();
@@ -34,7 +34,7 @@ if (module.hot) {
   });
 }
 
-registerServiceWorker();
+// registerServiceWorker();
 
 initAuth(store.dispatch)
   .then(() => render(App))
