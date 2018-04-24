@@ -49,10 +49,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', api);
 app.use('/api-fims', apiFims);
 
-app.use('/static', express.static('client/build/static'));
-app.get('/*', function(req, res) {
+// app.use('/static', express.static('client/build/static'));
+// app.get('/*', function(req, res) {
+//   res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+// });
+
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

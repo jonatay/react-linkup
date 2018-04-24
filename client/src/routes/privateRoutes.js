@@ -1,11 +1,29 @@
-import AdminUsersPage from '../views/pages/admin/admin-users-page';
-import AdminRightsPage from '../views/pages/admin/admin-rights-page';
-import FleetDriversPage from '../views/pages/fleet/fleet-drivers-page';
-import FleetVehiclesPage from '../views/pages/fleet/fleet-vehicles-page';
-import FleetTransactionsPage from '../views/pages/fleet/fleet-transactions-page';
-import FleetSettingsPage from '../views/pages/fleet/fleet-settings-page';
-import UserProfilePage from '../views/pages/user/user-profile-page';
-import RootPage from '../views/pages/common/root-page';
+import asyncComponent from '../views/components/common/async-component';
+
+const AdminUsersPage = asyncComponent(() =>
+  import('../views/pages/admin/admin-users-page')
+);
+const AdminRightsPage = asyncComponent(() =>
+  import('../views/pages/admin/admin-rights-page')
+);
+const FleetDriversPage = asyncComponent(() =>
+  import('../views/pages/fleet/fleet-drivers-page')
+);
+const FleetVehiclesPage = asyncComponent(() =>
+  import('../views/pages/fleet/fleet-vehicles-page')
+);
+const FleetTransactionsPage = asyncComponent(() =>
+  import('../views/pages/fleet/fleet-transactions-page')
+);
+const FleetSettingsPage = asyncComponent(() =>
+  import('../views/pages/fleet/fleet-settings-page')
+);
+const UserProfilePage = asyncComponent(() =>
+  import('../views/pages/user/user-profile-page')
+);
+const RootPage = asyncComponent(() =>
+  import('../views/pages/common/root-page')
+);
 
 export const privateRoutes = [
   { path: '/admin/users', component: AdminUsersPage },
