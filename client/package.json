@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "private": true,
   "proxy": "http://localhost:3000/",
   "dependencies": {
@@ -35,7 +35,8 @@
     "webpack": "4.0.0"
   },
   "scripts": {
-    "analyze": "source-map-explorer build/static/js/main.*","build": "run-s build.css build.js",
+    "analyze": "source-map-explorer build/static/js/main.*",
+    "build": "run-s build.css build.js",
     "build.css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
     "build.js": "cross-env NODE_PATH=. react-app-rewired build",
     "start": "run-p start.css start.js",
