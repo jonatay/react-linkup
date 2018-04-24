@@ -63,7 +63,8 @@ const SignInPage = ({
           <Button
             className="sign-in__button"
             icon="facebook"
-            onClick={signInWithFacebook}
+            disabled
+            // onClick={signInWithFacebook}
           >
             Facebook
           </Button>

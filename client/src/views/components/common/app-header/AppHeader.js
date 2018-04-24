@@ -33,10 +33,15 @@ const AppHeader = ({
   currentNavPath
 }) => {
   const handleMenuClick = ({ key }) => {
-    if (key === 'signOut') {
-      signOut();
-    } else {
-      navigateTo(`/${key}`);
+    switch (key) {
+      case 'signOut':
+        signOut();
+        break;
+      case 'userProfile':
+        navigateTo('/user/profile');
+        break;
+      default:
+        navigateTo(`/${key}`);
     }
   };
   const mapMenuChildren = parent => {
@@ -50,13 +55,35 @@ const AppHeader = ({
     );
   };
   return (
-    <Header>
+    <Header
+      style={{
+        position: 'fixed',
+        width: '100%',
+        left: 0,
+        background: 'white',
+        padding: '5px 2px',
+        marginBottom: 5
+      }}
+    >
       {/*<div className="logo" />*/}
+      <div
+        onClick={() => navigateTo('/')}
+        style={{
+          width: 70,
+          height: 31,
+          // background: 'rgba(255,255,255,.2)',
+          // margin: '16px 24px 16px 0',
+          // marginTop:5,
+          cursor: 'pointer',
+          float: 'left'
+        }}
+      >
+        <img src="/img/LULogoBar2.png" alt="" />
+      </div>
       <Menu
         onClick={handleMenuClick}
         mode="horizontal"
         // theme="dark"
-        style={{ position: 'fixed', width: '100%', left: 0 }}
         selectedKeys={
           typeof currentNavPath === 'string'
             ? [currentNavPath.replace('/', '')]
@@ -64,7 +91,7 @@ const AppHeader = ({
         }
       >
         <SubMenu
-          style={{ position: 'absolute', right: -1, top: -1 }}
+          style={{ position: 'absolute', right: -1, top: -1, marginTop: -5 }}
           key="subUser"
           title={
             photoURL ? (
@@ -74,12 +101,13 @@ const AppHeader = ({
             )
           }
         >
-          <Menu.Item key="100">User Profile</Menu.Item>
+          <Menu.Item key="userProfile">User Profile</Menu.Item>
           <Menu.Item key="signOut">Logout</Menu.Item>
         </SubMenu>
 
         {aclFront.map(menu => (
           <SubMenu
+            style={{ marginTop: -5 }}
             key={menu.resource.toLowerCase()}
             title={
               <span>

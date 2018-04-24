@@ -4,6 +4,8 @@ import FleetDriversPage from '../views/pages/fleet/fleet-drivers-page';
 import FleetVehiclesPage from '../views/pages/fleet/fleet-vehicles-page';
 import FleetTransactionsPage from '../views/pages/fleet/fleet-transactions-page';
 import FleetSettingsPage from '../views/pages/fleet/fleet-settings-page';
+import UserProfilePage from '../views/pages/user/user-profile-page';
+import RootPage from '../views/pages/common/root-page';
 
 export const privateRoutes = [
   { path: '/admin/users', component: AdminUsersPage },
@@ -11,5 +13,7 @@ export const privateRoutes = [
   { path: '/fleet/drivers', component: FleetDriversPage },
   { path: '/fleet/vehicles', component: FleetVehiclesPage },
   { path: '/fleet/transactions', component: FleetTransactionsPage },
-  { path: '/fleet/settings', component: FleetSettingsPage }
+  { path: '/fleet/settings', component: FleetSettingsPage },
+  { path: '/user/profile', component: UserProfilePage },
+  { path: '/', component: RootPage }
 ];
