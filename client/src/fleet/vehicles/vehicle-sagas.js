@@ -61,13 +61,10 @@ function* updateVehicle({
   if (JSON.stringify(vCcgs) !== JSON.stringify(cCcgs)) {
     yield put(vehicleCcgActions.updateVehicleCcgArray(vCcgs, cCcgs));
   }
-  const vChanges = changes;
-  if (vChanges) {
-    let result = yield call([vehicleList, vehicleList.update], vehicle.id, {
-      changes: vChanges
-    });
-    yield put(vehicleActions.updateVehicleFulfilled(result.vehicle));
-  }
+  let result = yield call([vehicleList, vehicleList.update], vehicle.id, {
+    changes
+  });
+  yield put(vehicleActions.updateVehicleFulfilled(result.vehicle));
 }
 
 function* watchUpdateVehicle() {

@@ -9,8 +9,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-import CostCentreTable from '../../../components/fleet/cost-centre-table';
-import CostCentreGroupTable from '../../../components/fleet/cost-centre-group-table';
+import CostCentreGroupGrid from '../../../components/fleet/settings/cost_centre-group-grid';
+import CostCentreGrid from '../../../components/fleet/settings/cost-centre-grid';
 import TransactionTypeTable from '../../../components/fleet/transaction-type-table';
 import FimsImport from 'src/views/components/fleet/fims_import';
 
@@ -52,7 +52,7 @@ class FleetSettingsPage extends React.Component {
               </span>
             }
           >
-            <CostCentreGroupTable {...this.props} />
+            <CostCentreGroupGrid {...this.props} />
           </TabPane>
           <TabPane
             key="cost-centres"
@@ -62,7 +62,7 @@ class FleetSettingsPage extends React.Component {
               </span>
             }
           >
-            <CostCentreTable {...this.props} />
+            <CostCentreGrid {...this.props} />
           </TabPane>
           <TabPane
             key="transaction-types"
