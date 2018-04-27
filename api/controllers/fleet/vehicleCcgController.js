@@ -14,7 +14,7 @@ exports.insert = (req, res) => {
 };
 
 exports.update = (req, res) => {
-  const id = req.listParams.id;
+  const id = req.params.id;
   console.log(id);
   const {vehicleCcg} = req.body;
   console.log(vehicleCcg);
@@ -24,7 +24,7 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  const id = req.listParams.id;
+  const id = req.params.id;
   ModelVehicleCcg.delete(id)
     .then(() => res.json({ status: 'deleted', id }))
     .catch(err => res.json({ status: 'error', msg: err }));

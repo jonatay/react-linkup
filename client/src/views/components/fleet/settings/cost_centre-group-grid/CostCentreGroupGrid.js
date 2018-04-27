@@ -21,8 +21,18 @@ class CostCentreGroupGrid extends React.Component {
 
   render() {
     const { data } = this.state;
+    const columns = [
+      {
+        Header: 'Name',
+        accessor: 'name'
+      },
+      {
+        Header: 'Description',
+        accessor: 'description'
+      }
+    ];
 
-    return <div>CCGG</div>;
+    return <ReactTable data={data} columns={columns} />;
   }
 }
 

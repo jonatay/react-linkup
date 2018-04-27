@@ -6,7 +6,7 @@ SELECT * FROM fleet.vehicle_get_list() v
 `;
 
 const sqlGet = `
-SELECT * from fleet.vehicle_get_id($[id]) v
+SELECT * from fleet.vehicle_get_id($[id]) vehicle
 `;
 
 const sqlUpdate = `
