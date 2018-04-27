@@ -236,9 +236,6 @@ class FleetTransactionGrid extends React.Component {
         onFetchData={(state, instance) => {
           this.setState({ loading: true });
 
-          //if (data.length === 0) {
-          //this.props.loadFleetTransactions();
-          //}
           const filtered = state.filtered.filter(v => v.value !== 'all');
 
           this.props.filterFleetTransactions({

@@ -36,14 +36,18 @@
   },
   "scripts": {
     "analyze": "source-map-explorer build/static/js/main.*",
-    "build": "run-s build.css build.js",
-    "build.css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
+    "build": "run-s build.css build.js && rm build/static/js/*.map",
+    "build-dev": "run-s build.css build.js",
+    "build.css":
+      "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
     "build.js": "cross-env NODE_PATH=. react-app-rewired build",
     "start": "run-p start.css start.js",
-    "start.css": "npm run build.css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
+    "start.css":
+      "npm run build.css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
     "start.js": "cross-env NODE_PATH=. react-app-rewired start",
     "test": "cross-env NODE_PATH=. react-app-rewired test --env=jsdom",
-    "test.ci": "cross-env CI=true NODE_PATH=. react-app-rewired test --env=jsdom"
+    "test.ci":
+      "cross-env CI=true NODE_PATH=. react-app-rewired test --env=jsdom"
   },
   "devDependencies": {
     "babel-plugin-import": "^1.6.3",
