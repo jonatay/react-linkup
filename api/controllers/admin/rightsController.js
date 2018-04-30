@@ -2,7 +2,7 @@ const admin = require('../../services/firebase/firebase-admin');
 const acl = require('../../services/firebase/firebase-acl');
 
 exports.allowedPermissions = function(req, res) {
-  const uid = req.listParams.uid;
+  const uid = req.params.uid;
   const resources = req.parema.resources;
   acl.allowedPermissions(uid, resources, function(err, obj) {
     if (err) {
@@ -14,7 +14,7 @@ exports.allowedPermissions = function(req, res) {
 };
 
 exports.user_roles = function(req, res) {
-  const uid = req.listParams.uid;
+  const uid = req.params.uid;
   acl.userRoles(uid, function(err, userRoles) {
     if (err) {
       res.json(err);
@@ -25,7 +25,7 @@ exports.user_roles = function(req, res) {
 };
 
 exports.role_users = function(req, res) {
-  const role = req.listParams.role;
+  const role = req.params.role;
   acl.roleUsers(role, function(err, users) {
     if (err) {
       res.json(err);
