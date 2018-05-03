@@ -21,12 +21,12 @@ exports.user_list = function(req, res) {
 };
 
 exports.user_detail = function(req, res) {
-  console.log(req.listParams.id);
+  console.log(req.params.id);
 };
 
 exports.user_delete = function(req, res) {
-  console.log(req.listParams.id);
-  const uid = req.listParams.uid;
+  console.log(req.params.id);
+  const uid = req.params.uid;
   admin
     .auth()
     .deleteUser(uid)
@@ -52,7 +52,7 @@ exports.user_delete = function(req, res) {
 *
 * */
 exports.user_update = function(req, res) {
-  const uid = req.listParams.uid;
+  const uid = req.params.uid;
   const data = req.body;
   const user = data.user;
   const changes = data.changes;
