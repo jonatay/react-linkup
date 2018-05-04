@@ -20,6 +20,21 @@ export const settingActions = {
   LOAD_COST_CENTRE_GROUPS_FULFILLED: 'FLEET_LOAD_COST_CENTRE_GROUPS_FULFILLED',
   LOAD_COST_CENTRE_GROUPS_FAILED: 'FLEET_LOAD_COST_CENTRE_GROUPS_FAILED',
 
+  CREATE_COST_CENTRE_GROUP: 'FLEET_CREATE_COST_CENTRE_GROUP',
+  CREATE_COST_CENTRE_GROUP_FAILED: 'FLEET_CREATE_COST_CENTRE_GROUP_FAILED',
+  CREATE_COST_CENTRE_GROUP_FULFILLED:
+    'FLEET_CREATE_COST_CENTRE_GROUP_FULFILLED',
+
+  REMOVE_COST_CENTRE_GROUP: 'FLEET_REMOVE_COST_CENTRE_GROUP',
+  REMOVE_COST_CENTRE_GROUP_FAILED: 'FLEET_REMOVE_COST_CENTRE_GROUP_FAILED',
+  REMOVE_COST_CENTRE_GROUP_FULFILLED:
+    'FLEET_REMOVE_COST_CENTRE_GROUP_FULFILLED',
+
+  UPDATE_COST_CENTRE_GROUP: 'FLEET_UPDATE_COST_CENTRE_GROUP',
+  UPDATE_COST_CENTRE_GROUP_FAILED: 'FLEET_UPDATE_COST_CENTRE_GROUP_FAILED',
+  UPDATE_COST_CENTRE_GROUP_FULFILLED:
+    'FLEET_UPDATE_COST_CENTRE_GROUP_FULFILLED',
+
   LOAD_TRANSACTION_TYPES: 'FLEET_LOAD_TRANSACTION_TYPES',
   LOAD_TRANSACTION_TYPES_FULFILLED: 'FLEET_LOAD_TRANSACTION_TYPES_FULFILLED',
   LOAD_TRANSACTION_TYPES_FAILED: 'FLEET_LOAD_TRANSACTION_TYPES_FAILED',
@@ -115,6 +130,51 @@ export const settingActions = {
   loadCostCentreGroupsFailed: error => ({
     type: settingActions.LOAD_COST_CENTRE_GROUPS_FAILED,
     payload: { error }
+  }),
+
+  createCostCentreGroupGroup: title => ({
+    type: settingActions.CREATE_COST_CENTRE_GROUP,
+    payload: { costCentreGroupGroup: { title, completed: false } }
+  }),
+
+  createCostCentreGroupGroupFailed: error => ({
+    type: settingActions.CREATE_COST_CENTRE_GROUP_FAILED,
+    payload: { error }
+  }),
+
+  createCostCentreGroupGroupFulfilled: costCentreGroupGroup => ({
+    type: settingActions.CREATE_COST_CENTRE_GROUP_FULFILLED,
+    payload: { costCentreGroupGroup }
+  }),
+
+  removeCostCentreGroupGroup: costCentreGroup => ({
+    type: settingActions.REMOVE_COST_CENTRE_GROUP,
+    payload: { costCentreGroup }
+  }),
+
+  removeCostCentreGroupFailed: error => ({
+    type: settingActions.REMOVE_COST_CENTRE_GROUP_FAILED,
+    payload: { error }
+  }),
+
+  removeCostCentreGroupFulfilled: costCentreGroup => ({
+    type: settingActions.REMOVE_COST_CENTRE_GROUP_FULFILLED,
+    payload: { costCentreGroup }
+  }),
+
+  updateCostCentreGroup: (costCentreGroup, changes) => ({
+    type: settingActions.UPDATE_COST_CENTRE_GROUP,
+    payload: { costCentreGroup, changes }
+  }),
+
+  updateCostCentreGroupFailed: error => ({
+    type: settingActions.UPDATE_COST_CENTRE_GROUP_FAILED,
+    payload: { error }
+  }),
+
+  updateCostCentreGroupFulfilled: costCentreGroup => ({
+    type: settingActions.UPDATE_COST_CENTRE_GROUP_FULFILLED,
+    payload: { costCentreGroup }
   }),
 
   loadTransactionTypes: () => ({
