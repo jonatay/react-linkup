@@ -1,13 +1,29 @@
-const db = require('../../services/postgres/db');
-
-const sqlGetCostCentres = `
-SELECT cc.*, ccg.name AS cost_centre_group FROM fleet.cost_centre cc
-LEFT JOIN fleet.cost_centre_group ccg ON ccg.id = cc.cost_centre_group_id
-`;
+const ModelCostCentre = require('../../models/fleet/ModelCostCentre');
 
 exports.list = (req, res) => {
-  db
-    .any(sqlGetCostCentres)
+  ModelCostCentre.list()
     .then(data => res.json(data))
     .catch(e => res.json(e));
+};
+
+exports.update = (req, res) => {
+  const id = req.params.id;
+  const { costCentre, changes } = req.body;
+  ModelCostCentre.update(id, changes)
+    .then(data => res.json({ status: 'updated', costCentre: data }))
+    .catch(err => res.json({ status: 'error', msg: err }));
+};
+
+exports.create = (req, res) => {
+  const { costCentre } = req.body;
+  ModelCostCentre.create(costCentre)
+    .then(data => res.json({ status: 'created', costCentre: data }))
+    .catch(err => res.json({ status: 'error', msg: err }));
+};
+
+exports.delete = (req, res) => {
+  const id = req.params.id;
+  ModelCostCentre.delete(id)
+    .then(() => res.json({ status: 'deleted', id }))
+    .catch(err => res.json({ status: 'error', msg: err }));
 };

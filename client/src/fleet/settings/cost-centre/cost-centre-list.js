@@ -1,5 +1,5 @@
 import { ApiList } from 'src/api/index';
-import { settingActions } from './setting-actions';
+import { settingActions } from '../setting-actions';
 import { CostCentre } from './cost-centre';
 
 const costCentrePath = 'fleet/cost-centres';

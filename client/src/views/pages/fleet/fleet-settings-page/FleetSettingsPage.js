@@ -105,7 +105,7 @@ FleetSettingsPage.propTypes = {
   postFimsBatch: PropTypes.func.isRequired,
   updateCostCentreGroup: PropTypes.func.isRequired,
   createCostCentreGroup: PropTypes.func.isRequired,
-  removeCostCentreGroupGroup: PropTypes.func.isRequired
+  removeCostCentreGroup: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -122,8 +122,8 @@ const mapDispatchToProps = {
   loadFimsPeriods: settingActions.loadFimsPeriods,
   postFimsBatch: settingActions.postFimsBatch,
   updateCostCentreGroup: settingActions.updateCostCentreGroup,
-  createCostCentreGroup: settingActions.createCostCentreGroupGroup,
-  removeCostCentreGroupGroup: settingActions.removeCostCentreGroupGroup
+  createCostCentreGroup: settingActions.createCostCentreGroup,
+  removeCostCentreGroup: settingActions.removeCostCentreGroup
 };
 
 export default withRouter(
