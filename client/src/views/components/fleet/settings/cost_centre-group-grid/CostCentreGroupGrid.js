@@ -6,6 +6,7 @@ import React from 'react';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import { Button, Input, Modal } from 'antd';
+const _ = require('lodash');
 
 class CostCentreGroupGrid extends React.Component {
   constructor() {
@@ -37,6 +38,18 @@ class CostCentreGroupGrid extends React.Component {
             e.target.value
           )
         }
+        onKeyDown={k => {
+          switch (k.keyCode) {
+            case 27:
+              this.onCancelEdit(cellInfo.original.id);
+              break;
+            case 13:
+              this.onPostEdit(cellInfo.original.id);
+              break;
+            default:
+              break;
+          }
+        }}
       />
     ) : (
       this.state.data[cellInfo.index][cellInfo.column.id]
@@ -44,7 +57,7 @@ class CostCentreGroupGrid extends React.Component {
   }
 
   onEditRow(original) {
-    this.setState({ editing: [...this.state.editing, original] });
+    this.setState({ editing: [...this.state.editing, _.clone(original)] });
   }
 
   onDeleteRow(rec, deleteAction) {
@@ -53,7 +66,7 @@ class CostCentreGroupGrid extends React.Component {
       content: (
         <ul>
           <li>name: {rec.name}</li>
-          <li> description: {rec.description}</li>
+          <li>description: {rec.description}</li>
         </ul>
       ),
       okText: 'Yes',
@@ -65,27 +78,25 @@ class CostCentreGroupGrid extends React.Component {
     });
   }
 
-  onCancelEdit(original) {
+  onCancelEdit(id) {
     this.setState({
-      editing: this.state.editing.filter(r => r.id !== original.id),
+      editing: this.state.editing.filter(r => r.id !== id),
       data:
-        original.id !== 'add'
+        id !== 'add'
           ? this.state.data
           : this.state.data.filter(r => r.id !== 'add')
     });
   }
 
-  onPostEdit(changes) {
-    if (changes.id === 'add') {
-      this.props.createCostCentreGroup(changes);
+  onPostEdit(id) {
+    if (id === 'add') {
+      this.props.createCostCentreGroup(this.findEditRow(id));
     } else {
-      this.props.updateCostCentreGroup(
-        this.state.data.find(r => r.id === changes.id),
-        changes
-      );
+      this.props.updateCostCentreGroup(id, this.findEditRow(id));
     }
     this.setState({
-      editing: this.state.editing.filter(r => r.id !== changes.id)
+      data: this.state.data.filter(r => r.id !== 'add'),
+      editing: this.state.editing.filter(r => r.id !== id)
     });
   }
 
@@ -132,7 +143,7 @@ class CostCentreGroupGrid extends React.Component {
               this.onAddRow();
             }}
           >
-            Add Cost Centre Group
+            Add Cost Centre
           </Button>
         )
       },
@@ -142,6 +153,7 @@ class CostCentreGroupGrid extends React.Component {
         Cell: this.renderEditable
       },
       {
+        sortable: false,
         width: 75,
         Cell: ({ original }) => (
           <span>
@@ -155,7 +167,7 @@ class CostCentreGroupGrid extends React.Component {
                   icon="check"
                   disabled={!this.validateEditing(original.id)}
                   onClick={() => {
-                    this.onPostEdit(original);
+                    this.onPostEdit(original.id);
                   }}
                 />
                 {'  '}
@@ -166,7 +178,7 @@ class CostCentreGroupGrid extends React.Component {
                   shape="circle"
                   icon="close"
                   onClick={() => {
-                    this.onCancelEdit(original);
+                    this.onCancelEdit(original.id);
                   }}
                 />
               </span>
@@ -192,7 +204,7 @@ class CostCentreGroupGrid extends React.Component {
                   onClick={() => {
                     this.onDeleteRow(
                       original,
-                      this.props.removeCostCentreGroupGroup
+                      this.props.removeCostCentreGroup
                     );
                   }}
                 />
@@ -208,9 +220,15 @@ class CostCentreGroupGrid extends React.Component {
         <ReactTable
           data={data}
           columns={columns}
-          defaultPageSize={10}
+          defaultPageSize={14}
           showPaginationTop={false}
           showPaginationBottom={true}
+          defaultSorted={[
+            {
+              id: 'name',
+              desc: false
+            }
+          ]}
         />
       </div>
     );

@@ -132,22 +132,22 @@ export const settingActions = {
     payload: { error }
   }),
 
-  createCostCentreGroupGroup: costCentreGroup => ({
+  createCostCentreGroup: costCentreGroup => ({
     type: settingActions.CREATE_COST_CENTRE_GROUP,
     payload: { costCentreGroup }
   }),
 
-  createCostCentreGroupGroupFailed: error => ({
+  createCostCentreGroupFailed: error => ({
     type: settingActions.CREATE_COST_CENTRE_GROUP_FAILED,
     payload: { error }
   }),
 
-  createCostCentreGroupGroupFulfilled: costCentreGroupGroup => ({
+  createCostCentreGroupFulfilled: costCentreGroup => ({
     type: settingActions.CREATE_COST_CENTRE_GROUP_FULFILLED,
-    payload: { costCentreGroupGroup }
+    payload: { costCentreGroup }
   }),
 
-  removeCostCentreGroupGroup: costCentreGroup => ({
+  removeCostCentreGroup: costCentreGroup => ({
     type: settingActions.REMOVE_COST_CENTRE_GROUP,
     payload: { costCentreGroup }
   }),
@@ -162,9 +162,9 @@ export const settingActions = {
     payload: { costCentreGroup }
   }),
 
-  updateCostCentreGroup: (costCentreGroup, changes) => ({
+  updateCostCentreGroup: (id, changes) => ({
     type: settingActions.UPDATE_COST_CENTRE_GROUP,
-    payload: { costCentreGroup, changes }
+    payload: { id, changes }
   }),
 
   updateCostCentreGroupFailed: error => ({

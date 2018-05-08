@@ -24,10 +24,14 @@ router.get('/drivers', driverController.list);
 router.get('/fleet-transactions/:params', fleetTransactionController.list);
 
 router.get('/cost-centres', costCentreController.list);
+router.put('/cost-centres/:id', costCentreController.update);
+router.post('/cost-centres/', costCentreController.create);
+router.delete('/cost-centres/:id', costCentreController.delete);
 
 router.get('/cost-centre-groups', costCentreGroupController.list);
 router.put('/cost-centre-groups/:id', costCentreGroupController.update);
 router.post('/cost-centre-groups/', costCentreGroupController.create);
+router.delete('/cost-centre-groups/:id', costCentreGroupController.delete);
 
 router.get('/transaction-types', transactionTypeController.list);
 

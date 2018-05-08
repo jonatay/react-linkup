@@ -1,10 +1,10 @@
 import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
 import { authActions } from 'src/common/auth/index';
 import { settingActions } from './setting-actions';
-import { costCentreList } from './cost-centre-list';
-import { costCentreGroupList } from './cost-centre-group-list';
-import { transactionTypeList } from './transaction-type-list';
-import { fimsPeriodList } from './fims-period-list';
+import { costCentreList } from './cost-centre/cost-centre-list';
+import { costCentreGroupList } from './cost-centre-group/cost-centre-group-list';
+import { transactionTypeList } from './transaction-type/transaction-type-list';
+import { fimsPeriodList } from './fims-period/fims-period-list';
 
 function* importFimsPeriod({ payload }) {
   //console.log(payload);
@@ -43,14 +43,10 @@ function* removeCostCentre({ payload }) {
 }
 
 function* updateCostCentre({ payload }) {
-  let result = yield call(
-    [costCentreList, costCentreList.update],
-    payload.costCentre.id,
-    {
-      costCentre: payload.costCentre,
-      changes: payload.changes
-    }
-  );
+  let result = yield call([costCentreList, costCentreList.update], payload.id, {
+    costCentre: payload.costCentre,
+    changes: payload.changes
+  });
   yield put(settingActions.updateCostCentreFulfilled(result.costCentre));
 }
 
@@ -70,15 +66,36 @@ function* loadAllTransactionTypes() {
   yield put(settingActions.loadTransactionTypesFulfilled(transactionTypes));
 }
 
-function* updateCostCentreGroup({ payload }) {
+function* createCostCentreGroup({ payload: { costCentreGroup } }) {
+  let result = yield call([costCentreGroupList, costCentreGroupList.insert], {
+    costCentreGroup
+  });
+  yield put(
+    settingActions.createCostCentreGroupFulfilled(result.costCentreGroup)
+  );
+}
+
+function* updateCostCentreGroup({ payload: { id, changes } }) {
   let result = yield call(
     [costCentreGroupList, costCentreGroupList.update],
-    payload.costCentreGroup.id,
-    { costCentreGroup: payload.costCentreGroup, changes: payload.changes }
+    id,
+    { changes }
   );
   yield put(
     settingActions.updateCostCentreGroupFulfilled(result.costCentreGroup)
   );
+}
+
+function* removeCostCentreGroup({ payload: { costCentreGroup } }) {
+  let result = yield call(
+    [costCentreGroupList, costCentreGroupList.remove],
+    costCentreGroup.id
+  );
+  if (result.status === 'deleted') {
+    yield put(settingActions.removeCostCentreGroupFulfilled(costCentreGroup));
+  } else {
+    yield put(settingActions.removeCostCentreGroupFailed(result));
+  }
 }
 
 //=====================================
@@ -127,6 +144,20 @@ function* watchUpdateCostCentre() {
   yield takeEvery(settingActions.UPDATE_COST_CENTRE, updateCostCentre);
 }
 
+function* watchLoadCostCentreGroups() {
+  yield takeEvery(
+    settingActions.LOAD_COST_CENTRE_GROUPS,
+    loadAllCostCentreGroups
+  );
+}
+
+function* watchCreateCostCentreGroup() {
+  yield takeEvery(
+    settingActions.CREATE_COST_CENTRE_GROUP,
+    createCostCentreGroup
+  );
+}
+
 function* watchUpdateCostCentreGroup() {
   yield takeEvery(
     settingActions.UPDATE_COST_CENTRE_GROUP,
@@ -134,10 +165,10 @@ function* watchUpdateCostCentreGroup() {
   );
 }
 
-function* watchLoadCostCentreGroups() {
+function* watchRemoveCostCentreGroup() {
   yield takeEvery(
-    settingActions.LOAD_COST_CENTRE_GROUPS,
-    loadAllCostCentreGroups
+    settingActions.REMOVE_COST_CENTRE_GROUP,
+    removeCostCentreGroup
   );
 }
 
@@ -181,5 +212,7 @@ export const settingSagas = [
   fork(watchPostFimsBatch),
   fork(watchRemoveFimsPeriod),
   fork(watchImportFimsPeriod),
-  fork(watchUpdateCostCentreGroup)
+  fork(watchUpdateCostCentreGroup),
+  fork(watchCreateCostCentreGroup),
+  fork(watchRemoveCostCentreGroup)
 ];
