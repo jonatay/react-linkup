@@ -45,7 +45,7 @@ function* removeCostCentre({ payload }) {
 function* updateCostCentre({ payload }) {
   let result = yield call(
     [costCentreList, costCentreList.update],
-    payload.costCentre.uid,
+    payload.costCentre.id,
     {
       costCentre: payload.costCentre,
       changes: payload.changes
@@ -68,6 +68,17 @@ function* loadAllTransactionTypes() {
     transactionTypeList.list
   ]);
   yield put(settingActions.loadTransactionTypesFulfilled(transactionTypes));
+}
+
+function* updateCostCentreGroup({ payload }) {
+  let result = yield call(
+    [costCentreGroupList, costCentreGroupList.update],
+    payload.costCentreGroup.id,
+    { costCentreGroup: payload.costCentreGroup, changes: payload.changes }
+  );
+  yield put(
+    settingActions.updateCostCentreGroupFulfilled(result.costCentreGroup)
+  );
 }
 
 //=====================================
@@ -116,6 +127,13 @@ function* watchUpdateCostCentre() {
   yield takeEvery(settingActions.UPDATE_COST_CENTRE, updateCostCentre);
 }
 
+function* watchUpdateCostCentreGroup() {
+  yield takeEvery(
+    settingActions.UPDATE_COST_CENTRE_GROUP,
+    updateCostCentreGroup
+  );
+}
+
 function* watchLoadCostCentreGroups() {
   yield takeEvery(
     settingActions.LOAD_COST_CENTRE_GROUPS,
@@ -162,5 +180,6 @@ export const settingSagas = [
   fork(watchFimsLoadPeriods),
   fork(watchPostFimsBatch),
   fork(watchRemoveFimsPeriod),
-  fork(watchImportFimsPeriod)
+  fork(watchImportFimsPeriod),
+  fork(watchUpdateCostCentreGroup)
 ];

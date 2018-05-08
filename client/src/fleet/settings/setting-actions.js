@@ -132,9 +132,9 @@ export const settingActions = {
     payload: { error }
   }),
 
-  createCostCentreGroupGroup: title => ({
+  createCostCentreGroupGroup: costCentreGroup => ({
     type: settingActions.CREATE_COST_CENTRE_GROUP,
-    payload: { costCentreGroupGroup: { title, completed: false } }
+    payload: { costCentreGroup }
   }),
 
   createCostCentreGroupGroupFailed: error => ({

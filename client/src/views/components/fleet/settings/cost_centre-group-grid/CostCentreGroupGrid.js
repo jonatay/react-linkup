@@ -5,7 +5,7 @@
 import React from 'react';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
-import { Button, Input } from 'antd';
+import { Button, Input, Modal } from 'antd';
 
 class CostCentreGroupGrid extends React.Component {
   constructor() {
@@ -15,6 +15,8 @@ class CostCentreGroupGrid extends React.Component {
       editing: []
     };
     this.renderEditable = this.renderEditable.bind(this);
+    this.handleAddOk = this.handleAddOk.bind(this);
+    this.handleAddCancel = this.handleAddCancel.bind(this);
   }
 
   componentDidMount() {
@@ -26,24 +28,69 @@ class CostCentreGroupGrid extends React.Component {
   }
 
   renderEditable(cellInfo) {
-    return this.findEditRow(cellInfo.original.id)
-      ? <Input value={}/>
-      : this.state.data[cellInfo.index][cellInfo.column.id];
+    return this.findEditRow(cellInfo.original.id) ? (
+      <Input
+        autoFocus={cellInfo.column.id === 'name'}
+        value={this.findEditRow(cellInfo.original.id)[cellInfo.column.id]}
+        onChange={e =>
+          this.changeEditData(
+            cellInfo.original.id,
+            cellInfo.column.id,
+            e.target.value
+          )
+        }
+      />
+    ) : (
+      this.state.data[cellInfo.index][cellInfo.column.id]
+    );
   }
 
   onEditRow(original) {
     this.setState({ editing: [...this.state.editing, original] });
   }
 
-  onCancelEdit(original) {
-    this.setState({
-      editing: this.state.editing.filter(r => r.id !== original.id)
+  onDeleteRow(rec, deleteAction) {
+    Modal.confirm({
+      title: 'Are you sure you want to delete this CCG?',
+      content: (
+        <ul>
+          <li>name: {rec.name}</li>
+          <li> description: {rec.description}</li>
+        </ul>
+      ),
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        deleteAction(rec);
+      }
     });
   }
 
-  onPostEdit(original) {
+  onCancelEdit(original) {
     this.setState({
-      editing: this.state.editing.filter(r => r.id !== original.id)
+      editing: this.state.editing.filter(r => r.id !== original.id),
+      data:
+        original.id !== 'add'
+          ? this.state.data
+          : this.state.data.filter(r => r.id !== 'add')
+    });
+  }
+
+  onPostEdit(changes) {
+    if (changes.id === 'add') {
+      this.props.createCostCentreGroup(
+        changes
+      );
+    } else {
+      this.props.updateCostCentreGroup(
+        this.state.data.find(r => r.id === changes.id),
+        changes
+      );
+
+    }
+    this.setState({
+      editing: this.state.editing.filter(r => r.id !== changes.id)
     });
   }
 
@@ -51,13 +98,48 @@ class CostCentreGroupGrid extends React.Component {
     return this.state.editing.find(r => r.id === id);
   }
 
+  changeEditData(id, col, val) {
+    let row = this.findEditRow(id);
+    row[col] = val;
+    this.setState({
+      editing: this.state.editing.map(r => (r.id === id ? row : r))
+    });
+  }
+
+  validateEditing(id) {
+    return (
+      this.findEditRow(id).name > '' && this.findEditRow(id).description > ''
+    );
+  }
+
+  onAddRow() {
+    const addRow = { id: 'add', name: '', description: '' };
+    this.setState({
+      data: [...this.state.data.filter(r => r.id !== 'add'), addRow],
+      editing: [...this.state.editing.filter(r => r.id !== 'add'), addRow]
+    });
+  }
+
   render() {
-    const { data, editing } = this.state;
+    const { data } = this.state;
     const columns = [
       {
         Header: 'Name',
         accessor: 'name',
-        Cell: this.renderEditable
+        Cell: this.renderEditable,
+        Footer: (
+          <Button
+            type="primary"
+            size="small"
+            icon="plus"
+            disabled={this.findEditRow('add')}
+            onClick={() => {
+              this.onAddRow();
+            }}
+          >
+            Add Cost Centre Group
+          </Button>
+        )
       },
       {
         Header: 'Description',
@@ -76,6 +158,7 @@ class CostCentreGroupGrid extends React.Component {
                   size="small"
                   shape="circle"
                   icon="check"
+                  disabled={!this.validateEditing(original.id)}
                   onClick={() => {
                     this.onPostEdit(original);
                   }}
@@ -93,16 +176,32 @@ class CostCentreGroupGrid extends React.Component {
                 />
               </span>
             ) : (
-              <Button
-                type="primary"
-                ghost={true}
-                size="small"
-                shape="circle"
-                icon="edit"
-                onClick={() => {
-                  this.onEditRow(original);
-                }}
-              />
+              <span>
+                <Button
+                  type="primary"
+                  ghost={true}
+                  size="small"
+                  shape="circle"
+                  icon="edit"
+                  onClick={() => {
+                    this.onEditRow(original);
+                  }}
+                />
+                {'  '}
+                <Button
+                  type="danger"
+                  ghost={true}
+                  size="small"
+                  shape="circle"
+                  icon="delete"
+                  onClick={() => {
+                    this.onDeleteRow(
+                      original,
+                      this.props.removeCostCentreGroupGroup
+                    );
+                  }}
+                />
+              </span>
             )}
           </span>
         )
@@ -110,13 +209,15 @@ class CostCentreGroupGrid extends React.Component {
     ];
 
     return (
-      <ReactTable
-        data={data}
-        columns={columns}
-        defaultPageSize={10}
-        showPaginationTop={false}
-        showPaginationBottom={true}
-      />
+      <div>
+        <ReactTable
+          data={data}
+          columns={columns}
+          defaultPageSize={10}
+          showPaginationTop={false}
+          showPaginationBottom={true}
+        />
+      </div>
     );
   }
 }

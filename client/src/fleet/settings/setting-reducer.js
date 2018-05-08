@@ -37,6 +37,16 @@ export function settingReducer(state = new SettingState(), { payload, type }) {
         })
       );
 
+    case settingActions.UPDATE_COST_CENTRE_GROUP_FULFILLED:
+      return state.set(
+        'costCentreGroupList',
+        state.costCentreGroupList.map(r => {
+          return r.id === payload.costCentreGroup.id
+            ? payload.costCentreGroup
+            : r;
+        })
+      );
+
     case settingActions.LOAD_COST_CENTRE_GROUPS_FULFILLED:
       return state.set(
         'costCentreGroupList',

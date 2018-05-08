@@ -103,7 +103,9 @@ FleetSettingsPage.propTypes = {
   //fims
   fimsPeriods: PropTypes.instanceOf(Array).isRequired,
   postFimsBatch: PropTypes.func.isRequired,
-  updateCostCentreGroup: PropTypes.func.isRequired
+  updateCostCentreGroup: PropTypes.func.isRequired,
+  createCostCentreGroup: PropTypes.func.isRequired,
+  removeCostCentreGroupGroup: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -119,7 +121,9 @@ const mapDispatchToProps = {
   loadTransactionTypes: settingActions.loadTransactionTypes,
   loadFimsPeriods: settingActions.loadFimsPeriods,
   postFimsBatch: settingActions.postFimsBatch,
-  updateCostCentreGroup: settingActions.updateCostCentreGroup
+  updateCostCentreGroup: settingActions.updateCostCentreGroup,
+  createCostCentreGroup: settingActions.createCostCentreGroupGroup,
+  removeCostCentreGroupGroup: settingActions.removeCostCentreGroupGroup
 };
 
 export default withRouter(
