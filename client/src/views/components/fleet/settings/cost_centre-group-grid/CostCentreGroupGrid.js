@@ -15,8 +15,6 @@ class CostCentreGroupGrid extends React.Component {
       editing: []
     };
     this.renderEditable = this.renderEditable.bind(this);
-    this.handleAddOk = this.handleAddOk.bind(this);
-    this.handleAddCancel = this.handleAddCancel.bind(this);
   }
 
   componentDidMount() {
@@ -79,15 +77,12 @@ class CostCentreGroupGrid extends React.Component {
 
   onPostEdit(changes) {
     if (changes.id === 'add') {
-      this.props.createCostCentreGroup(
-        changes
-      );
+      this.props.createCostCentreGroup(changes);
     } else {
       this.props.updateCostCentreGroup(
         this.state.data.find(r => r.id === changes.id),
         changes
       );
-
     }
     this.setState({
       editing: this.state.editing.filter(r => r.id !== changes.id)
