@@ -24,7 +24,11 @@ router.get('/drivers', driverController.list);
 router.get('/fleet-transactions/:params', fleetTransactionController.list);
 
 router.get('/cost-centres', costCentreController.list);
+
 router.get('/cost-centre-groups', costCentreGroupController.list);
+router.put('/cost-centre-groups/:id', costCentreGroupController.update);
+router.post('/cost-centre-groups/', costCentreGroupController.create);
+
 router.get('/transaction-types', transactionTypeController.list);
 
 router.get('/fims-periods', fimsController.list_fims_periods);
