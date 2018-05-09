@@ -13,14 +13,14 @@ export function costCentreGroupReducer(
   switch (type) {
     case costCentreGroupActions.CREATE_COST_CENTRE_GROUP_FULFILLED:
       return state.set(
-        'costCentreGroupList',
-        state.costCentreGroupList.unshift(payload.costCentreGroup)
+        'list',
+        state.list.unshift(payload.costCentreGroup)
       );
 
     case costCentreGroupActions.UPDATE_COST_CENTRE_GROUP_FULFILLED:
       return state.set(
-        'costCentreGroupList',
-        state.costCentreGroupList.map(r => {
+        'list',
+        state.list.map(r => {
           return r.id === payload.costCentreGroup.id
             ? payload.costCentreGroup
             : r;
@@ -29,15 +29,15 @@ export function costCentreGroupReducer(
 
     case costCentreGroupActions.REMOVE_COST_CENTRE_GROUP_FULFILLED:
       return state.set(
-        'costCentreGroupList',
-        state.costCentreGroupList.filter(costCentreGroup => {
+        'list',
+        state.list.filter(costCentreGroup => {
           return costCentreGroup.id !== payload.costCentreGroup.id;
         })
       );
 
     case costCentreGroupActions.LOAD_COST_CENTRE_GROUPS_FULFILLED:
       return state.set(
-        'costCentreGroupList',
+        'list',
         new List(payload.costCentreGroups)
       );
 
