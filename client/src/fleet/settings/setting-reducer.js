@@ -3,12 +3,14 @@ import {
   costCentreReducer,
   costCentreGroupReducer,
   fimsPeriodReducer,
-  transactionTypeReducer
+  transactionTypeReducer,
+  tranTypeCcReducer
 } from './';
 
 export const settingReducer = combineReducers({
   costCentres: costCentreReducer,
   costCentreGroups: costCentreGroupReducer,
   fimsPeriods: fimsPeriodReducer,
-  transactionTypes: transactionTypeReducer
+  transactionTypes: transactionTypeReducer,
+  tranTypeCcs: tranTypeCcReducer
 });

@@ -1,9 +1,9 @@
-export { costCentreGroupList } from './cost-centre-group-list';
-export { costCentreGroupActions } from './cost-centre-group-actions';
-export { costCentreGroupReducer } from './cost-centre-group-reducer';
-export { costCentreGroupSagas } from './cost-centre-group-sagas';
+export { tranTypeCcList } from './tran-type-cc-list';
+export { tranTypeCcActions } from './tran-type-cc-actions';
+export { tranTypeCcReducer } from './tran-type-cc-reducer';
+export { tranTypeCcSagas } from './tran-type-cc-sagas';
 export {
-  getCostCentreGroupList,
-  getCostCentreGroups,
-  getCostCentreGroupById
-} from './cost-centre-group-selectors';
+  getTranTypeCcList,
+  getTranTypeCcs,
+  getTranTypeCcById
+} from './tran-type-cc-selectors';

@@ -1,18 +1,18 @@
 import { ApiList } from 'src/api/index';
 import { tranTypeCcActions } from './tran-type-cc-actions';
-import { TransactionTypeCostCentre } from './transaction-type-cost-centre';
+import { TranTypeCc } from './tran-type-cc';
 
-const transactionTypeCostCentrePath = 'fleet/transaction-type-cost-centres';
+const tranTypeCcPath = 'fleet/transaction-type-cost-centres';
 
-class TransactionTypeCostCentreList extends ApiList {}
+class TranTypeCcList extends ApiList {}
 
-export const transactionTypeCostCentreList = new TransactionTypeCostCentreList(
+export const tranTypeCcList = new TranTypeCcList(
   {
-    onAdd: tranTypeCcActions.createTransactionTypeCostCentreFulfilled(),
-    onChange: tranTypeCcActions.updateTransactionTypeCostCentreFulfilled(),
-    onLoad: tranTypeCcActions.loadTransactionTypeCostCentresFulfilled(),
-    onRemove: tranTypeCcActions.removeTransactionTypeCostCentreFulfilled()
+    onAdd: tranTypeCcActions.createTranTypeCcFulfilled(),
+    onChange: tranTypeCcActions.updateTranTypeCcFulfilled(),
+    onLoad: tranTypeCcActions.loadTranTypeCcsFulfilled(),
+    onRemove: tranTypeCcActions.removeTranTypeCcFulfilled()
   },
-  TransactionTypeCostCentre,
-  transactionTypeCostCentrePath
+  TranTypeCc,
+  tranTypeCcPath
 );

@@ -5,13 +5,10 @@
 import React from 'react';
 // import { List } from 'immutable';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
 import FimsPeriodTable from 'src/views/components/fleet/fims-period-table';
 
 import { Upload, Icon, Button, Row, Col } from 'antd';
-import { settingActions } from '../../../../fleet/settings';
 const Dragger = Upload.Dragger;
 
 const inclCsvCols = [
@@ -170,13 +167,4 @@ FimsImport.propTypes = {
   importFimsPeriod: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({});
-
-const mapDispatchToProps = {
-  removeFimsPeriod: settingActions.removeFimsPeriod,
-  importFimsPeriod: settingActions.importFimsPeriod
-};
-
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(FimsImport)
-);
+export default FimsImport

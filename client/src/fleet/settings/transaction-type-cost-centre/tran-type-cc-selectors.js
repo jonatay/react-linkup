@@ -1,11 +1,11 @@
 import { createSelector } from 'reselect';
 
-export const getTransactionTypeCostCentresRoot = state => {
-  return state.fleet.settings.transactionTypeCostCentres;
+export const getTranTypeCcsRoot = state => {
+  return state.fleet.settings.tranTypeCcs;
 };
 
-export const getTransactionTypeCostCentreList = state => {
-  return getTransactionTypeCostCentresRoot(state).list;
+export const getTranTypeCcList = state => {
+  return getTranTypeCcsRoot(state).list;
 };
 
 
@@ -14,13 +14,13 @@ export const getTransactionTypeCostCentreList = state => {
 //-------------------------------------
 
 
-export const getTransactionTypeCostCentreById = createSelector(
-  getTransactionTypeCostCentreList,
+export const getTranTypeCcById = createSelector(
+  getTranTypeCcList,
   (list, id) =>
     list.filter(rec => rec.id === id)
 );
 
-export const getTransactionTypeCostCentres = createSelector(
-  getTransactionTypeCostCentreList,
+export const getTranTypeCcs = createSelector(
+  getTranTypeCcList,
   list => list.toArray()
 );

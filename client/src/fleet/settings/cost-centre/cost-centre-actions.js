@@ -20,9 +20,9 @@ export const costCentreActions = {
     type: costCentreActions.LOAD_COST_CENTRES
   }),
 
-  createCostCentre: title => ({
+  createCostCentre: costCentre => ({
     type: costCentreActions.CREATE_COST_CENTRE,
-    payload: { costCentre: { title, completed: false } }
+    payload: { costCentre }
   }),
 
   createCostCentreFailed: error => ({
@@ -35,9 +35,9 @@ export const costCentreActions = {
     payload: { costCentre }
   }),
 
-  removeCostCentre: costCentre => ({
+  removeCostCentre: id => ({
     type: costCentreActions.REMOVE_COST_CENTRE,
-    payload: { costCentre }
+    payload: { id }
   }),
 
   removeCostCentreFailed: error => ({
@@ -45,9 +45,9 @@ export const costCentreActions = {
     payload: { error }
   }),
 
-  removeCostCentreFulfilled: costCentre => ({
+  removeCostCentreFulfilled: id => ({
     type: costCentreActions.REMOVE_COST_CENTRE_FULFILLED,
-    payload: { costCentre }
+    payload: { id }
   }),
 
   updateCostCentre: (costCentre, changes) => ({

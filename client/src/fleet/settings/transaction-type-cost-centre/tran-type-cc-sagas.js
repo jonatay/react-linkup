@@ -1,51 +1,86 @@
 import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
-import { transactionTypeCostCentreList, tranTypeCcActions } from './';
+import { tranTypeCcList, tranTypeCcActions } from './';
 import { authActions } from '../../../common/auth';
 
-function* loadAllTransactionTypeCostCentres() {
-  const transactionTypeCostCentres = yield call([
-    transactionTypeCostCentreList,
-    transactionTypeCostCentreList.list
+function* loadAllTranTypeCcs() {
+  const tranTypeCcs = yield call([
+    tranTypeCcList,
+    tranTypeCcList.list
   ]);
   yield put(
-    tranTypeCcActions.loadTransactionTypeCostCentresFulfilled(transactionTypeCostCentres)
+    tranTypeCcActions.loadTranTypeCcsFulfilled(
+      tranTypeCcs
+    )
   );
 }
-function* createTransactionTypeCostCentre({ payload: { transactionTypeCostCentre } }) {
-  let result = yield call([transactionTypeCostCentreList, transactionTypeCostCentreList.insert], {
-    transactionTypeCostCentre
-  });
+
+function* createTranTypeCc({
+  payload: { tranTypeCc }
+}) {
+  let result = yield call(
+    [tranTypeCcList, tranTypeCcList.insert],
+    {
+      transactionTypeCostCentre : tranTypeCc
+    }
+  );
   yield put(
-    tranTypeCcActions.createTransactionTypeCostCentreFulfilled(
+    tranTypeCcActions.createTranTypeCcFulfilled(
       result.transactionTypeCostCentre
     )
   );
 }
 
-function* updateTransactionTypeCostCentre({ payload: { id, changes } }) {
+function* updateTranTypeCc({ payload: { id, changes } }) {
   let result = yield call(
-    [transactionTypeCostCentreList, transactionTypeCostCentreList.update],
+    [tranTypeCcList, tranTypeCcList.update],
     id,
     { changes }
   );
   yield put(
-    tranTypeCcActions.updateTransactionTypeCostCentreFulfilled(
-      result.transactionTypeCostCentre
+    tranTypeCcActions.updateTranTypeCcFulfilled(
+      result.tranTypeCc
     )
   );
 }
 
-function* removeTransactionTypeCostCentre({ payload: { transactionTypeCostCentre } }) {
+function* removeTranTypeCc({
+  payload: { tranTypeCc }
+}) {
   let result = yield call(
-    [transactionTypeCostCentreList, transactionTypeCostCentreList.remove],
-    transactionTypeCostCentre.id
+    [tranTypeCcList, tranTypeCcList.remove],
+    tranTypeCc.id
   );
   if (result.status === 'deleted') {
     yield put(
-      tranTypeCcActions.removeTransactionTypeCostCentreFulfilled(transactionTypeCostCentre)
+      tranTypeCcActions.removeTranTypeCcFulfilled(
+        tranTypeCc
+      )
     );
   } else {
-    yield put(tranTypeCcActions.removeTransactionTypeCostCentreFailed(result));
+    yield put(tranTypeCcActions.removeTranTypeCcFailed(result));
+  }
+}
+
+function* updateTranTypeCcBatch({ payload: { tranTypeCcs, changes } }) {
+  console.log(tranTypeCcs, changes);
+  // look for changes without id - add
+  const addTtCcs = changes.filter(r => !r.id);
+  // look for matching v.id = c.id where different - modify
+  const modTtCcs = changes.filter(ttcc => {
+    const vCcg = tranTypeCcs.find(r => r.id === ttcc.id);
+    return !vCcg ? false : JSON.stringify(vCcg) !== JSON.stringify(ttcc);
+  });
+  // look for v.id missing in c - delete
+  const delTtCcs = tranTypeCcs.filter(r => !changes.find(c => c.id === r.id));
+  console.log({ add: addTtCcs, mod: modTtCcs, del: delTtCcs });
+  for (let ccg of addTtCcs) {
+    yield put(tranTypeCcActions.createTranTypeCc(ccg));
+  }
+  for (let ccg of modTtCcs) {
+    yield put(tranTypeCcActions.updateTranTypeCc(ccg));
+  }
+  for (let ccg of delTtCcs) {
+    yield put(tranTypeCcActions.removeTranTypeCc(ccg));
   }
 }
 //=====================================
@@ -55,52 +90,60 @@ function* removeTransactionTypeCostCentre({ payload: { transactionTypeCostCentre
 function* watchAuthentication() {
   while (true) {
     let { payload } = yield take(authActions.SIGN_IN_FULFILLED);
-    transactionTypeCostCentreList.token = payload.idToken;
+    tranTypeCcList.token = payload.idToken;
     yield take([authActions.SIGN_OUT_FULFILLED]);
-    transactionTypeCostCentreList.token = payload.null;
+    tranTypeCcList.token = payload.null;
   }
 }
 
 function* watchIdTokenRefresh() {
   while (true) {
     const { payload } = yield take(authActions.REFRESH_ID_TOKEN_FULFILLED);
-    transactionTypeCostCentreList.token = payload.idToken;
+    tranTypeCcList.token = payload.idToken;
   }
 }
 
-function* watchLoadTransactionTypeCostCentres() {
+function* watchLoadTranTypeCcs() {
   yield takeEvery(
     tranTypeCcActions.LOAD_TRANSACTION_TYPE_COST_CENTRES,
-    loadAllTransactionTypeCostCentres
+    loadAllTranTypeCcs
   );
 }
 
-function* watchCreateTransactionTypeCostCentre() {
+function* watchCreateTranTypeCc() {
   yield takeEvery(
     tranTypeCcActions.CREATE_TRANSACTION_TYPE_COST_CENTRE,
-    createTransactionTypeCostCentre
+    createTranTypeCc
   );
 }
 
-function* watchUpdateTransactionTypeCostCentre() {
+function* watchUpdateTranTypeCc() {
   yield takeEvery(
     tranTypeCcActions.UPDATE_TRANSACTION_TYPE_COST_CENTRE,
-    updateTransactionTypeCostCentre
+    updateTranTypeCc
   );
 }
 
-function* watchRemoveTransactionTypeCostCentre() {
+function* watchRemoveTranTypeCc() {
   yield takeEvery(
     tranTypeCcActions.REMOVE_TRANSACTION_TYPE_COST_CENTRE,
-    removeTransactionTypeCostCentre
+    removeTranTypeCc
   );
 }
 
-export const transactionTypeCostCentreSagas = [
+function* watchUpdateTranCcBatch() {
+  yield takeEvery(
+    tranTypeCcActions.UPDATE_TRANSACTION_TYPE_COST_CENTRE_BATCH,
+    updateTranTypeCcBatch
+  );
+}
+
+export const tranTypeCcSagas = [
   fork(watchAuthentication),
   fork(watchIdTokenRefresh),
-  fork(watchLoadTransactionTypeCostCentres),
-  fork(watchUpdateTransactionTypeCostCentre),
-  fork(watchCreateTransactionTypeCostCentre),
-  fork(watchRemoveTransactionTypeCostCentre)
+  fork(watchLoadTranTypeCcs),
+  fork(watchUpdateTranTypeCc),
+  fork(watchCreateTranTypeCc),
+  fork(watchRemoveTranTypeCc),
+  fork(watchUpdateTranCcBatch)
 ];

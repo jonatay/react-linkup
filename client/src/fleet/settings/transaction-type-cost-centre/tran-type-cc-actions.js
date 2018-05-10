@@ -1,4 +1,4 @@
-export const transactionTypeCostCentreActions = {
+export const tranTypeCcActions = {
   LOAD_TRANSACTION_TYPE_COST_CENTRES:
     'FLEET_LOAD_TRANSACTION_TYPE_COST_CENTRES',
   LOAD_TRANSACTION_TYPE_COST_CENTRES_FULFILLED:
@@ -29,77 +29,66 @@ export const transactionTypeCostCentreActions = {
   UPDATE_TRANSACTION_TYPE_COST_CENTRE_FULFILLED:
     'FLEET_UPDATE_TRANSACTION_TYPE_COST_CENTRE_FULFILLED',
 
-  loadTransactionTypeCostCentres: () => ({
-    type: transactionTypeCostCentreActions.LOAD_TRANSACTION_TYPE_COST_CENTRES
+  loadTranTypeCcs: () => ({
+    type: tranTypeCcActions.LOAD_TRANSACTION_TYPE_COST_CENTRES
   }),
-  loadTransactionTypeCostCentresFulfilled: transactionTypeCostCentres => ({
-    type:
-      transactionTypeCostCentreActions.LOAD_TRANSACTION_TYPE_COST_CENTRES_FULFILLED,
-    payload: { transactionTypeCostCentres }
+  loadTranTypeCcsFulfilled: tranTypeCcs => ({
+    type: tranTypeCcActions.LOAD_TRANSACTION_TYPE_COST_CENTRES_FULFILLED,
+    payload: { tranTypeCcs }
   }),
 
-  loadTransactionTypeCostCentresFailed: error => ({
-    type:
-      transactionTypeCostCentreActions.LOAD_TRANSACTION_TYPE_COST_CENTRES_FAILED,
+  loadTranTypeCcsFailed: error => ({
+    type: tranTypeCcActions.LOAD_TRANSACTION_TYPE_COST_CENTRES_FAILED,
     payload: { error }
   }),
 
-  createTransactionTypeCostCentre: transactionTypeCostCentre => ({
-    type: transactionTypeCostCentreActions.CREATE_TRANSACTION_TYPE_COST_CENTRE,
-    payload: { transactionTypeCostCentre }
+  createTranTypeCc: tranTypeCc => ({
+    type: tranTypeCcActions.CREATE_TRANSACTION_TYPE_COST_CENTRE,
+    payload: { tranTypeCc }
   }),
 
-  createTransactionTypeCostCentreFailed: error => ({
-    type:
-      transactionTypeCostCentreActions.CREATE_TRANSACTION_TYPE_COST_CENTRE_FAILED,
+  createTranTypeCcFailed: error => ({
+    type: tranTypeCcActions.CREATE_TRANSACTION_TYPE_COST_CENTRE_FAILED,
     payload: { error }
   }),
 
-  createTransactionTypeCostCentreFulfilled: transactionTypeCostCentre => ({
-    type:
-      transactionTypeCostCentreActions.CREATE_TRANSACTION_TYPE_COST_CENTRE_FULFILLED,
-    payload: { transactionTypeCostCentre }
+  createTranTypeCcFulfilled: tranTypeCc => ({
+    type: tranTypeCcActions.CREATE_TRANSACTION_TYPE_COST_CENTRE_FULFILLED,
+    payload: { tranTypeCc }
   }),
 
-  removeTransactionTypeCostCentre: transactionTypeCostCentre => ({
-    type: transactionTypeCostCentreActions.REMOVE_TRANSACTION_TYPE_COST_CENTRE,
-    payload: { transactionTypeCostCentre }
+  removeTranTypeCc: tranTypeCc => ({
+    type: tranTypeCcActions.REMOVE_TRANSACTION_TYPE_COST_CENTRE,
+    payload: { tranTypeCc }
   }),
 
-  removeTransactionTypeCostCentreFailed: error => ({
-    type:
-      transactionTypeCostCentreActions.REMOVE_TRANSACTION_TYPE_COST_CENTRE_FAILED,
+  removeTranTypeCcFailed: error => ({
+    type: tranTypeCcActions.REMOVE_TRANSACTION_TYPE_COST_CENTRE_FAILED,
     payload: { error }
   }),
 
-  removeTransactionTypeCostCentreFulfilled: transactionTypeCostCentre => ({
-    type:
-      transactionTypeCostCentreActions.REMOVE_TRANSACTION_TYPE_COST_CENTRE_FULFILLED,
-    payload: { transactionTypeCostCentre }
+  removeTranTypeCcFulfilled: tranTypeCc => ({
+    type: tranTypeCcActions.REMOVE_TRANSACTION_TYPE_COST_CENTRE_FULFILLED,
+    payload: { tranTypeCc }
   }),
 
-  updateTransactionTypeCostCentreActionsArray: (
-    transactionTypeCostCentres,
-    changes
-  ) => ({
-    type: transactionTypeCostCentres.UPDATE_TRANSACTION_TYPE_COST_CENTRE_BATCH,
-    payload: { transactionTypeCostCentres, changes }
+  updateTranTypeCcBatch: (tranTypeCcs, changes) => ({
+    type: tranTypeCcActions.UPDATE_TRANSACTION_TYPE_COST_CENTRE_BATCH,
+    payload: { tranTypeCcs, changes }
   }),
 
-  updateTransactionTypeCostCentre: (id, changes) => ({
-    type: transactionTypeCostCentreActions.UPDATE_TRANSACTION_TYPE_COST_CENTRE,
+  updateTranTypeCc: (id, changes) => ({
+    type: tranTypeCcActions.UPDATE_TRANSACTION_TYPE_COST_CENTRE,
     payload: { id, changes }
   }),
 
-  updateTransactionTypeCostCentreFailed: error => ({
-    type:
-      transactionTypeCostCentreActions.UPDATE_TRANSACTION_TYPE_COST_CENTRE_FAILED,
+  updateTranTypeCcFailed: error => ({
+    type: tranTypeCcActions.UPDATE_TRANSACTION_TYPE_COST_CENTRE_FAILED,
     payload: { error }
   }),
 
-  updateTransactionTypeCostCentreFulfilled: transactionTypeCostCentre => ({
-    type:
-      transactionTypeCostCentreActions.UPDATE_TRANSACTION_TYPE_COST_CENTRE_FULFILLED,
-    payload: { transactionTypeCostCentre }
+  updateTranTypeCcFulfilled: tranTypeCc => ({
+    type: tranTypeCcActions.UPDATE_TRANSACTION_TYPE_COST_CENTRE_FULFILLED,
+    payload: { tranTypeCc }
   })
 };

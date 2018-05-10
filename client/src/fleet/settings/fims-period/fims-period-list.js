@@ -1,5 +1,5 @@
 import { ApiList } from 'src/api/index';
-import { settingActions } from '../setting-actions';
+import { fimsPeriodActions } from './fims-period-actions';
 import { FimsPeriod } from './fims-period';
 
 const fimsPeriodPath = 'fleet/fims-periods';
@@ -19,10 +19,10 @@ class FimsPeriodList extends ApiList {
 
 export const fimsPeriodList = new FimsPeriodList(
   {
-    // onAdd: costCentreGroupActions.createCostCentreFulfilled(),
-    // onChange: costCentreGroupActions.updateCostCentreFulfilled(),
-    onLoad: settingActions.loadFimsPeriodsFulfilled()
-    // onRemove: costCentreGroupActions.removeCostCentreFulfilled()
+    // onAdd: fimsPeriodActions.createFimsPeriodFulfilled(),
+    // onChange: fimsPeriodActions.updateFimsPeriodFulfilled(),
+    onLoad: fimsPeriodActions.loadFimsPeriodsFulfilled(),
+    // onRemove: fimsPeriodActions.removeFimsPeriodFulfilled()
   },
   FimsPeriod,
   fimsPeriodPath
