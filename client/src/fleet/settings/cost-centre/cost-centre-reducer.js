@@ -21,7 +21,7 @@ export function costCentreReducer(
       return state.set(
         'list',
         state.list.filter(costCentre => {
-          return costCentre.id !== payload.costCentre.id;
+          return costCentre.id !== parseInt(payload.id,10);
         })
       );
 

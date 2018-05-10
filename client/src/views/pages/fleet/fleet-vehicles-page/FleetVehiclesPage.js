@@ -12,7 +12,7 @@ import {
   getVehcleShowInactive,
   getVisibleVehicles,
   vehicleActions,
-  settingActions,
+  costCentreGroupActions,
   getCostCentreGroups
 } from 'src/fleet';
 
@@ -185,7 +185,7 @@ const mapDispatchToProps = {
   updateVehicle: vehicleActions.updateVehicle,
   toggleVehicleIsActive: vehicleActions.toggleVehicleIsActive,
   toggleShowInactive: vehicleActions.vehicleToggleShowInactive,
-  loadCostCentreGroups: settingActions.loadCostCentreGroups
+  loadCostCentreGroups: costCentreGroupActions.loadCostCentreGroups
 };
 
 export default withRouter(

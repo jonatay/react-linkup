@@ -3,7 +3,7 @@ import { authActions } from 'src/common/auth/index';
 import { vehicleActions } from './vehicle-actions';
 import { vehicleCcgActions } from '../vehicle-ccg';
 import { vehicleList } from './vehicle-list';
-import { settingActions } from '../settings';
+import { costCentreGroupActions } from '../settings';
 
 //=====================================
 //  WATCHERS
@@ -26,7 +26,7 @@ function* watchIdTokenRefresh() {
 }
 
 function* loadAllVehicles() {
-  yield put(settingActions.loadCostCentreGroups());
+  yield put(costCentreGroupActions.loadCostCentreGroups());
   yield put(vehicleCcgActions.loadVehicleCcgs());
   const vehicles = yield call([vehicleList, vehicleList.list]);
   yield put(vehicleActions.loadVehiclesFulfilled(vehicles));

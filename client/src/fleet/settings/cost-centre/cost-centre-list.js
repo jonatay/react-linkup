@@ -1,5 +1,5 @@
 import { ApiList } from 'src/api/index';
-import { settingActions } from '../setting-actions';
+import { costCentreActions } from './cost-centre-actions';
 import { CostCentre } from './cost-centre';
 
 const costCentrePath = 'fleet/cost-centres';
@@ -19,10 +19,10 @@ class CostCentreList extends ApiList {
 
 export const costCentreList = new CostCentreList(
   {
-    onAdd: settingActions.createCostCentreFulfilled(),
-    onChange: settingActions.updateCostCentreFulfilled(),
-    onLoad: settingActions.loadCostCentresFulfilled(),
-    onRemove: settingActions.removeCostCentreFulfilled()
+    onAdd: costCentreActions.createCostCentreFulfilled(),
+    onChange: costCentreActions.updateCostCentreFulfilled(),
+    onLoad: costCentreActions.loadCostCentresFulfilled(),
+    onRemove: costCentreActions.removeCostCentreFulfilled()
   },
   CostCentre,
   costCentrePath

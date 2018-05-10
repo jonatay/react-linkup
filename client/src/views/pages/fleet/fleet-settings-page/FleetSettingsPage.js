@@ -15,11 +15,15 @@ import TransactionTypeTable from '../../../components/fleet/transaction-type-tab
 import FimsImport from 'src/views/components/fleet/fims_import';
 
 import {
-  settingActions,
+  costCentreActions,
+  costCentreGroupActions,
+  fimsPeriodActions,
+  transactionTypeActions,
   getCostCentres,
   getCostCentreGroups,
   getTransactionTypes,
-  getFimsPeriods
+  getFimsPeriods,
+  tranTypeCcActions
 } from 'src/fleet/settings';
 
 import { Tabs, Icon } from 'antd';
@@ -34,7 +38,7 @@ class FleetSettingsPage extends React.Component {
   render() {
     return (
       <div>
-        <PageHeader>fleet-settings</PageHeader>
+        <PageHeader>fleet-settings / {this.state.activeKey}</PageHeader>
         <Tabs
           theme="dark"
           size="small"
@@ -97,15 +101,15 @@ FleetSettingsPage.propTypes = {
   //cost centre group
   costCentreGroups: PropTypes.instanceOf(Array).isRequired,
   loadCostCentreGroups: PropTypes.func.isRequired,
+  updateCostCentreGroup: PropTypes.func.isRequired,
+  createCostCentreGroup: PropTypes.func.isRequired,
+  removeCostCentreGroup: PropTypes.func.isRequired,
   //transaction types
   transactionTypes: PropTypes.instanceOf(Array).isRequired,
   loadTransactionTypes: PropTypes.func.isRequired,
   //fims
   fimsPeriods: PropTypes.instanceOf(Array).isRequired,
-  postFimsBatch: PropTypes.func.isRequired,
-  updateCostCentreGroup: PropTypes.func.isRequired,
-  createCostCentreGroup: PropTypes.func.isRequired,
-  removeCostCentreGroup: PropTypes.func.isRequired
+  postFimsBatch: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -116,14 +120,25 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  loadCostCentres: settingActions.loadCostCentres,
-  loadCostCentreGroups: settingActions.loadCostCentreGroups,
-  loadTransactionTypes: settingActions.loadTransactionTypes,
-  loadFimsPeriods: settingActions.loadFimsPeriods,
-  postFimsBatch: settingActions.postFimsBatch,
-  updateCostCentreGroup: settingActions.updateCostCentreGroup,
-  createCostCentreGroup: settingActions.createCostCentreGroup,
-  removeCostCentreGroup: settingActions.removeCostCentreGroup
+  //cost centre
+  loadCostCentres: costCentreActions.loadCostCentres,
+  updateCostCentre: costCentreActions.updateCostCentre,
+  createCostCentre: costCentreActions.createCostCentre,
+  removeCostCentre: costCentreActions.removeCostCentre,
+  //cost centre group
+  loadCostCentreGroups: costCentreGroupActions.loadCostCentreGroups,
+  updateCostCentreGroup: costCentreGroupActions.updateCostCentreGroup,
+  createCostCentreGroup: costCentreGroupActions.createCostCentreGroup,
+  removeCostCentreGroup: costCentreGroupActions.removeCostCentreGroup,
+  //transaction types
+  loadTransactionTypes: transactionTypeActions.loadTransactionTypes,
+  //fims
+  loadFimsPeriods: fimsPeriodActions.loadFimsPeriods,
+  postFimsBatch: fimsPeriodActions.postFimsBatch,
+  removeFimsPeriod: fimsPeriodActions.removeFimsPeriod,
+  importFimsPeriod: fimsPeriodActions.importFimsPeriod,
+  //tran-type-cost-centre
+  loadTransactionTypeCostCentres: tranTypeCcActions.loadTransactionTypeCostCentres
 };
 
 export default withRouter(

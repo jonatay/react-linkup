@@ -2,12 +2,14 @@ import {
   costCentreSagas,
   costCentreGroupSagas,
   fimsPeriodSagas,
-  transactionTypeSagas
+  transactionTypeSagas,
+  tranTypeCcSagas
 } from './';
 
 export const settingSagas = [
   ...costCentreSagas,
   ...costCentreGroupSagas,
   ...fimsPeriodSagas,
-  ...transactionTypeSagas
+  ...transactionTypeSagas,
+  ...tranTypeCcSagas
 ];
