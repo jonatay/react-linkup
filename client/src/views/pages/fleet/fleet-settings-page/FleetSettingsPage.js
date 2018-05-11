@@ -23,7 +23,8 @@ import {
   getCostCentreGroups,
   getTransactionTypes,
   getFimsPeriods,
-  tranTypeCcActions
+  tranTypeCcActions,
+  getFimsPeriodIsAvailable
 } from 'src/fleet/settings';
 
 import { Tabs, Icon } from 'antd';
@@ -116,7 +117,8 @@ const mapStateToProps = state => ({
   costCentres: getCostCentres(state),
   costCentreGroups: getCostCentreGroups(state),
   transactionTypes: getTransactionTypes(state),
-  fimsPeriods: getFimsPeriods(state)
+  fimsPeriods: getFimsPeriods(state),
+  fimsPeriodIsAvailable: getFimsPeriodIsAvailable(state)
 });
 
 const mapDispatchToProps = {
@@ -137,8 +139,10 @@ const mapDispatchToProps = {
   postFimsBatch: fimsPeriodActions.postFimsBatch,
   removeFimsPeriod: fimsPeriodActions.removeFimsPeriod,
   importFimsPeriod: fimsPeriodActions.importFimsPeriod,
+  importFimsPeriodBatch: fimsPeriodActions.importFimsPeriodBatch,
   //tran-type-cost-centre
-  loadTransactionTypeCostCentres: tranTypeCcActions.loadTransactionTypeCostCentres
+  loadTransactionTypeCostCentres:
+    tranTypeCcActions.loadTransactionTypeCostCentres
 };
 
 export default withRouter(

@@ -8,9 +8,12 @@ LEFT JOIN fleet.fleet_transaction ft ON ft.fims_voucher_id = fv.id
 GROUP BY fp.id
 `;
 
-exports.sqlGetIdFimsPeriod = `
-SELECT * FROM fleet.fims_period
-WHERE id =$[id]
+const sqlGet = `
+SELECT fp.*, sum(ft.amount) AS check_total FROM fleet.fims_period fp
+LEFT JOIN fleet.fims_voucher fv ON fv.fims_period_id = fp.id
+LEFT JOIN fleet.fleet_transaction ft ON ft.fims_voucher_id = fv.id
+WHERE fp.id =$[id]
+GROUP BY fp.id
 `;
 
 const sqlRequestFimsPeriod = `
@@ -39,7 +42,7 @@ exports.list = () => {
   return db.any(sqlListFimsPeriods);
 };
 
-exports.getIdFimsPeriod = id => db.one(sqlGetIdFimsPeriod, { id });
+exports.get = id => db.one(sqlGet, { id });
 
 exports.requestFimsPeriod = (cal_year, cal_month) =>
   db.one(sqlRequestFimsPeriod, { cal_year, cal_month });

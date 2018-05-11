@@ -4,7 +4,7 @@ var async = require('asyncawait/async');
 
 const db = require('../../services/postgres/db');
 
-const ModelFimsPeriod = require('../../models/fleet/modelFimsPeriod');
+const ModelFimsPeriod = require('../../models/fleet/ModelFimsPeriod');
 const ModelFimsVoucher = require('../../models/fleet/modelFimsVoucher');
 const ModelFleetTransaction = require('../../models/fleet/modelFleetTransaction');
 
@@ -70,8 +70,12 @@ exports.import_fims_period = (req, res) => {
         )
         .then(() => {
           ModelFleetTransaction.insertBatch(tranData).then(e => {
-            ModelFimsPeriod.updateFimsPeriod(fimsPeriod);
-            res.json(fimsPeriod);
+            fimsPeriod.when_imported = new Date();
+            ModelFimsPeriod.updateFimsPeriod(fimsPeriod).then(data =>
+              ModelFimsPeriod.get(data.id).then(data =>
+                res.json({ status: 'imported', fimsPeriod: data })
+              )
+            );
           });
         });
     });
@@ -114,7 +118,7 @@ exports.import_fims_period = (req, res) => {
     .then(fimsPeriod => {});
 };
 */
-// ModelFimsPeriod.getIdFimsPeriod(id).then(fimsPeriod => {
+// ModelFimsPeriod.get(id).then(fimsPeriod => {
 // db
 //   .many(
 //     'SELECT * FROM fleet.import_fleet_transaction_from_fims_voucher($[id])',

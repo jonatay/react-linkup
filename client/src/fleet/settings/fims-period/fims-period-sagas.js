@@ -1,15 +1,14 @@
-import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
+import {
+  call,
+  fork,
+  put,
+  take,
+  takeEvery,
+  race,
+  cancel
+} from 'redux-saga/effects';
 import { fimsPeriodActions, fimsPeriodList } from './';
 import { authActions } from '../../../common/auth';
-
-function* importFimsPeriod({ payload }) {
-  //console.log(payload);
-  const fimsPeriod = yield call(
-    [fimsPeriodList, fimsPeriodList.importFimsPeriod],
-    payload.id
-  );
-  yield put(fimsPeriodActions.importFimsPeriodFulfilled(fimsPeriod));
-}
 
 function* removeFimsPeriod({ payload }) {
   const id = yield call([fimsPeriodList, fimsPeriodList.remove], payload.id);
@@ -28,6 +27,29 @@ function* postFimsBatch({ payload }) {
     { fimsBatch }
   );
   yield put(fimsPeriodActions.postFimsBatchFulfilled(postFimsBatchResult));
+}
+
+function* importFimsPeriod({ payload }) {
+  //console.log(payload);
+  const result = yield call(
+    [fimsPeriodList, fimsPeriodList.importFimsPeriod],
+    payload.id
+  );
+  yield put(fimsPeriodActions.importFimsPeriodFulfilled(result.fimsPeriod));
+}
+
+function* importFimsPeriodBatch({ payload: { fimsPeriods } }) {
+  for (let fp of fimsPeriods) {
+    const task = yield put(fimsPeriodActions.importFimsPeriod(fp.id));
+    const { error } = yield race({
+      success: take(fimsPeriodActions.IMPORT_FIRMS_PERIOD_FULFILLED),
+      error: take(fimsPeriodActions.IMPORT_FIRMS_PERIOD_FAILED)
+    });
+    if (error) {
+      yield cancel(task);
+      break;
+    }
+  }
 }
 
 //=====================================
@@ -66,11 +88,19 @@ function* watchImportFimsPeriod() {
   yield takeEvery(fimsPeriodActions.IMPORT_FIRMS_PERIOD, importFimsPeriod);
 }
 
+function* watchImportFimsPeriodBatch() {
+  yield takeEvery(
+    fimsPeriodActions.IMPORT_FIMS_PERIOD_BATCH,
+    importFimsPeriodBatch
+  );
+}
+
 export const fimsPeriodSagas = [
   fork(watchAuthentication),
   fork(watchIdTokenRefresh),
   fork(watchFimsLoadPeriods),
   fork(watchPostFimsBatch),
   fork(watchRemoveFimsPeriod),
-  fork(watchImportFimsPeriod)
+  fork(watchImportFimsPeriod),
+  fork(watchImportFimsPeriodBatch)
 ];
