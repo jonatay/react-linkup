@@ -135,10 +135,10 @@ class FimsPeriodTable extends React.Component {
                       ? 1
                       : b.cal_year === 0 && b.cal_month === 0
                         ? -1
-                        : a.cal_year * 10 + a.cal_month >
+                        : a.cal_year * 10 + a.cal_month <
                           b.cal_year * 12 + b.cal_month
                           ? 1
-                          : a.cal_year * 12 + a.cal_month <
+                          : a.cal_year * 12 + a.cal_month >
                             b.cal_year * 12 + b.cal_month
                             ? -1
                             : 0
