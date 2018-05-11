@@ -62,7 +62,7 @@ function* removeRole({ payload }) {
 }
 
 function* removeRoles({ payload }) {
-  console.log(payload);
+  // console.log(payload);
   for (let role of payload.roles) {
     const task = yield put(aclActions.aclRemoveRole(role));
     const { error } = yield race({

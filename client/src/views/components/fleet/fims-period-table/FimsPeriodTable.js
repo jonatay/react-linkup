@@ -118,6 +118,26 @@ class FimsPeriodTable extends React.Component {
     {
       width: 100,
       align: 'right',
+      title: (
+        <Button
+          style={{ margin: 5, marginRight: 10, float: 'left' }}
+          type="primary"
+          ghost={false}
+          size="small"
+          // shape="square"
+          icon="rocket"
+          onClick={() => {
+            this.props.importFimsPeriodBatch(
+              this.props.fimsPeriods.map(r => ({
+                id: r.id
+              }))
+            );
+          }}
+          disabled={!this.props.fimsPeriodIsAvailable}
+        >
+          Import All
+        </Button>
+      ),
       render: rec => (
         <Row>
           <Button
@@ -130,6 +150,7 @@ class FimsPeriodTable extends React.Component {
             onClick={() => {
               this.props.importFimsPeriod(rec.id);
             }}
+            disabled={!this.props.fimsPeriodIsAvailable}
           />
           <Button
             style={{ margin: 5, marginRight: 20 }}
@@ -144,6 +165,7 @@ class FimsPeriodTable extends React.Component {
                 this.props.removeFimsPeriod
               );
             }}
+            disabled={!this.props.fimsPeriodIsAvailable}
           />
         </Row>
       )

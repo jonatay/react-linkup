@@ -139,7 +139,11 @@ class FimsImport extends React.Component {
           >
             {uploading ? 'Uploading' : 'Start Upload'}
           </Button>
-          <Dragger {...props} style={{ padding: 10 }}>
+          <Dragger
+            {...props}
+            style={{ padding: 10 }}
+            disabled={!this.props.fimsPeriodIsAvailable}
+          >
             <p className="ant-upload-drag-icon">
               <Icon type="inbox" />
             </p>
@@ -167,4 +171,4 @@ FimsImport.propTypes = {
   importFimsPeriod: PropTypes.func.isRequired
 };
 
-export default FimsImport
+export default FimsImport;

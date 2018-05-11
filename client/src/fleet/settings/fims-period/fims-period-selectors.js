@@ -1,26 +1,27 @@
 import { createSelector } from 'reselect';
 
-export const getFimsPeriodsRoot = state => {
+const getRoot = state => {
   return state.fleet.settings.fimsPeriods;
 };
 
 export const getFimsPeriodList = state => {
-  return getFimsPeriodsRoot(state).list;
+  return getRoot(state).list;
+};
+
+export const getFimsPeriodIsAvailable = state => {
+  return getRoot(state).isAvailable;
 };
 
 /*
   Memorised
  */
 
-export const getFimsPeriodById = createSelector(
-  getFimsPeriodList,
-  (list, id) =>
-    list.filter(rec => rec.id === id)
+export const getFimsPeriodById = createSelector(getFimsPeriodList, (list, id) =>
+  list.filter(rec => rec.id === id)
 );
 
-export const getFimsPeriods = createSelector(
-  getFimsPeriodList,
-  list => list.toArray()
+export const getFimsPeriods = createSelector(getFimsPeriodList, list =>
+  list.toArray()
 );
 
 //=====================================
