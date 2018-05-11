@@ -143,7 +143,7 @@ class CostCentreGroupGrid extends React.Component {
               this.onAddRow();
             }}
           >
-            Add Cost Centre
+            Add
           </Button>
         )
       },
