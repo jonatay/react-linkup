@@ -128,9 +128,24 @@ class FimsPeriodTable extends React.Component {
           icon="rocket"
           onClick={() => {
             this.props.importFimsPeriodBatch(
-              this.props.fimsPeriods.map(r => ({
-                id: r.id
-              }))
+              this.props.fimsPeriods
+                .sort(
+                  (a, b) =>
+                    a.cal_year === 0 && a.cal_month === 0
+                      ? 1
+                      : b.cal_year === 0 && b.cal_month === 0
+                        ? -1
+                        : a.cal_year * 10 + a.cal_month >
+                          b.cal_year * 12 + b.cal_month
+                          ? 1
+                          : a.cal_year * 12 + a.cal_month <
+                            b.cal_year * 12 + b.cal_month
+                            ? -1
+                            : 0
+                )
+                .map(r => ({
+                  id: r.id
+                }))
             );
           }}
           disabled={!this.props.fimsPeriodIsAvailable}
