@@ -5,7 +5,7 @@ var async = require('asyncawait/async');
 const db = require('../../services/postgres/db');
 
 const ModelFimsPeriod = require('../../models/fleet/ModelFimsPeriod');
-const ModelFimsVoucher = require('../../models/fleet/modelFimsVoucher');
+const ModelFimsVoucher = require('../../models/fleet/ModelFimsVoucher');
 const ModelFleetTransaction = require('../../models/fleet/modelFleetTransaction');
 
 exports.list_fims_periods = (req, res) => {

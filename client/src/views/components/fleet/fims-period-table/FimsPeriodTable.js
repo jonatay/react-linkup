@@ -25,6 +25,9 @@ class FimsPeriodTable extends React.Component {
       )}
     </span>
   );
+  yrMtnToInt(fimsPeriod) {
+    return fimsPeriod.cal_year * 12 + fimsPeriod.cal_month;
+  }
   columns = [
     {
       title: 'Period',
@@ -36,7 +39,7 @@ class FimsPeriodTable extends React.Component {
           ? 1
           : b.cal_year === 0
             ? -1
-            : a.cal_year * 12 + a.cal_month - (b.cal_year * 12 + b.cal_month),
+            : this.yrMtnToInt(a) - this.yrMtnToInt(b),
       render: (text, record) => (
         <h4 style={{ padding: 2, marginBottom: 0 }}>
           {text} - {record.cal_month}
@@ -131,17 +134,11 @@ class FimsPeriodTable extends React.Component {
               this.props.fimsPeriods
                 .sort(
                   (a, b) =>
-                    a.cal_year === 0 && a.cal_month === 0
+                    a.cal_year === 0
                       ? 1
-                      : b.cal_year === 0 && b.cal_month === 0
+                      : b.cal_year === 0
                         ? -1
-                        : a.cal_year * 10 + a.cal_month <
-                          b.cal_year * 12 + b.cal_month
-                          ? 1
-                          : a.cal_year * 12 + a.cal_month >
-                            b.cal_year * 12 + b.cal_month
-                            ? -1
-                            : 0
+                        : this.yrMtnToInt(a) - this.yrMtnToInt(b)
                 )
                 .map(r => ({
                   id: r.id
