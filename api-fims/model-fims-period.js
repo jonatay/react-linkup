@@ -1,34 +1,34 @@
 const db = require('../api/services/postgres/db');
 
 const sqlGetAvailablePeriod = `
-SELECT year, month FROM fleet.fims_period 
+SELECT cal_year, cal_month FROM fleet.fims_period 
   WHERE (when_received is null OR must_refresh) 
-  ORDER BY year,month 
+  ORDER BY cal_year,cal_month 
   LIMIT 1
 `;
 
 const sqlGetLastPeriod = `
-SELECT year, month FROM fleet.fims_period 
-  ORDER BY year DESC,month DESC
+SELECT cal_year, cal_month FROM fleet.fims_period 
+  ORDER BY cal_year DESC,cal_month DESC
   LIMIT 1
 `;
 
 const sqlGetUniqueByPeriod = `
 SELECT id FROM fleet.fims_period 
-WHERE year=$[year] AND month=$[month]
+WHERE cal_year=$[cal_year] AND cal_month=$[cal_month]
 `;
 
 const sqlInsert = `
 INSERT INTO fleet.fims_period(
-    year, month, when_received, rows_received, account, must_refresh)
+    cal_year, cal_month, when_received, rows_received, account, must_refresh)
   VALUES 
-    ($[year], $[month], $[when_received], $[rows_received], $[account], $[must_refresh]);
+    ($[cal_year], $[cal_month], $[when_received], $[rows_received], $[account], $[must_refresh]);
 `;
 
 const sqlUpdate = `
 UPDATE fleet.fims_period
   SET 
-    year=$[year], month=$[month], 
+    cal_year=$[cal_year], cal_month=$[cal_month], 
     when_received=$[when_received], 
     rows_received=$[rows_received],
     account=$[account],

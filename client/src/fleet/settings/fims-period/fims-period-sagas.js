@@ -29,13 +29,13 @@ function* postFimsBatch({ payload }) {
   yield put(fimsPeriodActions.postFimsBatchFulfilled(postFimsBatchResult));
 }
 
-function* importFimsPeriod({ payload }) {
+function* importFimsPeriod({ payload: { id } }) {
   //console.log(payload);
-  const result = yield call(
+  const { fimsPeriod } = yield call(
     [fimsPeriodList, fimsPeriodList.importFimsPeriod],
-    payload.id
+    id
   );
-  yield put(fimsPeriodActions.importFimsPeriodFulfilled(result.fimsPeriod));
+  yield put(fimsPeriodActions.importFimsPeriodFulfilled(fimsPeriod));
 }
 
 function* importFimsPeriodBatch({ payload: { fimsPeriods } }) {
