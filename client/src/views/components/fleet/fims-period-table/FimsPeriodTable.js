@@ -140,6 +140,7 @@ class FimsPeriodTable extends React.Component {
                         ? -1
                         : this.yrMtnToInt(a) - this.yrMtnToInt(b)
                 )
+                .reverse()
                 .map(r => ({
                   id: r.id
                 }))

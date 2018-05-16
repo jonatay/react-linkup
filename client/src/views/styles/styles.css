@@ -128,3 +128,6 @@ a {
     top: -7px !important; }
   .ant-collapse .ant-collapse-item .ant-collapse-header {
     padding: 7px 0 0 40px !important; }
+
+.ant-table-row > tr > td {
+  padding: 0; }
