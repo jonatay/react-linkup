@@ -20,7 +20,11 @@ const iconCheat = {
   Rights: 'lock',
   Users: 'user',
   Attendance: 'clock-circle-o',
-  Settings: 'setting'
+  Settings: 'setting',
+  'sage-pay': 'cloud-upload-o',
+  'bank-accounts': 'credit-card',
+  'banks-and-branches': 'shop',
+  'salary-batches': 'solution'
 };
 
 const { Header } = Layout;
@@ -46,11 +50,13 @@ const AppHeader = ({
   };
   const mapMenuChildren = parent => {
     return child => (
-      <Menu.Item key={`${parent.toLowerCase()}/${child.toLowerCase()}`}>
+      <Menu.Item
+        key={`${parent.toLowerCase()}/${child.resource.toLowerCase()}`}
+      >
         <span>
-          <Icon type={iconCheat[child]} />
+          <Icon type={iconCheat[child.resource]} />
         </span>
-        {child}
+        {child.label}
       </Menu.Item>
     );
   };
@@ -112,7 +118,7 @@ const AppHeader = ({
             title={
               <span>
                 <Icon type={iconCheat[menu.resource]} />
-                {menu.resource}
+                {menu.label}
               </span>
             }
           >

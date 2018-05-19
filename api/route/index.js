@@ -8,6 +8,8 @@ var acl = require('../services/firebase/firebase-acl');
 const root_controller = require('../controllers/rootController');
 const adminRoutes = require('./adminRoutes');
 const fleetRoutes = require('./fleetRoutes');
+const sagePayRoutes = require('./sagePayRoutes');
+
 /*
 implement firebase auth middleware,
  -uses token attached to every request
@@ -25,13 +27,11 @@ implement acl middleware
  */
 router.use('/*', acl.middleware(3, userId));
 
-
-
-
 /* GET api root page. */
 router.get('/', root_controller.root);
 
 router.use('/admin', adminRoutes);
 router.use('/fleet', fleetRoutes);
+router.use('/sage-pay', sagePayRoutes);
 
 module.exports = router;

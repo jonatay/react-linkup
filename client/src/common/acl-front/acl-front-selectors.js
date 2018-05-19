@@ -55,6 +55,12 @@ export const getAclRoles = createSelector(getAcl, getUid, (acl, uid) => {
 });
 /*
  */
+function toTitleCase(str) {
+  return str.replace(/\w\S*/g, function(txt) {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  });
+}
+
 const extractFront = (node, roles) => {
   let ret = [];
   for (let r of Object.keys(node)) {
@@ -63,9 +69,19 @@ const extractFront = (node, roles) => {
       for (let res of Object.keys(front)) {
         let fEle = ret.find(f => f.resource === res);
         if (fEle) {
-          fEle.children = Object.keys(front[res]).concat(fEle.children);
+          fEle.children = Object.keys(front[res]).map(f => ({
+            resource: f,
+            label: toTitleCase(f.replace(/-/gi, ' '))
+          })).concat(fEle.children);
         } else {
-          ret.push({ resource: res, children: Object.keys(front[res]) });
+          ret.push({
+            resource: res,
+            label: toTitleCase(res.replace(/-/gi, ' ')),
+            children: Object.keys(front[res]).map(f => ({
+              resource: f,
+              label: toTitleCase(f.replace(/-/gi, ' '))
+            }))
+          });
         }
       }
     }
