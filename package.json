@@ -20,12 +20,17 @@
     "firebase": "^4.8.2",
     "firebase-admin": "^5.8.0",
     "jade": "^1.11.0",
+    "libxmljs": "^0.18.9-pre0",
     "moment": "^2.22.0",
     "morgan": "~1.9.0",
     "pg-promise": "^7.4.1",
     "raven": "^2.4.0",
     "rollbar": "^2.3.7",
-    "serve-favicon": "~2.4.5"
+    "serve-favicon": "~2.4.5",
+    "simple-xml": "^0.0.10",
+    "soap": "^0.24.0",
+    "strong-soap": "^1.9.0",
+    "xml-js": "^1.6.2"
   },
   "devDependencies": {}
 }
