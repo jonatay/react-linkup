@@ -250,6 +250,12 @@ class FleetTransactionGrid extends React.Component {
           height: window.innerHeight - 155 // This will force the table body to overflow and scroll, since there is not enough room
         }}
         className="-striped -highlight"
+        defaultSorted={[
+          {
+            id: 'transaction_date',
+            desc: true
+          }
+        ]}
       />
     );
   }

@@ -32,7 +32,9 @@ class BankAccountsPage extends React.Component {
 
 BankAccountsPage.propTypes = {
   sageAccounts: PropTypes.array.isRequired,
-  loadSageAccounts: PropTypes.func.isRequired
+  loadSageAccounts: PropTypes.func.isRequired,
+  importBestAccounts: PropTypes.func.isRequired,
+  importCubitAccounts: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -40,7 +42,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  loadSageAccounts: sageAccountActions.loadSageAccounts
+  loadSageAccounts: sageAccountActions.loadSageAccounts,
+  importBestAccounts: sageAccountActions.importBestAccounts,
+  importCubitAccounts: sageAccountActions.importCubitAccounts
 };
 
 export default withRouter(

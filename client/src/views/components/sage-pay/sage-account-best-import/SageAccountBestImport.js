@@ -59,7 +59,7 @@ function bestToJSON(best) {
       re[c] = aCols[c].isNbr ? Number.parseFloat(extr) : extr;
       return re;
     }, {})
-  );
+  ).filter(r=>r.acct_nbr!=='');
 }
 
 class SageAccountBestImport extends React.Component {
@@ -78,7 +78,7 @@ class SageAccountBestImport extends React.Component {
       reader.onload = event => {
         let data = bestToJSON(event.target.result);
         console.log(data);
-        // this.props.postFimsBatch(data);
+        this.props.importBestAccounts(data);
       };
       reader.readAsText(file);
       fileList = fileList.filter(f => f.name !== file.name);
@@ -113,7 +113,13 @@ class SageAccountBestImport extends React.Component {
     };
     return (
       <Row type="flex" justify="left" align="top">
-        <Col span={4}>
+        <Col span={6}>
+          <Button
+            type="primary"
+            onClick={() => this.props.importCubitAccounts()}
+          >
+            Import CUBIT Accounts
+          </Button><p></p>
           <Button
             className="upload-start red"
             type="primary"
@@ -121,10 +127,10 @@ class SageAccountBestImport extends React.Component {
             disabled={this.state.fileList.length === 0}
             loading={uploading}
           >
-            {uploading ? 'Uploading' : 'Start Upload'}
+            {uploading ? 'Uploading' : 'Start BEST Accounts Upload'}
           </Button>
         </Col>
-        <Col span={20}>
+        <Col span={18}>
           <Dragger
             {...props}
             style={{ padding: 2 }}

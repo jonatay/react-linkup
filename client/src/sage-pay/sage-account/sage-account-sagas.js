@@ -7,12 +7,20 @@ function* loadSageAccounts() {
   yield put(sageAccountActions.loadSageAccountsFulfilled(sageAccounts));
 }
 
-function* importSageAccounts() {
+function* importBestAccounts({ payload: { bestCreditors } }) {
+  const { sageAccounts } = yield call(
+    [sageAccountList, sageAccountList.importBest],
+    { bestCreditors }
+  );
+  yield put(sageAccountActions.importBestAccountsFulfilled(sageAccounts));
+}
+
+function* importCubitAccounts() {
   const { sageAccounts } = yield call([
     sageAccountList,
-    sageAccountList.import
+    sageAccountList.importCubit
   ]);
-  yield put(sageAccountActions.importSageAccountsFulfilled(sageAccounts));
+  yield put(sageAccountActions.importCubitAccountsFulfilled(sageAccounts));
 }
 
 //=====================================
@@ -39,13 +47,21 @@ function* watchLoadSageAccounts() {
   yield takeEvery(sageAccountActions.LOAD_SAGE_ACCOUNTS, loadSageAccounts);
 }
 
-function* watchImportSageAccounts() {
-  yield takeEvery(sageAccountActions.IMPORT_SAGE_ACCOUNTS, importSageAccounts);
+function* watchImportBestAccounts() {
+  yield takeEvery(sageAccountActions.IMPORT_BEST_ACCOUNTS, importBestAccounts);
+}
+
+function* watchImportCubitAccounts() {
+  yield takeEvery(
+    sageAccountActions.IMPORT_CUBIT_ACCOUNTS,
+    importCubitAccounts
+  );
 }
 
 export const sageAccountSagas = [
   fork(watchAuthentication),
   fork(watchIdTokenRefresh),
   fork(watchLoadSageAccounts),
-  fork(watchImportSageAccounts)
+  fork(watchImportBestAccounts),
+  fork(watchImportCubitAccounts)
 ];
