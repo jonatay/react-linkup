@@ -24,6 +24,10 @@ class SageAccountGrid extends React.Component {
       {
         Header: 'Branch Code',
         accessor: 'branch_code'
+      },
+      {
+        Header: 'Bank Name',
+        accessor: 'bank_name'
       }
     ];
     return (

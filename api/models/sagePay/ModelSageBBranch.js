@@ -4,6 +4,10 @@ const sqlList = `
 SELECT * FROM sage_pay.sage_bbranches
 `;
 
+const sqlGetByBranchCode= `
+SELECT * FROM sage_pay.sage_bbranches WHERE branch_code = $[branchCode]
+`
+
 const sqlInsert = `
 INSERT INTO sage_pay.sage_bbranches(
             branch_code, bank_name, branch_name, sage_bank_id)
@@ -21,6 +25,8 @@ RETURNING *
 `;
 
 exports.list = () => db.any(sqlList);
+
+exports.getByBranchCode = (branchCode) => db.any(sqlGetByBranchCode, {branchCode})
 
 exports.insert = sageBBranch => db.one(sqlInsert, sageBBranch);
 

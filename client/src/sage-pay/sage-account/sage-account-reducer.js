@@ -12,7 +12,8 @@ export function sageAccountReducer(
 ) {
   switch (type) {
     case sageAccountActions.LOAD_SAGE_ACCOUNTS_FULFILLED:
-    case sageAccountActions.IMPORT_SAGE_ACCOUNTS_FULFILLED:
+    case sageAccountActions.IMPORT_CUBIT_ACCOUNTS_FULFILLED:
+    case sageAccountActions.IMPORT_BEST_ACCOUNTS_FULFILLED:
       return state.set('list', new List(payload.sageAccounts));
 
     default:
