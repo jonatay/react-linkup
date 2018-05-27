@@ -1,8 +1,11 @@
 import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
 import { sageAccountActions, sageAccountList } from './';
 import { authActions } from '../../common/auth';
+import { sageBankActions, sageBBranchActions } from '../';
 
 function* loadSageAccounts() {
+  yield put(sageBankActions.loadSageBanks());
+  yield put(sageBBranchActions.loadSageBBranches());
   const { sageAccounts } = yield call([sageAccountList, sageAccountList.list]);
   yield put(sageAccountActions.loadSageAccountsFulfilled(sageAccounts));
 }
