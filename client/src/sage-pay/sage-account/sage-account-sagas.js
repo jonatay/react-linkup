@@ -26,6 +26,19 @@ function* importCubitAccounts() {
   yield put(sageAccountActions.importCubitAccountsFulfilled(sageAccounts));
 }
 
+function* validateSageAccount({ payload: { id } }) {
+  const { sageAccount, validationResult } = yield call(
+    [sageAccountList, sageAccountList.validateSageAccount],
+    id
+  );
+  yield put(
+    sageAccountActions.validateSageAccountFulfilled(
+      sageAccount,
+      validationResult
+    )
+  );
+}
+
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -61,10 +74,18 @@ function* watchImportCubitAccounts() {
   );
 }
 
+function* watchValidateSageAccount() {
+  yield takeEvery(
+    sageAccountActions.VALIDATE_SAGE_ACCOUNT,
+    validateSageAccount
+  );
+}
+
 export const sageAccountSagas = [
   fork(watchAuthentication),
   fork(watchIdTokenRefresh),
   fork(watchLoadSageAccounts),
   fork(watchImportBestAccounts),
-  fork(watchImportCubitAccounts)
+  fork(watchImportCubitAccounts),
+  fork(watchValidateSageAccount)
 ];

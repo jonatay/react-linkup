@@ -90,8 +90,9 @@ exports.validateBankAccount = (branchCode, accountNumber, accountType) => {
           AccountNumber: accountNumber,
           AccountType: accountType
         })
-        .then(({ result: { ValidateBankAccountResult: r } }) =>
-          resolve({
+        .then(({ result: { ValidateBankAccountResult } }) => {
+          const r = parseInt(ValidateBankAccountResult, 10);
+          return resolve({
             valid: r === 0,
             invalidBranchCode: r === 1,
             accNbrFailCDV: r === 2,
@@ -99,8 +100,8 @@ exports.validateBankAccount = (branchCode, accountNumber, accountType) => {
             inputDataIncorrect: r === 4,
             authFailed: r === 100,
             webFailed: r === 200
-          })
-        );
+          });
+        });
     });
   });
 };

@@ -1,3 +1,5 @@
+const accountServices = require('../../services/sagePay/accountServices');
+
 const ModelSageAccount = require('../../models/sagePay/ModelSageAccount');
 const ModelCubitEmployee = require('../../models/cubit/cubit/ModelCubitEmployee');
 const ModelEmployee = require('../../models/hr/ModelEmployee');
@@ -8,7 +10,6 @@ exports.list = (req, res) => {
     res.json({ status: 'list', sageAccounts: data })
   );
 };
-
 
 getChanges = (sageAccount, newSageAcc) =>
   Object.keys(sageAccount).reduce((accum, key) => {
@@ -169,7 +170,7 @@ exports.importBest = (req, res) => {
         )
       )
     )
-  ).then(data => res.json({ status: 'import-cubir', sageAccounts: data }));
+  ).then(data => res.json({ status: 'import-cubit', sageAccounts: data }));
 };
 
 exports.create = (req, res) => {
@@ -184,6 +185,32 @@ exports.delete = (req, res) => {
   res.json({ status: 'not_implemented', id: null });
 };
 
-exports.validateSage = (req, res) => {
-  res.json({ status: 'not_implemented', sageAccount: {}, validation: {} });
+exports.validateSageAccount = (req, res) => {
+  const id = req.params.id;
+  ModelSageAccount.get(id).then(sageAccount =>
+    accountServices
+      .validateBankAccount(
+        sageAccount.branch_code,
+        sageAccount.account_number,
+        sageAccount.account_type ? sageAccount.account_type : 1
+      )
+      .then(validationResult => {
+        if (validationResult.valid) {
+          sageAccount.validated = new Date();
+          ModelSageAccount.update(id, sageAccount).then(
+            res.json({
+              status: 'validate-sucess',
+              sageAccount,
+              validationResult
+            })
+          );
+        } else {
+          res.json({
+            status: 'validate-fail',
+            sageAccount,
+            validationResult
+          });
+        }
+      })
+  );
 };

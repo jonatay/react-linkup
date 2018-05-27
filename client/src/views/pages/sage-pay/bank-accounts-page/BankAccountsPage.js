@@ -23,8 +23,8 @@ class BankAccountsPage extends React.Component {
     return (
       <div>
         <PageHeader>sage-pay/bank-accounts </PageHeader>
-        <SageAccountBestImport {...this.props} />
         <SageAccountGrid {...this.props} />
+        <SageAccountBestImport {...this.props} />
       </div>
     );
   }
@@ -44,7 +44,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   loadSageAccounts: sageAccountActions.loadSageAccounts,
   importBestAccounts: sageAccountActions.importBestAccounts,
-  importCubitAccounts: sageAccountActions.importCubitAccounts
+  importCubitAccounts: sageAccountActions.importCubitAccounts,
+  validateSageAccount: sageAccountActions.validateSageAccount
 };
 
 export default withRouter(

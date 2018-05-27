@@ -4,6 +4,10 @@ const sqlList = `
 SELECT * FROM sage_pay.sage_accounts
 `;
 
+const sqlGet = `
+SELECT * FROM sage_pay.sage_accounts WHERE id = $[id]
+`;
+
 const sqlGetByAccRef = `
 SELECT * FROM sage_pay.sage_accounts WHERE acc_ref = $[accRef]
 `;
@@ -25,12 +29,10 @@ UPDATE sage_pay.sage_accounts
        account_type=$[account_type], cubit_account_type=$[cubit_account_type], employee_id=$[employee_id], 
        acc_ref=$[acc_ref], acc_holders_name=$[acc_holders_name], beneficiary_ref=$[beneficiary_ref], 
        mobile_number=$[mobile_number], email_addr=$[email_addr], sage_bank_id=$[sage_bank_id], 
-       sage_bbranch_id=$[sage_bbranch_id], changes=$[changes]
+       sage_bbranch_id=$[sage_bbranch_id], changes=$[changes], validated=$[validated]
  WHERE id=$[id]
  RETURNING *
 `;
-
-
 
 const sqlInsertFromBestImport = `
 INSERT INTO sage_pay.sage_accounts(
@@ -50,13 +52,13 @@ UPDATE
 RETURNING *
 `;
 
-
-
 const sqlDelete = `
 DELETE FROM sage_pay.sage_accounts WHERE id = $[id]
 `;
 
 exports.list = () => db.any(sqlList);
+
+exports.get = id => db.one(sqlGet, { id });
 
 exports.getByAccRef = accRef =>
   db
@@ -71,5 +73,3 @@ exports.delete = id => db.none(sqlDelete, { id });
 
 exports.insertBatch = data =>
   db.task(t => t.batch(data.map(d => t.one(sqlInsert, d))));
-
-

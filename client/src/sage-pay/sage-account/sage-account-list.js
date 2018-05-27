@@ -11,6 +11,9 @@ class SageAccountList extends ApiList {
   importCubit() {
     return this.customApiCall(null, 'import-cubit', {}, 'post');
   }
+  validateSageAccount(id) {
+    return this.customApiCall(id, 'validate-sage-account', {}, 'put');
+  }
 }
 
 export const sageAccountList = new SageAccountList(

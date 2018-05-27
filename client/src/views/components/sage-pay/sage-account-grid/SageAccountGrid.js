@@ -5,6 +5,7 @@
 import React from 'react';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
+import { Popover, Button } from 'antd';
 
 class SageAccountGrid extends React.Component {
   render() {
@@ -14,6 +15,37 @@ class SageAccountGrid extends React.Component {
         accessor: 'acc_ref',
         width: 100,
         Footer: <span>{this.props.sageAccounts.length}</span>
+      },
+      {
+        Header: 'Val',
+        Cell: props => (
+          <span>
+            <Popover
+              content={
+                <div>
+                  <pre>
+                    {JSON.stringify(props.original.validationResult, null, 2)}
+                  </pre>
+                </div>
+              }
+            >
+              <Button
+                type="primary"
+                ghost={true}
+                size="small"
+                shape="circle"
+                icon="check-square-o"
+                onClick={() =>
+                  this.props.validateSageAccount(props.original.id)
+                }
+              />
+            </Popover>
+          </span>
+        )
+      },
+      {
+        Header: 'Validated',
+        accessor: 'validated'
       },
       {
         Header: 'Name',
@@ -54,11 +86,10 @@ class SageAccountGrid extends React.Component {
         accessor: 'sageBBranch.branch_name'
       },
       {
-        Header: 'Changes',
         columns: [
           {
             expander: true,
-            Header: () => <strong>More</strong>,
+            Header: () => 'Changes',
             width: 65,
             Expander: ({ isExpanded, ...rest }) => (
               <div>
@@ -98,6 +129,7 @@ class SageAccountGrid extends React.Component {
               <pre>{row.original.changes}</pre>
             </div>
           )}
+          className="-striped -highlight"
         />
       </div>
     );

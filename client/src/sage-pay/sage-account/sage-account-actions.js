@@ -11,6 +11,10 @@ export const sageAccountActions = {
   IMPORT_CUBIT_ACCOUNTS_FULFILLED: 'SAGE_PAY_IMPORT_CUBIT_ACCOUNTS_FULFILLED',
   IMPORT_CUBIT_ACCOUNTS_FAILED: 'SAGE_PAY_IMPORT_CUBIT_ACCOUNTS_FAILED',
 
+  VALIDATE_SAGE_ACCOUNT: 'SAGE_PAY_VALIDATE_SAGE_ACCOUNT',
+  VALIDATE_SAGE_ACCOUNT_FULFILLED: 'SAGE_PAY_VALIDATE_SAGE_ACCOUNT_FULFILLED',
+  VALIDATE_SAGE_ACCOUNT_FAILED: 'SAGE_PAY_VALIDATE_SAGE_ACCOUNT',
+
   loadSageAccounts: () => ({
     type: sageAccountActions.LOAD_SAGE_ACCOUNTS
   }),
@@ -45,5 +49,18 @@ export const sageAccountActions = {
   importCubitAccountsFailed: error => ({
     type: sageAccountActions.IMPORT_CUBIT_ACCOUNTS_FAILED,
     payload: { error }
+  }),
+
+  validateSageAccount: id => ({
+    type: sageAccountActions.VALIDATE_SAGE_ACCOUNT,
+    payload: { id }
+  }),
+  validateSageAccountFalied: error => ({
+    type: sageAccountActions.VALIDATE_SAGE_ACCOUNT_FAILED,
+    payload: { error }
+  }),
+  validateSageAccountFulfilled: (sageAccount, validationResult) => ({
+    type: sageAccountActions.VALIDATE_SAGE_ACCOUNT_FULFILLED,
+    payload: { sageAccount, validationResult }
   })
 };
