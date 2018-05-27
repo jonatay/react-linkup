@@ -1,7 +1,13 @@
-import { sageBankSagas, sageBBranchSagas, sageAccountSagas } from './';
+import {
+  sageBankSagas,
+  sageBBranchSagas,
+  sageAccountSagas,
+  sageBatchSagas
+} from './';
 
 export const sagePaySagas = [
   ...sageBankSagas,
   ...sageBBranchSagas,
-  ...sageAccountSagas
+  ...sageAccountSagas,
+  ...sageBatchSagas
 ];

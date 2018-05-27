@@ -2,7 +2,7 @@ import { List, Record } from 'immutable';
 import { sageAccountActions } from './sage-account-actions';
 
 export const SageAccountState = new Record({
-  filter: '',
+  filter: { employeeOnly: true },
   list: new List()
 });
 
@@ -15,6 +15,21 @@ export function sageAccountReducer(
     case sageAccountActions.IMPORT_CUBIT_ACCOUNTS_FULFILLED:
     case sageAccountActions.IMPORT_BEST_ACCOUNTS_FULFILLED:
       return state.set('list', new List(payload.sageAccounts));
+
+    case sageAccountActions.VALIDATE_SAGE_ACCOUNT_FULFILLED: {
+      return state.set(
+        'list',
+        state.list.map(
+          sageAccount =>
+            sageAccount.id === payload.sageAccount.id
+              ? {
+                  ...payload.sageAccount,
+                  validationResult: payload.validationResult
+                }
+              : sageAccount
+        )
+      );
+    }
 
     default:
       return state;

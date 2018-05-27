@@ -1,8 +1,11 @@
 import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
 import { sageAccountActions, sageAccountList } from './';
 import { authActions } from '../../common/auth';
+import { sageBankActions, sageBBranchActions } from '../';
 
 function* loadSageAccounts() {
+  yield put(sageBankActions.loadSageBanks());
+  yield put(sageBBranchActions.loadSageBBranches());
   const { sageAccounts } = yield call([sageAccountList, sageAccountList.list]);
   yield put(sageAccountActions.loadSageAccountsFulfilled(sageAccounts));
 }
@@ -21,6 +24,19 @@ function* importCubitAccounts() {
     sageAccountList.importCubit
   ]);
   yield put(sageAccountActions.importCubitAccountsFulfilled(sageAccounts));
+}
+
+function* validateSageAccount({ payload: { id } }) {
+  const { sageAccount, validationResult } = yield call(
+    [sageAccountList, sageAccountList.validateSageAccount],
+    id
+  );
+  yield put(
+    sageAccountActions.validateSageAccountFulfilled(
+      sageAccount,
+      validationResult
+    )
+  );
 }
 
 //=====================================
@@ -58,10 +74,18 @@ function* watchImportCubitAccounts() {
   );
 }
 
+function* watchValidateSageAccount() {
+  yield takeEvery(
+    sageAccountActions.VALIDATE_SAGE_ACCOUNT,
+    validateSageAccount
+  );
+}
+
 export const sageAccountSagas = [
   fork(watchAuthentication),
   fork(watchIdTokenRefresh),
   fork(watchLoadSageAccounts),
   fork(watchImportBestAccounts),
-  fork(watchImportCubitAccounts)
+  fork(watchImportCubitAccounts),
+  fork(watchValidateSageAccount)
 ];

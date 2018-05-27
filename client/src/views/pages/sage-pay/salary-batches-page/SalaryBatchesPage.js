@@ -4,24 +4,52 @@
 */
 import React from 'react';
 // import { List } from 'immutable';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import PageHeader from '../../../components/common/page-header/';
 
-const SalaryBatchesPage = props => {
-  return (
-    <div>
-      <PageHeader>sage-pay/salary-batches </PageHeader>
-    </div>
-  );
+import {
+  sageBatchActions,
+  getSageBatches,
+  getSageBatchInstructions
+} from '../../../../sage-pay/sage-batch';
+
+import PageHeader from '../../../components/common/page-header/';
+import SageBatchGrid from '../../../components/sage-pay/sage-batch-grid';
+import NewSageBatch from '../../../components/sage-pay/new_sage_batch';
+
+class SalaryBatchesPage extends React.Component {
+  componentDidMount() {
+    this.props.loadSageBatches();
+  }
+
+  render() {
+    return (
+      <div>
+        <PageHeader>sage-pay/salary-batches </PageHeader>
+        <NewSageBatch {...this.props} />
+        <SageBatchGrid {...this.props} />
+      </div>
+    );
+  }
+}
+
+SalaryBatchesPage.propTypes = {
+  sageBatches: PropTypes.array.isRequired,
+  sageBatchInstructions: PropTypes.array.isRequired,
+  loadSageBatches: PropTypes.func.isRequired,
+  createSageBatch: PropTypes.func.isRequired
 };
 
-SalaryBatchesPage.propTypes = {};
+const mapStateToProps = state => ({
+  sageBatches: getSageBatches(state),
+  sageBatchInstructions : getSageBatchInstructions()
+});
 
-const mapStateToProps = state => ({});
-
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  loadSageBatches: sageBatchActions.loadSageBatches,
+  createSageBatch: sageBatchActions.createSageBatch
+};
 
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(SalaryBatchesPage)
