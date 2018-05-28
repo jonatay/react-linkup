@@ -43,23 +43,23 @@ const keysPay = [
 ];
 
 exports.create = (req, res) => {
-  const {
-    instruction,
-    actionDate: action_date,
-    taxYear: tax_year,
-    taxMonth: tax_month
-  } = req.body;
-  ModelEmpSalary.list(tax_year, tax_month).then(employees =>
-    Promise.all(employees.map(emp => emp)).then(
-      batchTransactions => ModelSageBatch.insert({
-        batch_name: `${instruction} for ${tax_year}/${tax_month}`,
-        instruction,
-        action_date,
-        tax_year,
-        tax_month
-      }).then(sageBatch => res.json({ status: 'create', sageBatch }));
-    )
-  );
+  // const {
+  //   instruction,
+  //   actionDate: action_date,
+  //   taxYear: tax_year,
+  //   taxMonth: tax_month
+  // } = req.body;
+  // ModelEmpSalary.list(tax_year, tax_month).then(employees =>
+  //   Promise.all(employees.map(emp => emp)).then(
+  //     batchTransactions => ModelSageBatch.insert({
+  //       batch_name: `${instruction} for ${tax_year}/${tax_month}`,
+  //       instruction,
+  //       action_date,
+  //       tax_year,
+  //       tax_month
+  //     }).then(sageBatch => res.json({ status: 'create', sageBatch }));
+  //   )
+  // );
 
 };
 
