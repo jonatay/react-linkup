@@ -1,6 +1,8 @@
 const ModelSageBatch = require('../../models/sagePay/ModelSageBatch');
 const ModelEmpSalary = require('../../models/hr/ModelEmpSalary');
 const ModelCubitEmployee = require('../../models/cubit/cubit/ModelCubitEmployee');
+const ModelSageAccount = require('../../models/sagePay/ModelSageAccount');
+const moment = require('moment');
 
 exports.list = (req, res) => {
   ModelSageBatch.list().then(sageBatches =>
@@ -17,31 +19,9 @@ exports.list = (req, res) => {
 //   )
 // );
 
-const keysUpdate = [
-  '101',
-  '102',
-  '131',
-  '132',
-  '133',
-  '134',
-  '135',
-  '136',
-  '161',
-  '251'
-];
+const keysUpdate = [101, 102, 131, 132, 133, 134, 135, 136, 161, 202, 251];
 
-const keysPay = [
-  '101',
-  '102',
-  '131',
-  '132',
-  '133',
-  '134',
-  '135',
-  '136',
-  '162',
-  '252'
-];
+const keysPay = [101, 102, 131, 132, 133, 134, 135, 136, 162, 202, 252];
 
 exports.create = (
   {
@@ -56,25 +36,88 @@ exports.create = (
   },
   res
 ) => {
+  //prep list of employees to pay, depending on instruction
   new Promise(
-    (resolve, reject) =>
+    (resolveEmpPayments, reject) =>
       instruction === 'Update'
-        ? ModelCubitEmployee.list().then(data => resolve(data))
-        : ModelEmpSalary.list(tax_year, tax_month).then(data => resolve(data))
-  ).then(data => console.log(data));
-  // ModelEmpSalary.list(tax_year, tax_month).then(employees =>
-  //   Promise.all(employees.map(emp => emp)).then(batchTransactions =>
-  //     console.log({
-  //       batch_name: `${instruction} for ${tax_year}/${tax_month}`,
-  //       instruction,
-  //       action_date,
-  //       tax_year,
-  //       tax_month
-  //     })
-  //   )
-  // );
+        ? //if Update - take 'cubit' employee list
+          ModelCubitEmployee.list().then(cEmps =>
+            resolveEmpPayments(
+              cEmps.map(cE => ({
+                employee_code: cE.enum,
+                amount: cE.basic_sal
+              }))
+            )
+          )
+        : //else use salary for specified tax period
+          ModelEmpSalary.list(tax_year, tax_month).then(sEmps =>
+            resolveEmpPayments(
+              sEmps.map(sE => ({
+                employee_code: sE.employee_code,
+                amount: sE.pay_bank
+              }))
+            )
+          )
+  ).then(empPayments =>
+    Promise.all(
+      empPayments
+        .sort(
+          (a, b) =>
+            a.employee_code > b.employee_code
+              ? 1
+              : a.employee_code < b.employee_code
+                ? -1
+                : 0
+        )
+        .map((empPay, index) =>
+          ModelSageAccount.getByAccRef(empPay.employee_code).then(sageAcc => ({
+            index,
+            account_reference: sageAcc.acc_ref,
+            account_name: sageAcc.name,
+            banking_detail_type: 1,
+            bank_account_name: sageAcc.acc_holders_name,
+            bank_account_type: sageAcc.account_type,
+            bank_account_branch: sageAcc.branch_code,
+            filler: 0,
+            bank_account_number: sageAcc.account_number,
+            payment_amount: parseInt(empPay.amount * 100),
+            mobile_number: sageAcc.mobile_number,
+            beneficiary_statement_ref: sageAcc.beneficiary_ref
+          }))
+        )
+    ).then(empTransactions =>
+      // insert batch in DB
+      ModelSageBatch.insert({
+        batch_name:
+          instruction === 'Update'
+            ? `${instruction}`
+            : `${instruction} for period ${tax_year}-${tax_month}`,
+        instruction,
+        action_date,
+        keys: instruction === 'Update' ? keysUpdate : keysPay,
+        tran_count: empTransactions.reduce(accum => accum + 1, 0),
+        tran_sum: empTransactions.reduce(
+          (accum, eT) => (accum += eT.payment_amount),
+          0
+        ),
+        status_log: [`created ${moment().format('YYYY-MM-DD HH:mm')}`],
+        tax_year,
+        tax_month,
+        batch_transactions: empTransactions.reduce(
+          (accum, eT) => [...accum, JSON.stringify(eT)],
+          []
+        ),
+        file_token: null,
+        status: 'Created',
+        submitted:null
+      }).then(sageBatch => res.json({ status: 'created', sageBatch }))
+    )
+  );
 };
 
-exports.postToSage = (req, res) => {};
+exports.delete = ({ params: { id } }, res) =>
+  ModelSageBatch.delete(id).then(() => res.json({ status: 'deleted', id }));
+
+exports.submitToSage = (req, res) => {};
 
 exports.updateSageStatus = (req, res) => {};

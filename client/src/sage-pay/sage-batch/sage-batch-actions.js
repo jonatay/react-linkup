@@ -7,9 +7,13 @@ export const sageBatchActions = {
   CREATE_SAGE_BATCH_FULFILLED: 'SAGE_PAY_CREATE_SAGE_BATCH_FULFILLED',
   CREATE_SAGE_BATCH_FAILED: 'SAGE_PAY_CREATE_SAGE_BATCH_FAILED',
 
-  POST_SAGE_BATCH: 'SAGE_PAY_POST_SALARY_BATCH',
-  POST_SAGE_BATCH_FULFILLED: 'SAGE_PAY_POST_SALARY_BATCH_FULFILLED',
-  POST_SAGE_BATCH_FAILED: 'SAGE_PAY_POST_SALARY_BATCH_FAILED',
+  DELETE_SAGE_BATCH: 'SAGE_PAY_DELETE_SAGE_BATCH',
+  DELETE_SAGE_BATCH_FULFILLED: 'SAGE_PAY_DELETE_SAGE_BATCH_FULFILLED',
+  DELETE_SAGE_BATCH_FAILED: 'SAGE_PAY_DELETE_SAGE_BATCH_FAILED',
+
+  SUBMIT_SAGE_BATCH: 'SAGE_PAY_POST_SALARY_BATCH',
+  SUBMIT_SAGE_BATCH_FULFILLED: 'SAGE_PAY_POST_SALARY_BATCH_FULFILLED',
+  SUBMIT_SAGE_BATCH_FAILED: 'SAGE_PAY_POST_SALARY_BATCH_FAILED',
 
   QUERY_SAGE_BATCH: 'SAGE_PAY_QUERY_SAGE_BATCH',
   QUERY_SAGE_BATCH_FULFILLED: 'SAGE_PAY_QUERY_SAGE_BATCH_FULFILLED',
@@ -31,23 +35,35 @@ export const sageBatchActions = {
     type: sageBatchActions.CREATE_SAGE_BATCH,
     payload: { params }
   }),
-  createSageBatchFulfilled: sageBatches => ({
+  createSageBatchFulfilled: sageBatch => ({
     type: sageBatchActions.CREATE_SAGE_BATCH_FULFILLED,
-    payload: { sageBatches }
+    payload: { sageBatch }
   }),
   createSageBatchFailed: error => ({
     type: sageBatchActions.CREATE_SAGE_BATCH_FAILED,
     payload: { error }
   }),
-  postSageBatch: () => ({
-    type: sageBatchActions.POST_SAGE_BATCH
+  deleteSageBatch: id => ({
+    type: sageBatchActions.DELETE_SAGE_BATCH,
+    payload: { id }
   }),
-  postSageBatchFulfilled: sageBatches => ({
-    type: sageBatchActions.POST_SAGE_BATCH_FULFILLED,
+  deleteSageBatchFulfilled: id => ({
+    type: sageBatchActions.DELETE_SAGE_BATCH_FULFILLED,
+    payload: { id }
+  }),
+  deleteSageBatchFailed: error => ({
+    type: sageBatchActions.DELETE_SAGE_BATCH_FAILED,
+    payload: { error }
+  }),
+  submitSageBatch: () => ({
+    type: sageBatchActions.SUBMIT_SAGE_BATCH
+  }),
+  sumbitSageBatchFulfilled: sageBatches => ({
+    type: sageBatchActions.SUBMIT_SAGE_BATCH_FULFILLED,
     payload: { sageBatches }
   }),
-  postSageBatchFailed: error => ({
-    type: sageBatchActions.POST_SAGE_BATCH_FAILED,
+  submitSageBatchFailed: error => ({
+    type: sageBatchActions.SUBMIT_SAGE_BATCH_FAILED,
     payload: { error }
   }),
 

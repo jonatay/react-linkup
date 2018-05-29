@@ -23,8 +23,9 @@ router.put('/sage-account/:id', sageAccountController.update);
 router.delete('/sage-account/:id', sageAccountController.delete);
 
 router.get('/sage-batches', sageSageBatchController.list);
-router.post('/sage-batch/:id/post', sageSageBatchController.postToSage);
+router.post('/sage-batches/:id/submit', sageSageBatchController.submitToSage);
 router.post('/sage-batches/create', sageSageBatchController.create);
 router.get('/sage-batches/:id', sageSageBatchController.updateSageStatus);
+router.delete('/sage-batches/:id', sageSageBatchController.delete);
 
 module.exports = router;
