@@ -8,8 +8,8 @@ class SageBatchList extends ApiList {
   createSageBatch(data) {
     return this.customApiCall(null, 'create', data, 'post');
   }
-  postBatch(id) {
-    return this.customApiCall(id, 'post', {}, 'post');
+  submitBatch(id) {
+    return this.customApiCall(id, 'submit', {}, 'post');
   }
   querySageBatch(id) {
     return this.customApiCall(id, '', {}, 'get');

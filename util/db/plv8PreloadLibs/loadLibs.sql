@@ -1,6 +1,6 @@
-\set underscore `cat underscore.js`
-\set jpath `cat jpath.js`
-\set smooth `cat smooth.js`
+\set underscore `C:\util\unixUtil\cat underscore.js`
+\set jpath `C:\util\unixUtil\cat jpath.js`
+\set smooth `C:\util\unixUtil\cat smooth.js`
 
 DROP SCHEMA plv8 CASCADE;
 

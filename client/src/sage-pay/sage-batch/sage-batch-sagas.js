@@ -15,24 +15,26 @@ function* querySageBatch({ payload: { id } }) {
   yield put(sageBatchActions.querySageBatchFulfilled(sageBatch));
 }
 
-function* postSageBatch({ payload: { id } }) {
+function* submitSageBatch({ payload: { id } }) {
   const { sageBatch } = yield call(
-    [sageBatchList, sageBatchList.postBatch],
+    [sageBatchList, sageBatchList.submitBatch],
     id
   );
-  yield put(sageBatchActions.postSageBatchFulfilled(sageBatch));
+  yield put(sageBatchActions.sumbitSageBatchFulfilled(sageBatch));
 }
 
 function* createSageBatch({ payload: { params } }) {
-  const { sageBatch, validationResult } = yield call(
+  const { sageBatch } = yield call(
     [sageBatchList, sageBatchList.createSageBatch],
     { params }
   );
-  yield put(
-    sageBatchActions.createSageBatchFulfilled(sageBatch, validationResult)
-  );
+  yield put(sageBatchActions.createSageBatchFulfilled(sageBatch));
 }
 
+function* deleteSageBatch({ payload: { id: delId } }) {
+  const { id } = yield call([sageBatchList, sageBatchList.remove], delId);
+  yield put(sageBatchActions.deleteSageBatchFulfilled(parseInt(id, 10)));
+}
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -61,12 +63,16 @@ function* watchQuerySageBatch() {
   yield takeEvery(sageBatchActions.QUERY_SAGE_BATCH, querySageBatch);
 }
 
-function* watchPostSageBatch() {
-  yield takeEvery(sageBatchActions.POST_SAGE_BATCH, postSageBatch);
+function* watchSubmitSageBatch() {
+  yield takeEvery(sageBatchActions.SUBMIT_SAGE_BATCH, submitSageBatch);
 }
 
 function* watchCreateSageBatch() {
   yield takeEvery(sageBatchActions.CREATE_SAGE_BATCH, createSageBatch);
+}
+
+function* watchDeleteSageBatch() {
+  yield takeEvery(sageBatchActions.DELETE_SAGE_BATCH, deleteSageBatch);
 }
 
 export const sageBatchSagas = [
@@ -74,6 +80,7 @@ export const sageBatchSagas = [
   fork(watchIdTokenRefresh),
   fork(watchLoadSageBatches),
   fork(watchQuerySageBatch),
-  fork(watchPostSageBatch),
-  fork(watchCreateSageBatch)
+  fork(watchSubmitSageBatch),
+  fork(watchCreateSageBatch),
+  fork(watchDeleteSageBatch)
 ];
