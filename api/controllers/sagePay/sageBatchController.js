@@ -1,5 +1,6 @@
 const ModelSageBatch = require('../../models/sagePay/ModelSageBatch');
 const ModelEmpSalary = require('../../models/hr/ModelEmpSalary');
+const ModelCubitEmployee = require('../../models/cubit/cubit/ModelCubitEmployee');
 
 exports.list = (req, res) => {
   ModelSageBatch.list().then(sageBatches =>
@@ -42,25 +43,36 @@ const keysPay = [
   '252'
 ];
 
-exports.create = (req, res) => {
-  // const {
-  //   instruction,
-  //   actionDate: action_date,
-  //   taxYear: tax_year,
-  //   taxMonth: tax_month
-  // } = req.body;
+exports.create = (
+  {
+    body: {
+      params: {
+        instruction,
+        actionDate: action_date,
+        taxYear: tax_year,
+        taxMonth: tax_month
+      }
+    }
+  },
+  res
+) => {
+  new Promise(
+    (resolve, reject) =>
+      instruction === 'Update'
+        ? ModelCubitEmployee.list().then(data => resolve(data))
+        : ModelEmpSalary.list(tax_year, tax_month).then(data => resolve(data))
+  ).then(data => console.log(data));
   // ModelEmpSalary.list(tax_year, tax_month).then(employees =>
-  //   Promise.all(employees.map(emp => emp)).then(
-  //     batchTransactions => ModelSageBatch.insert({
+  //   Promise.all(employees.map(emp => emp)).then(batchTransactions =>
+  //     console.log({
   //       batch_name: `${instruction} for ${tax_year}/${tax_month}`,
   //       instruction,
   //       action_date,
   //       tax_year,
   //       tax_month
-  //     }).then(sageBatch => res.json({ status: 'create', sageBatch }));
+  //     })
   //   )
   // );
-
 };
 
 exports.postToSage = (req, res) => {};
