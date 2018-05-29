@@ -37,7 +37,8 @@ const convCubitEmpl = (cubitEmpl, employee, sageBBranch, sageAccount) => {
     sage_bbranch_id: sageBBranch ? sageBBranch.id : null,
     jdata: null,
     pay_limit: null,
-    id: sageAccount ? sageAccount.id : null
+    id: sageAccount ? sageAccount.id : null,
+    validated: null
   };
   if (sageAccount && !sageAccount.changes) {
     sageAccount.changes = [];
@@ -78,7 +79,7 @@ exports.importCubit = (req, res) => {
                 if (!sageAccount) {
                   return ModelSageAccount.insert(newSAcc);
                 } else {
-                  return ModelSageAccount.update(sageAccount.id, newSAcc);
+                  return sageAccount; //ModelSageAccount.update(sageAccount.id, newSAcc);
                 }
               })
           )
@@ -126,7 +127,8 @@ const convBestCreditor = (bestCreditor, employee, sageBBranch, sageAccount) => {
     sage_bbranch_id: sageBBranch ? sageBBranch.id : null,
     jdata: null,
     pay_limit: bestCreditor.pay_limit,
-    id: sageAccount ? sageAccount.id : null
+    id: sageAccount ? sageAccount.id : null,
+    validated: null
   };
   if (sageAccount && !sageAccount.changes) {
     sageAccount.changes = [];
