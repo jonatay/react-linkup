@@ -9,10 +9,10 @@ class SageBatchList extends ApiList {
     return this.customApiCall(null, 'create', data, 'post');
   }
   submitBatch(id) {
-    return this.customApiCall(id, 'submit', {}, 'post');
+    return this.customApiCall(id, 'submit', {}, 'put');
   }
   querySageBatch(id) {
-    return this.customApiCall(id, '', {}, 'get');
+    return this.customApiCall(id, 'query', {}, 'put');
   }
 }
 
