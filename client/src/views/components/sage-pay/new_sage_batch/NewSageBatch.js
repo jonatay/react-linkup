@@ -13,7 +13,7 @@ const { Option } = Select;
 class NewSageBatch extends React.Component {
   state = {
     instruction: 'Update',
-    actionDate: moment().day(1),
+    actionDate: moment(),
     taxYear: 2019,
     taxMonth: 3
   };

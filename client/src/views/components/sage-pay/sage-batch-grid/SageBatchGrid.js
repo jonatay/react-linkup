@@ -22,17 +22,30 @@ class SageBatchGrid extends React.Component {
   render() {
     const columns = [
       {
-        Header: 'Date',
+        Header: 'Act Date',
+        width: 80,
         accessor: 'action_date',
-        Cell: props => moment(props.original.action_date).format('YY-MM-DD')
+        Cell: props => moment(props.value).format('YY-MM-DD')
+      },
+      {
+        Header: 'Submitted',
+        width: 120,
+        accessor: 'submitted',
+        Cell: props =>
+          props.value
+            ? moment(props.value).format('YY-MM-DD HH:mm')
+            : 'not submitted'
       },
       {
         Header: 'Tax Period',
-        Cell: props => (
-          <span>
-            {props.original.tax_year} / {props.original.tax_month}
-          </span>
-        )
+        Cell: props =>
+          props.original.tax_year && props.original.tax_month ? (
+            <span>
+              {props.original.tax_year} / {props.original.tax_month}
+            </span>
+          ) : (
+            <br />
+          )
       },
       { Header: 'Name', accessor: 'batch_name' },
       { Header: 'Status', accessor: 'status' },
@@ -49,15 +62,34 @@ class SageBatchGrid extends React.Component {
         )
       },
       {
-        Cell: props => (
+        Cell: ({ original: { id, submitted } }) => (
           <span>
+            <Button
+              type="primary"
+              size="small"
+              icon="upload"
+              disabled={submitted}
+              onClick={() => this.props.submitSageBatch(id)}
+            >
+              Submit
+            </Button>{' '}
+            <Button
+              type="primary"
+              ghost={true}
+              size="small"
+              shape="circle"
+              icon="sync"
+              disabled={!submitted}
+              onClick={() => this.props.querySageBatch(id)}
+            />{' '}
             <Button
               type="danger"
               ghost={true}
               size="small"
               shape="circle"
               icon="delete"
-              onClick={() => this.props.deleteSageBatch(props.original.id)}
+              disabled={submitted}
+              onClick={() => this.props.deleteSageBatch(id)}
             />
           </span>
         )
@@ -89,7 +121,8 @@ class SageBatchGrid extends React.Component {
       {
         Header: 'Index',
         accessor: 'index'
-      },      {
+      },
+      {
         Header: 'Acc Ref',
         accessor: 'account_reference'
       },

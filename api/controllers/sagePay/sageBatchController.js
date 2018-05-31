@@ -1,8 +1,10 @@
+const salaryBatchServices = require('../../services/sagePay/salaryBatchServices');
 const ModelSageBatch = require('../../models/sagePay/ModelSageBatch');
 const ModelEmpSalary = require('../../models/hr/ModelEmpSalary');
 const ModelCubitEmployee = require('../../models/cubit/cubit/ModelCubitEmployee');
 const ModelSageAccount = require('../../models/sagePay/ModelSageAccount');
 const moment = require('moment');
+const fs = require('fs');
 
 exports.list = (req, res) => {
   ModelSageBatch.list().then(sageBatches =>
@@ -101,15 +103,15 @@ exports.create = (
           0
         ),
         status_log: [`created ${moment().format('YYYY-MM-DD HH:mm')}`],
-        tax_year,
-        tax_month,
+        tax_year: instruction === 'Update' ? null : tax_year,
+        tax_month: instruction === 'Update' ? null : tax_month,
         batch_transactions: empTransactions.reduce(
           (accum, eT) => [...accum, JSON.stringify(eT)],
           []
         ),
         file_token: null,
         status: 'Created',
-        submitted:null
+        submitted: null
       }).then(sageBatch => res.json({ status: 'created', sageBatch }))
     )
   );
@@ -118,6 +120,36 @@ exports.create = (
 exports.delete = ({ params: { id } }, res) =>
   ModelSageBatch.delete(id).then(() => res.json({ status: 'deleted', id }));
 
-exports.submitToSage = (req, res) => {};
+// ModelSageBatch.get(19).then(sageBatch => {
+//   const file = salaryBatchServices.textifySageBatch(sageBatch);
+//   fs.writeFileSync(__dirname + '../../../../files/sageSalFile.txt', file);
+// });
 
-exports.updateSageStatus = (req, res) => {};
+exports.submitToSage = ({ params: { id } }, res) => {
+  ModelSageBatch.get(id).then(sageBatch =>
+    salaryBatchServices.sageBatchSubmit(sageBatch).then(sbSubmitRes =>
+      ModelSageBatch.update(sageBatch.id, {
+        ...sageBatch,
+        submitted: new Date(),
+        file_token: sbSubmitRes,
+        status_log: [...sageBatch.status_log, { submitted: new Date() }],
+        status: 'Submitted'
+      }).then(sageBatch =>
+        res.json({
+          status: 'submitted',
+          sageBatch: sageBatch
+        })
+      )
+    )
+  );
+
+  // {
+  //
+
+  // });
+};
+
+exports.querySageStatus = ({ params: { id } }, res) =>
+  ModelSageBatch.get(id).then(sageBatch =>
+    res.json({ status: 'Queried', sageBatch })
+  );

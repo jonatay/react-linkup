@@ -11,9 +11,9 @@ export const sageBatchActions = {
   DELETE_SAGE_BATCH_FULFILLED: 'SAGE_PAY_DELETE_SAGE_BATCH_FULFILLED',
   DELETE_SAGE_BATCH_FAILED: 'SAGE_PAY_DELETE_SAGE_BATCH_FAILED',
 
-  SUBMIT_SAGE_BATCH: 'SAGE_PAY_POST_SALARY_BATCH',
-  SUBMIT_SAGE_BATCH_FULFILLED: 'SAGE_PAY_POST_SALARY_BATCH_FULFILLED',
-  SUBMIT_SAGE_BATCH_FAILED: 'SAGE_PAY_POST_SALARY_BATCH_FAILED',
+  SUBMIT_SAGE_BATCH: 'SAGE_PAY_SUBMIT_SAGE_BATCH',
+  SUBMIT_SAGE_BATCH_FULFILLED: 'SAGE_PAY_SUBMIT_SAGE_BATCH_FULFILLED',
+  SUBMIT_SAGE_BATCH_FAILED: 'SAGE_PAY_SUBMIT_SAGE_BATCH_FAILED',
 
   QUERY_SAGE_BATCH: 'SAGE_PAY_QUERY_SAGE_BATCH',
   QUERY_SAGE_BATCH_FULFILLED: 'SAGE_PAY_QUERY_SAGE_BATCH_FULFILLED',
@@ -55,12 +55,13 @@ export const sageBatchActions = {
     type: sageBatchActions.DELETE_SAGE_BATCH_FAILED,
     payload: { error }
   }),
-  submitSageBatch: () => ({
-    type: sageBatchActions.SUBMIT_SAGE_BATCH
+  submitSageBatch: id => ({
+    type: sageBatchActions.SUBMIT_SAGE_BATCH,
+    payload: { id }
   }),
-  sumbitSageBatchFulfilled: sageBatches => ({
+  sumbitSageBatchFulfilled: sageBatch => ({
     type: sageBatchActions.SUBMIT_SAGE_BATCH_FULFILLED,
-    payload: { sageBatches }
+    payload: { sageBatch }
   }),
   submitSageBatchFailed: error => ({
     type: sageBatchActions.SUBMIT_SAGE_BATCH_FAILED,

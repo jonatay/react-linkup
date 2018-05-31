@@ -20,6 +20,7 @@ function* submitSageBatch({ payload: { id } }) {
     [sageBatchList, sageBatchList.submitBatch],
     id
   );
+  console.log(sageBatch);
   yield put(sageBatchActions.sumbitSageBatchFulfilled(sageBatch));
 }
 

@@ -39,7 +39,9 @@ SalaryBatchesPage.propTypes = {
   sageBatchInstructions: PropTypes.array.isRequired,
   loadSageBatches: PropTypes.func.isRequired,
   createSageBatch: PropTypes.func.isRequired,
-  deleteSageBatch: PropTypes.func.isRequired
+  deleteSageBatch: PropTypes.func.isRequired,
+  submitSageBatch: PropTypes.func.isRequired,
+  querySageBatch: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -50,7 +52,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   loadSageBatches: sageBatchActions.loadSageBatches,
   createSageBatch: sageBatchActions.createSageBatch,
-  deleteSageBatch: sageBatchActions.deleteSageBatch
+  deleteSageBatch: sageBatchActions.deleteSageBatch,
+  submitSageBatch: sageBatchActions.submitSageBatch,
+  querySageBatch: sageBatchActions.querySageBatch
 };
 
 export default withRouter(
