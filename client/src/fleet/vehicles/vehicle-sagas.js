@@ -28,7 +28,7 @@ function* watchIdTokenRefresh() {
 function* loadAllVehicles() {
   yield put(costCentreGroupActions.loadCostCentreGroups());
   yield put(vehicleCcgActions.loadVehicleCcgs());
-  const vehicles = yield call([vehicleList, vehicleList.list]);
+  const { status, vehicles } = yield call([vehicleList, vehicleList.list]);
   yield put(vehicleActions.loadVehiclesFulfilled(vehicles));
 }
 
