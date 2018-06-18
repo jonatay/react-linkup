@@ -1,4 +1,4 @@
-const ModelFleetTransaction = require('../../models/fleet/modelFleetTransaction');
+const ModelFleetTransaction = require('../../models/fleet/ModelFleetTransaction');
 
 exports.list = (req, res) => {
   const params = JSON.parse(req.params.params);

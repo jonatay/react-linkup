@@ -6,14 +6,15 @@ const db = require('../../services/postgres/db');
 
 const ModelFimsPeriod = require('../../models/fleet/ModelFimsPeriod');
 const ModelFimsVoucher = require('../../models/fleet/ModelFimsVoucher');
-const ModelFleetTransaction = require('../../models/fleet/modelFleetTransaction');
+const ModelFleetTransaction = require('../../models/fleet/ModelFleetTransaction');
+const ModelVehicle = require('../../models/fleet/ModelVehicle');
 
 exports.list_fims_periods = (req, res) => {
   ModelFimsPeriod.list()
-    .then(data => {
-      res.json(data);
+    .then(fimsPeriods => {
+      res.json({ status: 'ok', fimsPeriods });
     })
-    .catch(e => res.json(e));
+    .catch(error => res.json({ status: 'error', error }));
 };
 
 exports.post_fims_batch = (req, res) => {
@@ -51,6 +52,54 @@ exports.remove_fims_period = (req, res) => {
 
 exports.import_fims_period = (req, res) => {
   const { id } = req.params;
+  ModelFimsPeriod.get(id)
+    .then(fimsPeriod =>
+      ModelFimsVoucher.listFimsVouchersByFimsPeriod(fimsPeriod.id)
+        .map(fimsVoucher =>
+          ModelVehicle.getOrInsert(
+            fimsVoucher.vehicle_description,
+            fimsVoucher.registration
+          )
+            .then(vehicle => {
+              let fleetTransaction = {
+                invoice_number: 'FIMS IMP INV',
+                fims_voucher_id: fimsVoucher.id,
+                amount: Math.round(parseFloat(fimsVoucher.amount) * 100) / 100,
+                registration: fimsVoucher.registration,
+                description: `${fimsVoucher.driver.toProperCase()} in ${
+                  fimsVoucher.registration
+                } buys ${fimsVoucher.purchase_description.toProperCase()} at ${fimsVoucher.merchant_name.toProperCase()} in ${fimsVoucher.merchant_town.toProperCase()}`,
+                odometer: fimsVoucher.odometer,
+                transaction_date: new Date(
+                  parseInt(fimsVoucher.transaction_date.substr(0, 4)),
+                  parseInt(fimsVoucher.transaction_date.substr(4, 2)) - 1,
+                  parseInt(fimsVoucher.transaction_date.substr(6, 2))
+                ),
+                process_date: new Date(
+                  parseInt(fimsVoucher.process_date.substr(0, 4)),
+                  parseInt(fimsVoucher.process_date.substr(4, 2)) - 1,
+                  parseInt(fimsVoucher.process_date.substr(6, 2))
+                ),
+                vehicle_id: vehicle.id
+              };
+              // console.log(fleetTransaction);
+              return fleetTransaction;
+            })
+            .catch(error => {
+              console.log(error);
+            })
+        )
+        .then(res => {
+          console.log(res);
+        })
+    )
+    .catch(error => res.json({ status: 'error', error }));
+};
+
+/*
+
+exports.import_fims_period = (req, res) => {
+  const { id } = req.params;
   db
     .one('SELECT * FROM fleet.fims_period WHERE id = $1', id)
     .then(({ ...fimsPeriod }) => {
@@ -81,7 +130,6 @@ exports.import_fims_period = (req, res) => {
     });
 };
 
-/*
 exports.import_fims_period = (req, res) => {
   const { id } = req.params;
   db

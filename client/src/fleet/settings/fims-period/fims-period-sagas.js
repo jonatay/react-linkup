@@ -16,8 +16,15 @@ function* removeFimsPeriod({ payload }) {
 }
 
 function* loadFimsPeriods() {
-  const fimsPeriods = yield call([fimsPeriodList, fimsPeriodList.list]);
-  yield put(fimsPeriodActions.loadFimsPeriodsFulfilled(fimsPeriods));
+  const { status, fimsPeriods, error } = yield call([
+    fimsPeriodList,
+    fimsPeriodList.list
+  ]);
+  if (status === 'ok') {
+    yield put(fimsPeriodActions.loadFimsPeriodsFulfilled(fimsPeriods));
+  } else {
+    yield put(fimsPeriodActions.loadFimsPeriodsFailed(error));
+  }
 }
 
 function* postFimsBatch({ payload }) {
@@ -31,11 +38,15 @@ function* postFimsBatch({ payload }) {
 
 function* importFimsPeriod({ payload: { id } }) {
   //console.log(payload);
-  const { fimsPeriod } = yield call(
+  const { status, fimsPeriod, error } = yield call(
     [fimsPeriodList, fimsPeriodList.importFimsPeriod],
     id
   );
-  yield put(fimsPeriodActions.importFimsPeriodFulfilled(fimsPeriod));
+  if (status === 'ok') {
+    yield put(fimsPeriodActions.importFimsPeriodFulfilled(fimsPeriod));
+  } else {
+    yield put(fimsPeriodActions.importFimsPeriodFailed(error));
+  }
 }
 
 function* importFimsPeriodBatch({ payload: { fimsPeriods } }) {

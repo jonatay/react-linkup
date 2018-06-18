@@ -1,10 +1,10 @@
 const db = require('../../services/postgres/db');
-const ModelVehicle = require('../../models/fleet/modelVehicle');
+const ModelVehicle = require('../../models/fleet/ModelVehicle');
 
 exports.list = (req, res) => {
   ModelVehicle.list()
-    .then(data => res.json(data.map(v => v.v)))
-    .catch(e => res.json(e));
+    .then(vehicles => res.json({ status: 'list', vehicles }))
+    .catch(e => res.json({ status: 'error', e }));
 };
 
 exports.update = (req, res) => {

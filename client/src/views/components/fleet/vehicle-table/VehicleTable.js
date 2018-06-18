@@ -119,9 +119,9 @@ class VehicleTable extends React.Component {
         columns={this.columns}
         scroll={{ y: 590 }}
         // rowClassName={(record, index) => (index % 2 === 0 ? "even" : "odd")}
-        rowClassName={record =>
-          record.cost_centre_groups[0] ? record.cost_centre_groups[0].name : ''
-        }
+        // rowClassName={record =>
+        //   record.cost_centre_groups[0] ? record.cost_centre_groups[0].name : ''
+        // }
         pagination={false}
         // pagination={{
         //   size: 'small',
