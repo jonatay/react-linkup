@@ -8,6 +8,8 @@ import { List } from 'immutable';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import { Icon, Tabs } from 'antd';
+
 import {
   fleetTransactionActions,
   getVisibleFleetTransactions,
@@ -15,19 +17,48 @@ import {
   getFleetTransactionsPageCount,
   getFilteredFleetTransactions,
   getFleetTransactions,
-  getListParams
+  getListParams,
+  getListOptions,
+  getFleetTransactionSummary,
+  getFleetTransactionPeriods
 } from 'src/fleet';
 
 import PageHeader from 'src/views/components/common/page-header';
 import FleetTransactionGrid from '../../../components/fleet/fleet-transaction-grid';
 import FleetTransactionFilter from '../../../components/fleet/fleet-transaction-filter';
+import FleetTransactionSummary from '../../../components/fleet/fleet-transaction-summary';
+
+const TabPane = Tabs.TabPane;
 
 const FleetTransactionsPage = props => {
   return (
     <div>
       <PageHeader>fleet-transactions</PageHeader>
       <FleetTransactionFilter {...props} />
-      <FleetTransactionGrid {...props} />
+      <Tabs hideAdd theme="dark" type="editable-card">
+        <TabPane
+          key="transactions"
+          closable={false}
+          tab={
+            <span>
+              <Icon type="table" /> transactions
+            </span>
+          }
+        >
+          <FleetTransactionGrid {...props} />
+        </TabPane>
+        <TabPane
+          key="summary"
+          closable={false}
+          tab={
+            <span>
+              <Icon type="calculator" /> summary
+            </span>
+          }
+        >
+          <FleetTransactionSummary {...props} />
+        </TabPane>
+      </Tabs>
     </div>
   );
 };
@@ -40,7 +71,10 @@ FleetTransactionsPage.propTypes = {
   fleetTransactionsPageCount: PropTypes.number.isRequired,
   filteredFleetTransactions: PropTypes.instanceOf(List).isRequired,
   allFleetTransactions: PropTypes.instanceOf(List).isRequired,
-  listParams: PropTypes.instanceOf(Object).isRequired
+  listParams: PropTypes.instanceOf(Object).isRequired,
+  listOptions: PropTypes.instanceOf(Object).isRequired,
+  fleetTransactionSummary: PropTypes.instanceOf(Array).isRequired,
+  fleetTransactionPeriods: PropTypes.instanceOf(Array).isRequired
 };
 
 const mapStateToProps = state => ({
@@ -49,7 +83,10 @@ const mapStateToProps = state => ({
   fleetTransactionsPageCount: getFleetTransactionsPageCount(state),
   filteredFleetTransactions: getFilteredFleetTransactions(state),
   allFleetTransactions: getFleetTransactions(state),
-  listParams: getListParams(state)
+  listParams: getListParams(state),
+  listOptions: getListOptions(state),
+  fleetTransactionSummary: getFleetTransactionSummary(state),
+  fleetTransactionPeriods: getFleetTransactionPeriods(state)
 });
 
 const mapDispatchToProps = {
