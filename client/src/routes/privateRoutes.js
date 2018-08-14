@@ -34,6 +34,11 @@ const BanksAndBranchesPage = asyncComponent(() =>
 const SalaryBatchesPage = asyncComponent(() =>
   import('../views/pages/sage-pay/salary-batches-page')
 );
+
+const AccessPage = asyncComponent(() =>
+  import('../views/pages/access/access-page')
+);
+
 export const privateRoutes = [
   { path: '/admin/users', component: AdminUsersPage },
   { path: '/admin/rights', component: AdminRightsPage },
@@ -45,5 +50,6 @@ export const privateRoutes = [
   { path: '/sage-pay/bank-accounts', component: BankAccountsPage },
   { path: '/sage-pay/banks-and-branches', component: BanksAndBranchesPage },
   { path: '/sage-pay/salary-batches', component: SalaryBatchesPage },
+  { path: '/access/access', component: AccessPage },
   { path: '/', component: RootPage }
 ];

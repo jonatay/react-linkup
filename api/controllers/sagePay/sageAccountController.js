@@ -85,7 +85,7 @@ exports.importCubit = (req, res) => {
           )
         )
       )
-    ).then(data => res.json({ status: 'import-cubir', sageAccounts: data }))
+    ).then(data => res.json({ status: 'import-cubit', sageAccounts: data }))
   );
 };
 

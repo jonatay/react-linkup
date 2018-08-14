@@ -14,6 +14,12 @@ SELECT *
   WHERE transaction_date BETWEEN $1 AND $2
 `;
 
+const sqlListTaxYear = `
+SELECT * 
+  FROM fleet.fleet_transaction_joined
+  WHERE tax_year = $1
+`
+
 const sqlInsert = `
 INSERT INTO fleet.fleet_transaction(
             tax_year, tax_month, transaction_date, process_date, registration, 
@@ -31,13 +37,13 @@ ON CONFLICT ON CONSTRAINT fleet_transaction_fims_voucher_id_invoice_number_key D
             fims_voucher_id=$[fims_voucher_id], merchant_id=$[merchant_id], amount=$[amount],
             jdata=$[jdata], transaction_type_id=$[transaction_type_id], description=$[description],
             vat_amount=$[vat_amount], invoice_number=$[invoice_number], odometer=$[odometer]
-
  RETURNING *
 `;
 
 exports.list = params =>
   params.dateRange && params.dateRange.length === 2
     ? db.many(sqlListDateRange, params.dateRange)
+    : params.taxYear ? db.many(sqlListTaxYear, [params.taxYear] )
     : db.many(sqlList, { from: moment().subtract(3, 'months'), to: moment() });
 
 exports.insert = fleetTransaction => db.one(sqlInsert, fleetTransaction);

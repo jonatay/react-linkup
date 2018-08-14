@@ -3,19 +3,22 @@
     FleetTransactionFilter : React Class Component
 */
 import React from 'react';
-import { DatePicker, Row, Col } from 'antd';
+import moment from 'moment';
+import { DatePicker, Row, Col, Select } from 'antd';
+
 const { RangePicker } = DatePicker;
-// const Option = Select.Option;
+const Option = Select.Option;
 
 class FleetTransactionFilter extends React.Component {
   state = {
     params: {
-      dateRange: []
-    }
+      // dateRange: []
+    },
+    options: {}
   };
 
   static getDerivedStateFromProps(
-    { allFleetTransactions, listParams, loadFleetTransactions },
+    { allFleetTransactions, listParams, listOptions, loadFleetTransactions },
     prevState
   ) {
     if (
@@ -26,17 +29,45 @@ class FleetTransactionFilter extends React.Component {
     ) {
       loadFleetTransactions(listParams);
     }
-    return { params: { ...listParams } };
+    return { params: { ...listParams }, options: { ...listOptions } };
   }
 
-  onDateRangeChange(date) {
-    console.log(date);
-    this.props.loadFleetTransactions({ dateRange: date });
+  onDateRangeChange(dateRange) {
+    console.log(dateRange);
+    this.props.loadFleetTransactions({ dateRange });
+  }
+
+  onTaxYearChange(taxYear) {
+    console.log(taxYear);
+    this.props.loadFleetTransactions({ taxYear });
   }
 
   render() {
     return (
       <Row style={{ marginBottom: 10 }}>
+        <Col span={5}>
+          <Col span={8}>
+            <p
+              style={{
+                margin: '5px',
+                textAlign: 'right'
+              }}
+            >
+              Tax Year:
+            </p>
+          </Col>
+          <Col span={16}>
+            <Select
+              style={{ width: 80 }}
+              value={this.state.params.taxYear}
+              onChange={taxYear => this.onTaxYearChange(taxYear)}
+            >
+              {this.state.options.taxYears.map(ty => (
+                <Option key={ty}>{ty}</Option>
+              ))}
+            </Select>
+          </Col>
+        </Col>
         <Col span={8}>
           <Col span={8}>
             <p
