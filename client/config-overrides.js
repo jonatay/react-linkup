@@ -7,6 +7,7 @@ module.exports = function override(config, env) {
     config
   ); // change importing css to less
   config = rewireLess.withLoaderOptions({
+    javascriptEnabled: true,
     modifyVars: {
       '@primary-color': '@blue-6',
       '@info-color': '@blue-6',
@@ -17,7 +18,7 @@ module.exports = function override(config, env) {
       '@warning-color': '@gold-6',
       '@normal-color': '#d9d9d9',
       '@body-background': '#666',
-      '@layout-header-height':'50px',
+      '@layout-header-height': '50px'
       //'@component-background': '#FFFFD4'
     }
   })(config, env); // was 1DA57A
