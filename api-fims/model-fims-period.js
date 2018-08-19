@@ -38,12 +38,12 @@ UPDATE fleet.fims_period
 
 // use getNext Date to advance mth by 1 and check against today
 const getNextDate = myDate => {
-  //console.log(myDate);
+  console.log(myDate);
   let dNow = new Date();
   let mthNow = dNow.getUTCMonth() + 1; //months from 1-12
   let yrNow = dNow.getUTCFullYear();
-  let yrRet = myDate.month < 12 ? myDate.year : myDate.year + 1;
-  let mthRet = myDate.month < 12 ? myDate.month + 1 : 1;
+  let yrRet = myDate.cal_month < 12 ? myDate.cal_year : myDate.cal_year + 1;
+  let mthRet = myDate.cal_month < 12 ? myDate.cal_month + 1 : 1;
   //console.log(yrRet, yrNow, mthRet, mthNow)
   if (yrNow > yrRet || (yrNow === yrRet && mthNow > mthRet)) {
     return {

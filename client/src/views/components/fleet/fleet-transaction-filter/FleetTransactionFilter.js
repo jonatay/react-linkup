@@ -3,7 +3,7 @@
     FleetTransactionFilter : React Class Component
 */
 import React from 'react';
-import moment from 'moment';
+// import moment from 'moment';
 import { DatePicker, Row, Col, Select } from 'antd';
 
 const { RangePicker } = DatePicker;
@@ -12,7 +12,7 @@ const Option = Select.Option;
 class FleetTransactionFilter extends React.Component {
   state = {
     params: {
-      // dateRange: []
+       dateRange: []
     },
     options: {}
   };
@@ -21,6 +21,7 @@ class FleetTransactionFilter extends React.Component {
     { allFleetTransactions, listParams, listOptions, loadFleetTransactions },
     prevState
   ) {
+    //only load transactions here on first show, i.e. comp curr state to incoming
     if (
       prevState.params &&
       prevState.params.dateRange &&

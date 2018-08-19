@@ -8,6 +8,12 @@ const ModelFimsPeriod = require('../../models/fleet/ModelFimsPeriod');
 const ModelFimsVoucher = require('../../models/fleet/ModelFimsVoucher');
 const ModelFleetTransaction = require('../../models/fleet/ModelFleetTransaction');
 const ModelVehicle = require('../../models/fleet/ModelVehicle');
+const ModelDriver = require('../../models/fleet/ModelDriver');
+const ModelMerchant = require('../../models/fleet/ModelMerchant');
+const ModelTransactionType = require('../../models/fleet/ModelTransactionType');
+const ModelCostCentre = require('../../models/fleet/ModelCostCentre');
+const ModelTransactionTypeCostCentre = require('../../models/fleet/ModelTransactionTypeCostCentre');
+const ModelVehicleCcg = require('../../models/fleet/ModelVehicleCcg');
 
 exports.list_fims_periods = (req, res) => {
   ModelFimsPeriod.list()
@@ -50,52 +56,218 @@ exports.remove_fims_period = (req, res) => {
   );
 };
 
+// exports.import_fims_period = (req, res) => {
+//   const { id } = req.params;
+//   ModelFimsPeriod.get(id)
+//     .then(fimsPeriod => null)
+// }
+function* getCostCentre() {}
+/*
+ load fims_vouchers, then one at a time, asynchronously:
+   - load required foreign keys from relevant
+   - insert transaction
+   - return transaction
+
+ */
+exports.import_fims_period = (req, res) => {
+  const { id } = req.params;
+  ModelFimsPeriod.get(id).then(fimsPeriod =>
+    //the .each here ensures async exec
+    ModelFimsVoucher.listFimsVouchersByFimsPeriod(fimsPeriod.id)
+      .each(
+        // async function so await can be used
+        async fimsVoucher => {
+          const vehicle = await ModelVehicle.getOrInsert(
+            fimsVoucher.vehicle_description,
+            fimsVoucher.registration
+          );
+          const driver = await ModelDriver.getOrInsert(
+            fimsVoucher.driver,
+            fimsVoucher.registration
+          );
+          const merchant = await ModelMerchant.getOrInsert(
+            fimsVoucher.merchant_name,
+            fimsVoucher.merchant_town,
+            fimsVoucher.oil_company
+          );
+          const transactionType = await ModelTransactionType.getOrInsert(
+            fimsVoucher.purchase_description,
+            new Date(
+              parseInt(fimsVoucher.transaction_date.substr(0, 4)),
+              parseInt(fimsVoucher.transaction_date.substr(4, 2)) - 1,
+              parseInt(fimsVoucher.transaction_date.substr(6, 2))
+            )
+          );
+          const vehicleCcs = await ModelVehicleCcg.getCcgIdByVehicle(
+            vehicle.id
+          ).then(
+            async vCcg =>
+              new Set(await ModelCostCentre.listCcsByCcg(vCcg).each(cc => cc))
+          );
+          const tranTypeCcs = new Set(
+            await ModelTransactionTypeCostCentre.listCCIdsByTransactionType(
+              transactionType.id
+            )
+          );
+          let costCentreId = new Set(
+            [...vehicleCcs].filter(x => tranTypeCcs.has(x))
+          )
+            .values()
+            .next().value;
+          let fleetTransaction = {
+            tax_year:
+              fimsPeriod.cal_year === 0
+                ? 0
+                : fimsPeriod.cal_month <= 2
+                  ? fimsPeriod.cal_year
+                  : fimsPeriod.cal_year + 1,
+            tax_month: fimsPeriod.cal_month,
+            transaction_date: new Date(
+              parseInt(fimsVoucher.transaction_date.substr(0, 4)),
+              parseInt(fimsVoucher.transaction_date.substr(4, 2)) - 1,
+              parseInt(fimsVoucher.transaction_date.substr(6, 2))
+            ),
+            process_date: new Date(
+              parseInt(fimsVoucher.process_date.substr(0, 4)),
+              parseInt(fimsVoucher.process_date.substr(4, 2)) - 1,
+              parseInt(fimsVoucher.process_date.substr(6, 2))
+            ),
+            registration: fimsVoucher.registration,
+            cost_centre_id: costCentreId,
+            vehicle_id: vehicle.id,
+            driver_id: driver.id,
+            fims_voucher_id: fimsVoucher.id,
+            merchant_id: merchant.id,
+            amount: Math.round(parseFloat(fimsVoucher.amount) * 100) / 100,
+            transaction_type_id: transactionType.id,
+            description: `${driver.name} in ${
+              fimsVoucher.registration
+            } buys ${fimsVoucher.purchase_description.toProperCase()} at ${
+              merchant.name
+            } in ${merchant.town}`,
+            vat_amount:
+              transactionType.vat_rate === 0
+                ? 0
+                : Math.round(
+                    (parseFloat(fimsVoucher.amount) -
+                      parseFloat(fimsVoucher.amount) /
+                        (transactionType.vat_rate + 1)) *
+                      100
+                  ) / 100,
+            invoice_number: `fims ${fimsPeriod.cal_year}-${
+              fimsPeriod.cal_month
+            }-${fimsVoucher.batch_index}`,
+            odometer: fimsVoucher.odometer,
+            jdata: {}
+          };
+          // console.log(fleetTransaction);
+          return ModelFleetTransaction.insert(fleetTransaction);
+        }
+      )
+      .then(fTrans =>
+        fTrans.reduce(
+          (fimsP, fTran) => ({
+            ...fimsP,
+            transactions_total:
+              fimsP.transactions_total + Math.round(fTran.amount * 100),
+            rows_transactions: fimsP.rows_transactions + 1
+          }),
+          {
+            ...fimsPeriod,
+            transactions_total: 0,
+            rows_transactions: 0
+          }
+        )
+      )
+      .then(fimsP => ({
+        ...fimsP,
+        transactions_total: fimsP.transactions_total / 100,
+        when_imported: new Date()
+      }))
+      .then(fimsP =>
+        ModelFimsPeriod.updateFimsPeriod(fimsP).then(fimsP =>
+          res.json({ status: 'ok', fimsPeriod: fimsP })
+        )
+      )
+  );
+};
+/*
 exports.import_fims_period = (req, res) => {
   const { id } = req.params;
   ModelFimsPeriod.get(id)
     .then(fimsPeriod =>
       ModelFimsVoucher.listFimsVouchersByFimsPeriod(fimsPeriod.id)
-        .map(fimsVoucher =>
+        .each(fimsVoucher =>
           ModelVehicle.getOrInsert(
             fimsVoucher.vehicle_description,
             fimsVoucher.registration
+          ).then(vehicle =>
+            ModelDriver.getOrInsert(
+              fimsVoucher.driver,
+              fimsVoucher.registration
+            ).then(driver =>
+              ModelMerchant.getOrInsert(
+                fimsVoucher.merchant_name,
+                fimsVoucher.merchant_town,
+                fimsVoucher.oil_company
+              ).then(merchant =>
+                ModelTransactionType.getOrInsert(
+                  fimsVoucher.purchase_description,
+                  new Date(
+                    parseInt(fimsVoucher.transaction_date.substr(0, 4)),
+                    parseInt(fimsVoucher.transaction_date.substr(4, 2)) - 1,
+                    parseInt(fimsVoucher.transaction_date.substr(6, 2))
+                  )
+                ).then(transactionType => {
+                  let fleetTransaction = {
+                    vat_amount:
+                      transactionType.vat_rate === 0
+                        ? 0
+                        : Math.round(
+                            (parseFloat(fimsVoucher.amount) -
+                              parseFloat(fimsVoucher.amount) /
+                                (transactionType.vat_rate + 1)) *
+                              100
+                          ) / 100,
+                    registration: fimsVoucher.registration,
+                    description: `${driver.name.toProperCase()} in ${
+                      fimsVoucher.registration
+                    } buys ${fimsVoucher.purchase_description.toProperCase()} at ${
+                      merchant.name
+                    } in ${merchant.town}`,
+                    odometer: fimsVoucher.odometer,
+                    transaction_date: new Date(
+                      parseInt(fimsVoucher.transaction_date.substr(0, 4)),
+                      parseInt(fimsVoucher.transaction_date.substr(4, 2)) - 1,
+                      parseInt(fimsVoucher.transaction_date.substr(6, 2))
+                    ),
+                    process_date: new Date(
+                      parseInt(fimsVoucher.process_date.substr(0, 4)),
+                      parseInt(fimsVoucher.process_date.substr(4, 2)) - 1,
+                      parseInt(fimsVoucher.process_date.substr(6, 2))
+                    ),
+                    vehicle_id: vehicle.id,
+                    driver_id: driver.id,
+                    merchant_id: merchant.id,
+                    transaction_type_id: transactionType.id
+                  };
+                  console.log(fleetTransaction);
+                  return fleetTransaction;
+                })
+              )
+            )
           )
-            .then(vehicle => {
-              let fleetTransaction = {
-                invoice_number: 'FIMS IMP INV',
-                fims_voucher_id: fimsVoucher.id,
-                amount: Math.round(parseFloat(fimsVoucher.amount) * 100) / 100,
-                registration: fimsVoucher.registration,
-                description: `${fimsVoucher.driver.toProperCase()} in ${
-                  fimsVoucher.registration
-                } buys ${fimsVoucher.purchase_description.toProperCase()} at ${fimsVoucher.merchant_name.toProperCase()} in ${fimsVoucher.merchant_town.toProperCase()}`,
-                odometer: fimsVoucher.odometer,
-                transaction_date: new Date(
-                  parseInt(fimsVoucher.transaction_date.substr(0, 4)),
-                  parseInt(fimsVoucher.transaction_date.substr(4, 2)) - 1,
-                  parseInt(fimsVoucher.transaction_date.substr(6, 2))
-                ),
-                process_date: new Date(
-                  parseInt(fimsVoucher.process_date.substr(0, 4)),
-                  parseInt(fimsVoucher.process_date.substr(4, 2)) - 1,
-                  parseInt(fimsVoucher.process_date.substr(6, 2))
-                ),
-                vehicle_id: vehicle.id
-              };
-              // console.log(fleetTransaction);
-              return fleetTransaction;
-            })
-            .catch(error => {
-              console.log(error);
-            })
         )
         .then(res => {
-          console.log(res);
+          //console.log('result', res);
+        })
+        .catch(error => {
+          console.log(error);
         })
     )
     .catch(error => res.json({ status: 'error', error }));
 };
-
+*/
 /*
 
 exports.import_fims_period = (req, res) => {

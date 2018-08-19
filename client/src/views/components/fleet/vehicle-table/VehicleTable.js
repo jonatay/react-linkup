@@ -77,7 +77,7 @@ class VehicleTable extends React.Component {
       title: 'Fims Driver(s)',
       dataIndex: 'fims_drivers',
       width: 200,
-      render: (text, record) => <p>{text.join(',')}</p>
+      render: (fimsDrivers) => <p>{fimsDrivers ? fimsDrivers.join(',') : 'nu'}</p>
     },
     {
       //fixed: 'right',
