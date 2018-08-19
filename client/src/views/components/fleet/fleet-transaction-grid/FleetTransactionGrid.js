@@ -9,6 +9,9 @@ import dateFormat from 'dateformat';
 import _ from 'lodash';
 
 import { Select } from 'antd';
+
+import FormatNumber from '../../common/format-number';
+
 const Option = Select.Option;
 
 const getLkpArray = (array, key) =>
@@ -25,15 +28,6 @@ const SelectFilter = ({ filter, onChange, optionArray }) => (
     <Option value="all">All</Option>
     {optionArray.map(v => <Option key={v}>{v}</Option>)}
   </Select>
-);
-
-const FormatNumber = ({ value, decimals, style = {} }) => (
-  <span style={{ float: 'right', ...style }}>
-    {new Intl.NumberFormat('en-ZA', {
-      maximumFractionDigits: decimals,
-      minimumFractionDigits: decimals
-    }).format(value)}
-  </span>
 );
 
 const selectFilterMethod = (filter, row) =>

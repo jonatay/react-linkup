@@ -33,11 +33,7 @@ export const getVisibleVehicles = createSelector(
           ((!showInactive && vehicle.is_active) ||
             (showInactive && !vehicle.is_active)) &&
           (vehicle.name.toLowerCase().includes(filter.toLowerCase()) ||
-            vehicle.registration.toLowerCase().includes(filter.toLowerCase()) ||
-            vehicle.fims_drivers
-              .join(' ')
-              .toLowerCase()
-              .includes(filter.toLowerCase()))
+            vehicle.registration.toLowerCase().includes(filter.toLowerCase()))
       )
       .toArray()
       .map(v => ({

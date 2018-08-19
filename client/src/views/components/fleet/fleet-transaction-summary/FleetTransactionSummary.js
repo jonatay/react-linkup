@@ -3,13 +3,45 @@
     FleetTransactionSummary : React Class Component
 */
 import React from 'react';
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
+import FormatNumber from '../../common/format-number/FormatNumber';
+import createTable from 'react-table-hoc-fixed-columns';
+const ReactTableFixedColumns = createTable(ReactTable);
 
 class FleetTransactionSummary extends React.Component {
   render() {
+    const data = this.props.fleetTransactionSummary;
+    const periods = this.props.fleetTransactionPeriods;
     return (
-      <div>FleetTransactionSummary</div>
+      <div>
+        <ReactTableFixedColumns
+          data={data}
+          columns={[
+            { Header: 'Registration', accessor: 'registration', fixed: true },
+            { Header: 'Vehicle', accessor: 'vehicle', fixed: true },
+            ...periods.map(period => ({
+              Header: period,
+              Cell: row =>
+                row.original.periods[period].amount > 0 ? (
+                  <FormatNumber
+                    value={row.original.periods[period].amount}
+                    decimals={2}
+                  />
+                ) : (
+                  <p />
+                )
+            }))
+          ]}
+          defaultPageSize={20}
+          style={{
+            height: "650px" // This will force the table body to overflow and scroll, since there is not enough room
+          }}
+          className="-striped -highlight"
+        />
+      </div>
     );
   }
-};
+}
 
 export default FleetTransactionSummary;

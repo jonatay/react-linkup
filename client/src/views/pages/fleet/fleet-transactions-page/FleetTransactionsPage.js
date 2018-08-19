@@ -35,7 +35,7 @@ const FleetTransactionsPage = props => {
     <div>
       <PageHeader>fleet-transactions</PageHeader>
       <FleetTransactionFilter {...props} />
-      <Tabs hideAdd theme="dark" type="editable-card">
+      <Tabs hideAdd theme="dark" type="editable-card" defaultActiveKey='table'>
         <TabPane
           key="transactions"
           closable={false}

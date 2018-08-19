@@ -38,6 +38,19 @@ export const getFilteredFleetTransactions = createSelector(
           )
 );
 
+// const getDateSortedFleetTransactions = createSelector(
+//   getFleetTransactionList,
+//   fleetTranList =>
+//     fleetTranList.sort(
+//       (a, b) =>
+//         a.transaction_date > b.transaction_date
+//           ? 1
+//           : a.transaction_date > b.transaction_date
+//             ? -1
+//             : 0
+//     )
+// );
+
 const getSortedFleetTransactions = createSelector(
   getFilteredFleetTransactions,
   getFleetTransactionFilter,
@@ -92,9 +105,11 @@ export const getListOptions = createSelector(
 );
 
 const getPerId = ft =>
-  `${String('0000' + ft.tax_year).slice(-4)}${String('00' + ft.tax_month).slice(
-    -2
-  )}`;
+  ft.tax_year === 0
+    ? 'Current'
+    : `${String(
+        '0000' + ft.tax_month <= 2 ? ft.tax_year : ft.tax_year - 1
+      ).slice(-4)}${String('00' + ft.tax_month).slice(-2)}`;
 
 export const getFleetTransactionPeriods = createSelector(
   getFleetTransactionList,
@@ -109,36 +124,67 @@ export const getFleetTransactionPeriods = createSelector(
       .sort((a, b) => (a > b ? 1 : a < b ? -1 : 0))
 );
 
-export const getFleetTransactionSummary = createSelector(
+export const getFleetTransactionTypes = createSelector(
   getFleetTransactionList,
   fleetTransactionList =>
-    fleetTransactionList.toArray().reduce((ret, ft) => {
-      let perId = `${ft.tax_year}${String('00' + ft.tax_month).slice(-2)}`;
-      let vr = ret.find(v => v.registration === ft.registration);
-      if (typeof vr === 'undefined') {
-        vr = {
+    fleetTransactionList
+      .toArray()
+      .reduce(
+        (ret, ft) =>
+          ret.find(p => p === ft.transaction_type)
+            ? ret
+            : [...ret, ft.transaction_type],
+        []
+      )
+      .sort(
+        (a, b) => (a.localeCompare(b) < 0 ? 1 : a.localeCompare(b) > 0 ? -1 : 0)
+      )
+);
+
+export const getFleetTransactionSummary = createSelector(
+  getFleetTransactionList,
+  getFleetTransactionPeriods,
+  getFleetTransactionTypes,
+  (fleetTransactionList, fleetTransactionPeriods, fleetTransactionTypes) =>
+    fleetTransactionList.toArray().reduce((vehSumm, ft) => {
+      // let perId = `${ft.tax_year}${String('00' + ft.tax_month).slice(-2)}`;
+      let vehRow = vehSumm.find(v => v.vehicle_id === ft.vehicle_id);
+      const periodId = getPerId(ft);
+      if (typeof vehRow === 'undefined') {
+        vehRow = {
+          vehicle_id: ft.vehicle_id,
           registration: ft.registration,
           vehicle: ft.vehicle,
-          periods: []
+          periods: fleetTransactionPeriods.reduce(
+            (periods, pId) => ({
+              ...periods,
+              [pId]: {
+                period: pId,
+                amount: 0,
+                types: {}
+              }
+            }),
+            {}
+          )
         };
-        ret.push(vr);
+        vehSumm.push(vehRow);
       }
-      let per = vr.periods.find(
-        p => p.tax_year === ft.tax_year && p.tax_month === ft.tax_month
-      );
-      if (typeof per === 'undefined') {
-        per = { tax_year: ft.tax_year, tax_month: ft.tax_month, types: [] };
-        vr.periods.push(per);
+      let per = vehRow.periods[periodId];
+      if (!per.tax_year) {
+        per = {
+          ...per,
+          tax_year: ft.tax_year,
+          tax_month: ft.tax_month,
+          amount: 0
+        };
       }
-      let type = per.types.find(
-        t => t.transaction_type === ft.transaction_type
-      );
-      if (typeof type === 'undefined') {
-        type = { transaction_type: ft.transaction_type, amount: ft.amount };
-        per.types.push(type);
-      } else {
-        type.amount += ft.amount;
-      }
-      return ret;
+      per.amount += ft.amount;
+      let tranType = per.types[ft.transaction_type]
+        ? per.types[ft.transaction_type]
+        : { tranType: ft.transactionType, amount: 0 };
+      tranType.amount += ft.amount;
+      per.types[ft.transaction_type] = tranType;
+      vehRow.periods[periodId] = per;
+      return vehSumm;
     }, [])
 );

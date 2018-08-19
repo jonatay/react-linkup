@@ -1,18 +1,25 @@
 const db = require('../../services/postgres/db');
 
+const tableName = 'fleet.vehicle_cost_centre_group';
+
 const sqlList = `
-SELECT * FROM fleet.vehicle_cost_centre_group
+SELECT * FROM ${tableName}
+`;
+
+const sqlGetCcgIdByVehicle = `
+SELECT cost_centre_group_id FROM ${tableName}
+WHERE vehicle_id = $[vehicleId]
 `;
 
 const sqlInsert = `
-INSERT INTO fleet.vehicle_cost_centre_group(
+INSERT INTO ${tableName}(
             cost_centre_group_id, vehicle_id, start_date)
     VALUES ($[cost_centre_group_id], $[vehicle_id], $[start_date])
 RETURNING *
 `;
 
 const sqlUpdate = `
-UPDATE fleet.vehicle_cost_centre_group
+UPDATE ${tableName}
    SET cost_centre_group_id=$[cost_centre_group_id], 
    vehicle_id=$[vehicle_id], start_date=$[start_date]
  WHERE id = $[id]
@@ -20,11 +27,16 @@ UPDATE fleet.vehicle_cost_centre_group
 `;
 
 const sqlDelete = `
-DELETE FROM fleet.vehicle_cost_centre_group
+DELETE FROM ${tableName}
 WHERE id = $[id]
 `;
 
 exports.list = params => db.many(sqlList, params);
+
+exports.getCcgIdByVehicle = (vehicleId, date) =>
+  db
+    .one(sqlGetCcgIdByVehicle, { vehicleId })
+    .then(vCcg => vCcg.cost_centre_group_id);
 
 exports.insert = vehicleCcg => db.one(sqlInsert, vehicleCcg);
 
