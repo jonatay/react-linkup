@@ -40,7 +40,9 @@ WHERE id = $[id]
 exports.list = () => db.any(sqlList);
 
 exports.listCcsByCcg = costCentreGroupId =>
-  db.any(sqlListCcsByCcg, { costCentreGroupId }).then(ccs => ccs.map(cc => cc.id));
+  db
+    .any(sqlListCcsByCcg, { costCentreGroupId })
+    .then(ccs => ccs.map(cc => cc.id));
 
 exports.get = id => db.one(sqlGet, { id });
 

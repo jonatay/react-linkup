@@ -18,15 +18,21 @@ class FleetTransactionSummary extends React.Component {
         <ReactTableFixedColumns
           data={data}
           columns={[
-            { Header: 'Registration', accessor: 'registration', fixed: true },
-            { Header: 'Vehicle', accessor: 'vehicle', fixed: true },
+            {
+              Header: 'Registration',
+              accessor: 'registration',
+              fixed: true,
+              width: 70
+            },
+            { Header: 'Vehicle', accessor: 'vehicle', fixed: true, width: 70 },
             ...periods.map(period => ({
               Header: period,
+              width: 70,
               Cell: row =>
                 row.original.periods[period].amount > 0 ? (
                   <FormatNumber
                     value={row.original.periods[period].amount}
-                    decimals={2}
+                    decimals={0}
                   />
                 ) : (
                   <p />
@@ -35,7 +41,7 @@ class FleetTransactionSummary extends React.Component {
           ]}
           defaultPageSize={20}
           style={{
-            height: "650px" // This will force the table body to overflow and scroll, since there is not enough room
+            height: '650px' // This will force the table body to overflow and scroll, since there is not enough room
           }}
           className="-striped -highlight"
         />
