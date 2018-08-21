@@ -2,7 +2,7 @@
     Jono : 18 04 06
     FleetVehiclesPage : Stateless Functional Component
 */
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { List } from 'immutable';
 import { connect } from 'react-redux';
@@ -27,40 +27,56 @@ import PageHeader from 'src/views/components/common/page-header';
 import FleetTransactionGrid from '../../../components/fleet/fleet-transaction-grid';
 import FleetTransactionFilter from '../../../components/fleet/fleet-transaction-filter';
 import FleetTransactionSummary from '../../../components/fleet/fleet-transaction-summary';
+import Cookies from 'js-cookie';
 
 const TabPane = Tabs.TabPane;
 
-const FleetTransactionsPage = props => {
-  return (
-    <div>
-      <PageHeader>fleet-transactions</PageHeader>
-      <FleetTransactionFilter {...props} />
-      <Tabs hideAdd theme="dark" type="editable-card" defaultActiveKey='table'>
-        <TabPane
-          key="transactions"
-          closable={false}
-          tab={
-            <span>
-              <Icon type="table" /> transactions
-            </span>
-          }
+const FleetTransactionsPage = class FleetTransactionsPage extends Component {
+  state = {
+    activeKey: Cookies.get('fleetTransactionsActiveKey') || 'transactions'
+  };
+
+  render() {
+    return (
+      <div>
+        <PageHeader>fleet-transactions</PageHeader>
+        <FleetTransactionFilter {...this.props} />
+        <Tabs
+          hideAdd
+          theme="dark"
+          type="editable-card"
+          activeKey={this.state.activeKey}
+          onChange={activeKey => {
+            Cookies.set('fleetTransactionsActiveKey', activeKey, { expires: 7 });
+            this.setState({ activeKey });
+          }}
         >
-          <FleetTransactionGrid {...props} />
-        </TabPane>
-        <TabPane
-          key="summary"
-          closable={false}
-          tab={
-            <span>
-              <Icon type="calculator" /> summary
-            </span>
-          }
-        >
-          <FleetTransactionSummary {...props} />
-        </TabPane>
-      </Tabs>
-    </div>
-  );
+          <TabPane
+            key="transactions"
+            closable={false}
+            tab={
+              <span>
+                <Icon type="table" /> transactions
+              </span>
+            }
+          >
+            <FleetTransactionGrid {...this.props} />
+          </TabPane>
+          <TabPane
+            key="summary"
+            closable={false}
+            tab={
+              <span>
+                <Icon type="calculator" /> summary
+              </span>
+            }
+          >
+            <FleetTransactionSummary {...this.props} />
+          </TabPane>
+        </Tabs>
+      </div>
+    );
+  }
 };
 
 FleetTransactionsPage.propTypes = {

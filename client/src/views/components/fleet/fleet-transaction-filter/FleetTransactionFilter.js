@@ -3,16 +3,17 @@
     FleetTransactionFilter : React Class Component
 */
 import React from 'react';
-// import moment from 'moment';
+import moment from 'moment';
 import { DatePicker, Row, Col, Select } from 'antd';
+import Cookies from 'js-cookie';
 
 const { RangePicker } = DatePicker;
 const Option = Select.Option;
 
 class FleetTransactionFilter extends React.Component {
   state = {
-    params: {
-       dateRange: []
+    params:  JSON.parse(Cookies.get('fleetTransactionsFilter')) ||{
+      dateRange: [moment().subtract(6, 'months'), moment()]
     },
     options: {}
   };
@@ -22,24 +23,22 @@ class FleetTransactionFilter extends React.Component {
     prevState
   ) {
     //only load transactions here on first show, i.e. comp curr state to incoming
-    if (
-      prevState.params &&
-      prevState.params.dateRange &&
-      prevState.params.dateRange.length === 0 &&
-      listParams.dateRange.length === 2
-    ) {
-      loadFleetTransactions(listParams);
+    if (!(listParams.dateRange || listParams.taxYear)) {
+      loadFleetTransactions(prevState.params);
+      return { params: { ...prevState.params }, options: { ...listOptions } };
     }
     return { params: { ...listParams }, options: { ...listOptions } };
   }
 
   onDateRangeChange(dateRange) {
     console.log(dateRange);
+    Cookies.set('fleetTransactionsFilter', JSON.stringify({ dateRange }), { expires: 7 });
     this.props.loadFleetTransactions({ dateRange });
   }
 
   onTaxYearChange(taxYear) {
     console.log(taxYear);
+    Cookies.set('fleetTransactionsFilter', JSON.stringify({ taxYear }), { expires: 7 });
     this.props.loadFleetTransactions({ taxYear });
   }
 

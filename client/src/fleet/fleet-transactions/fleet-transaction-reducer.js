@@ -1,6 +1,6 @@
 import { List, Record } from 'immutable';
 import { fleetTransactionActions } from './fleet-transaction-actions';
-import moment from 'moment';
+// import moment from 'moment';
 
 // const cListParams = '';
 export const FleetTransactionsState = new Record({
@@ -13,7 +13,7 @@ export const FleetTransactionsState = new Record({
   listOptions: {
     taxYears: [2008, 2009, 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019].reverse()
   },
-  listParams: {dateRange: [moment().subtract(6, 'months'), moment()]},
+  listParams: {},
   //localStorage.getItem(cListParams) ? localStorage.getItem(cListParams)  : {
   //
   //taxYear: moment().month() < 3 ? moment().year() : moment().year() + 1
