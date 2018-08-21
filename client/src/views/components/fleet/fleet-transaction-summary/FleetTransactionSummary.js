@@ -6,8 +6,8 @@ import React from 'react';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import FormatNumber from '../../common/format-number/FormatNumber';
-import createTable from 'react-table-hoc-fixed-columns';
-const ReactTableFixedColumns = createTable(ReactTable);
+// import createTable from 'react-table-hoc-fixed-columns';
+// const ReactTableFixedColumns = createTable(ReactTable);
 
 class FleetTransactionSummary extends React.Component {
   render() {
@@ -15,19 +15,19 @@ class FleetTransactionSummary extends React.Component {
     const periods = this.props.fleetTransactionPeriods;
     return (
       <div>
-        <ReactTableFixedColumns
+        <ReactTable
           data={data}
           columns={[
             {
               Header: 'Registration',
               accessor: 'registration',
-              fixed: true,
+              // fixed: true,
               width: 70
             },
-            { Header: 'Vehicle', accessor: 'vehicle', fixed: true, width: 70 },
+            { Header: 'Vehicle', accessor: 'vehicle',  width: 120 },
             ...periods.map(period => ({
               Header: period,
-              width: 70,
+              width: 75,
               Cell: row =>
                 row.original.periods[period].amount > 0 ? (
                   <FormatNumber
