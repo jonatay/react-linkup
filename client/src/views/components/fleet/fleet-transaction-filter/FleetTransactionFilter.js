@@ -12,9 +12,11 @@ const Option = Select.Option;
 
 class FleetTransactionFilter extends React.Component {
   state = {
-    params:  JSON.parse(Cookies.get('fleetTransactionsFilter')) ||{
-      dateRange: [moment().subtract(6, 'months'), moment()]
-    },
+    params: Cookies.get('fleetTransactionsFilter')
+      ? JSON.parse(Cookies.get('fleetTransactionsFilter'))
+      : {
+          dateRange: [moment().subtract(6, 'months'), moment()]
+        },
     options: {}
   };
 
@@ -32,13 +34,17 @@ class FleetTransactionFilter extends React.Component {
 
   onDateRangeChange(dateRange) {
     console.log(dateRange);
-    Cookies.set('fleetTransactionsFilter', JSON.stringify({ dateRange }), { expires: 7 });
+    Cookies.set('fleetTransactionsFilter', JSON.stringify({ dateRange }), {
+      expires: 7
+    });
     this.props.loadFleetTransactions({ dateRange });
   }
 
   onTaxYearChange(taxYear) {
     console.log(taxYear);
-    Cookies.set('fleetTransactionsFilter', JSON.stringify({ taxYear }), { expires: 7 });
+    Cookies.set('fleetTransactionsFilter', JSON.stringify({ taxYear }), {
+      expires: 7
+    });
     this.props.loadFleetTransactions({ taxYear });
   }
 
