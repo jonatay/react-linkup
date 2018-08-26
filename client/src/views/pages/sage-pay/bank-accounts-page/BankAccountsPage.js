@@ -42,7 +42,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  loadSageAccounts: sageAccountActions.loadSageAccounts,
+  loadSageAccounts: sageAccountActions.loadSageEmpAccounts,
   importBestAccounts: sageAccountActions.importBestAccounts,
   importCubitAccounts: sageAccountActions.importCubitAccounts,
   validateSageAccount: sageAccountActions.validateSageAccount

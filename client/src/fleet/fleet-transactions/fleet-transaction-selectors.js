@@ -51,21 +51,32 @@ export const getFilteredFleetTransactions = createSelector(
 //     )
 // );
 
+const sortMethodRandPerLitre = (a, b) =>
+  a.fuel_litres > 0 && b.fuel_litres > 0
+    ? a.amount / a.fuel_litres - b.amount / b.fuel_litres
+    : a.fuel_litres > 0
+      ? 1
+      : b.fuel_litres > 0
+        ? -1
+        : 0;
+
 const getSortedFleetTransactions = createSelector(
   getFilteredFleetTransactions,
   getFleetTransactionFilter,
   (list, { sorted }) =>
-    !sorted
+    !sorted || sorted.length === 0
       ? list
-      : sorted.length === 0
-        ? list
-        : sorted.reduceRight(
-            (r, v) =>
-              v.desc
-                ? r.sortBy(rec => rec[v.id]).reverse()
+      : sorted.reduceRight(
+          (r, v) =>
+            v.desc
+              ? v.id === 'rand_per_litre'
+                ? r.sort(sortMethodRandPerLitre).reverse()
+                : r.sortBy(rec => rec[v.id]).reverse()
+              : v.id === 'rand_per_litre'
+                ? r.sort(sortMethodRandPerLitre)
                 : r.sortBy(rec => rec[v.id]),
-            list
-          )
+          list
+        )
 );
 
 export const getFleetTransactionsPageCount = createSelector(

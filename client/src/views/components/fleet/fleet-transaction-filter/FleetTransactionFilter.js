@@ -11,14 +11,21 @@ const { RangePicker } = DatePicker;
 const Option = Select.Option;
 
 class FleetTransactionFilter extends React.Component {
-  state = {
-    params: Cookies.get('fleetTransactionsFilter')
-      ? JSON.parse(Cookies.get('fleetTransactionsFilter'))
-      : {
-          dateRange: [moment().subtract(6, 'months'), moment()]
-        },
-    options: {}
-  };
+  constructor(props) {
+    super(props);
+    // state has to be here as dates need to be turned into moments
+    let params = JSON.parse(Cookies.get('fleetTransactionsFilter'));
+    if (!params) {
+      params = {
+        dateRange: [moment().subtract(6, 'months'), moment()]
+      };
+    } else if (params.dateRange) {
+      params = {
+        dateRange: [moment(params.dateRange[0]), moment(params.dateRange[1])]
+      };
+    }
+    this.state = { params, options: {} };
+  }
 
   static getDerivedStateFromProps(
     { allFleetTransactions, listParams, listOptions, loadFleetTransactions },

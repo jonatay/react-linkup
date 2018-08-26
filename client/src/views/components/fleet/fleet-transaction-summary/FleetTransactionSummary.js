@@ -22,9 +22,10 @@ class FleetTransactionSummary extends React.Component {
               Header: 'Registration',
               accessor: 'registration',
               // fixed: true,
-              width: 70
+              width: 70,
+              Footer: <p>{data.length}</p>
             },
-            { Header: 'Vehicle', accessor: 'vehicle',  width: 120 },
+            { Header: 'Vehicle', accessor: 'vehicle', width: 120 },
             ...periods.map(period => ({
               Header: period,
               width: 75,
@@ -36,7 +37,17 @@ class FleetTransactionSummary extends React.Component {
                   />
                 ) : (
                   <p />
-                )
+                ),
+              Footer: ({ column: { Header } }) => (
+                <FormatNumber
+                  style={{fontWeight:'bolder'}}
+                  value={data.reduce(
+                    (tot, veh) => tot + veh.periods[Header].amount,
+                    0
+                  )}
+                  decimals={0}
+                />
+              )
             }))
           ]}
           defaultPageSize={20}

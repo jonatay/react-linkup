@@ -1,0 +1,42 @@
+--
+-- TOC entry 312 (class 1259 OID 25315996)
+-- Name: fleet_transaction_joined; Type: VIEW; Schema: fleet; Owner: postgres
+--
+DROP VIEW fleet.fleet_transaction_joined;
+CREATE VIEW fleet.fleet_transaction_joined AS
+ SELECT tt.name AS transaction_type,
+    ccg.name AS cost_centre_group,
+    cc.name AS cost_centre,
+    v.name AS vehicle,
+    d.name AS driver,
+    m.name AS merchant,
+    m.town,
+    t.id,
+    t.tax_year,
+    t.tax_month,
+    t.transaction_date,
+    t.process_date,
+    t.registration,
+    t.cost_centre_id,
+    t.vehicle_id,
+    t.driver_id,
+    t.fims_voucher_id,
+    t.merchant_id,
+    t.amount,
+    t.jdata,
+    t.transaction_type_id,
+    t.description,
+    t.vat_amount,
+    t.invoice_number,
+    t.odometer,
+    t.fuel_litres,
+    t.oil_litres
+   FROM ((((((fleet.fleet_transaction t
+     LEFT JOIN fleet.transaction_type tt ON ((tt.id = t.transaction_type_id)))
+     LEFT JOIN fleet.cost_centre cc ON ((cc.id = t.cost_centre_id)))
+     LEFT JOIN fleet.cost_centre_group ccg ON ((ccg.id = cc.cost_centre_group_id)))
+     LEFT JOIN fleet.vehicle v ON ((v.id = t.vehicle_id)))
+     LEFT JOIN fleet.driver d ON ((d.id = t.driver_id)))
+     LEFT JOIN fleet.merchant m ON ((m.id = t.merchant_id)));
+
+

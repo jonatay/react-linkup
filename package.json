@@ -24,6 +24,7 @@
     "morgan": "~1.9.0",
     "mssql": "^4.1.0",
     "pg-promise": "^7.4.1",
+    "pug": "^2.0.3",
     "raven": "^2.4.0",
     "rollbar": "^2.3.7",
     "serve-favicon": "~2.4.5",

@@ -1,5 +1,6 @@
 export const sageAccountActions = {
   LOAD_SAGE_ACCOUNTS: 'SAGE_PAY_LOAD_SAGE_ACCOUNTS',
+  LOAD_SAGE_EMP_ACCOUNTS: 'SAGE_PAY_LOAD_SAGE_EMP_ACCOUNTS',
   LOAD_SAGE_ACCOUNTS_FULFILLED: 'SAGE_PAY_LOAD_SAGE_ACCOUNTS_FULFILLED',
   LOAD_SAGE_ACCOUNTS_FAILED: 'SAGE_PAY_LOAD_SAGE_ACCOUNTS_FAILED',
 
@@ -17,6 +18,9 @@ export const sageAccountActions = {
 
   loadSageAccounts: () => ({
     type: sageAccountActions.LOAD_SAGE_ACCOUNTS
+  }),
+  loadSageEmpAccounts: () => ({
+    type: sageAccountActions.LOAD_SAGE_EMP_ACCOUNTS
   }),
   loadSageAccountsFulfilled: sageAccounts => ({
     type: sageAccountActions.LOAD_SAGE_ACCOUNTS_FULFILLED,

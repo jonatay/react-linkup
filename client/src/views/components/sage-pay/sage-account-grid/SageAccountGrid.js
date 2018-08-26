@@ -6,6 +6,7 @@ import React from 'react';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import { Popover, Button } from 'antd';
+import dateFormat from 'dateformat';
 
 class SageAccountGrid extends React.Component {
   render() {
@@ -45,7 +46,12 @@ class SageAccountGrid extends React.Component {
       },
       {
         Header: 'Validated',
-        accessor: 'validated'
+        accessor: 'validated',
+        Cell: props => (
+          <span>{dateFormat(props.value, 'yy-mm-dd [HH:MM]')}</span>
+        ),
+        minWidth: 100,
+        maxWidth: 120
       },
       {
         Header: 'Name',
@@ -62,29 +68,29 @@ class SageAccountGrid extends React.Component {
         accessor: 'branch_code',
         width: 100
       },
-      {
-        Header: 'Bank Name',
-        accessor: 'bank_name',
-        width: 120
-      },
+      // {
+      //   Header: 'Bank Name',
+      //   accessor: 'bank_name',
+      //   width: 120
+      // },
       {
         Header: 'Type',
         accessor: 'account_type',
         width: 30
       },
-      {
-        Header: 'Beneficiary Ref',
-        accessor: 'beneficiary_ref',
-        width: 180
-      },
+      // {
+      //   Header: 'Beneficiary Ref',
+      //   accessor: 'beneficiary_ref',
+      //   width: 180
+      // },
       {
         Header: 'Sage Bank',
         accessor: 'sageBank.bank_name'
       },
-      {
-        Header: 'Sage BBranch',
-        accessor: 'sageBBranch.branch_name'
-      },
+      // {
+      //   Header: 'Sage BBranch',
+      //   accessor: 'sageBBranch.branch_name'
+      // },
       {
         columns: [
           {
@@ -102,8 +108,8 @@ class SageAccountGrid extends React.Component {
               padding: '0',
               textAlign: 'center',
               userSelect: 'none'
-            },
-            Footer: () => <span>&hearts;</span>
+            }
+            // Footer: () => <span>&hearts;</span>
           }
         ]
       }
