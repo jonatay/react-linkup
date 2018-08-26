@@ -10,6 +10,16 @@ function* loadSageAccounts() {
   yield put(sageAccountActions.loadSageAccountsFulfilled(sageAccounts));
 }
 
+function* loadSageEmpAccounts() {
+  yield put(sageBankActions.loadSageBanks());
+  yield put(sageBBranchActions.loadSageBBranches());
+  const { sageAccounts } = yield call([
+    sageAccountList,
+    sageAccountList.listEmp
+  ]);
+  yield put(sageAccountActions.loadSageAccountsFulfilled(sageAccounts));
+}
+
 function* importBestAccounts({ payload: { bestCreditors } }) {
   const { sageAccounts } = yield call(
     [sageAccountList, sageAccountList.importBest],
@@ -63,6 +73,13 @@ function* watchLoadSageAccounts() {
   yield takeEvery(sageAccountActions.LOAD_SAGE_ACCOUNTS, loadSageAccounts);
 }
 
+function* watchLoadSageEmpAccounts() {
+  yield takeEvery(
+    sageAccountActions.LOAD_SAGE_EMP_ACCOUNTS,
+    loadSageEmpAccounts
+  );
+}
+
 function* watchImportBestAccounts() {
   yield takeEvery(sageAccountActions.IMPORT_BEST_ACCOUNTS, importBestAccounts);
 }
@@ -85,6 +102,7 @@ export const sageAccountSagas = [
   fork(watchAuthentication),
   fork(watchIdTokenRefresh),
   fork(watchLoadSageAccounts),
+  fork(watchLoadSageEmpAccounts),
   fork(watchImportBestAccounts),
   fork(watchImportCubitAccounts),
   fork(watchValidateSageAccount)

@@ -1,10 +1,18 @@
 import { ApiList } from 'src/api/index';
 import { sageAccountActions } from './sage-account-actions';
 import { SageAccount } from './sage-account';
+import { apiFetch, statusHelper } from '../../api/api-fetch';
 
 const sageAccountPath = 'sage-pay/sage-accounts';
 
 class SageAccountList extends ApiList {
+  listEmp(params) {
+    return apiFetch(this.path + '-emp', this.token, params)
+      .then(statusHelper)
+      .then(response => response.json())
+      .catch(error => error);
+  }
+
   importBest(data) {
     return this.customApiCall(null, 'import-best', data, 'post');
   }

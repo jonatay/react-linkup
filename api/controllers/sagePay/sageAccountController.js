@@ -11,6 +11,12 @@ exports.list = (req, res) => {
   );
 };
 
+exports.listEmp = (req, res) => {
+  ModelSageAccount.listEmp().then(data =>
+    res.json({ status: 'list', sageAccounts: data })
+  );
+};
+
 getChanges = (sageAccount, newSageAcc) =>
   Object.keys(sageAccount).reduce((accum, key) => {
     if (key !== 'changes' && sageAccount[key] !== newSageAcc[key]) {
@@ -79,7 +85,18 @@ exports.importCubit = (req, res) => {
                 if (!sageAccount) {
                   return ModelSageAccount.insert(newSAcc);
                 } else {
-                  return sageAccount; //ModelSageAccount.update(sageAccount.id, newSAcc);
+                  if (sageAccount.account_number !== newSAcc.account_number) {
+                    return ModelSageAccount.update(sageAccount.id, {
+                      ...sageAccount,
+                      jdata: {
+                        update: {
+                          account_number: newSAcc.account_number,
+                          branch_code: newSAcc.branch_code,
+                          account_type: newSAcc.branch_code
+                        }
+                      }
+                    });
+                  } else return sageAccount; //ModelSageAccount.update(sageAccount.id, newSAcc);
                 }
               })
           )

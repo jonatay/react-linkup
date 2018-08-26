@@ -200,6 +200,44 @@ class FleetTransactionGrid extends React.Component {
         )
       },
       {
+        Header: 'Fuel',
+        accessor: 'fuel_litres',
+        minWidth: 50,
+        maxWidth: 70,
+        filterable: false,
+        Cell: ({ original: { fuel_litres } }) =>
+          fuel_litres > 0 ? (
+            <div>
+              <FormatNumber
+                value={fuel_litres}
+                decimals={1}
+                style={{ color: 'darkgreen', fontWeight: 400 }}
+              />
+            </div>
+          ) : (
+            <p />
+          )
+      },
+      {
+        Header: 'R/L',
+        accessor: 'rand_per_litre',
+        minWidth: 50,
+        maxWidth: 70,
+        filterable: false,
+        Cell: ({ original: { fuel_litres, amount } }) =>
+          fuel_litres > 0 ? (
+            <div>
+              <FormatNumber
+                value={amount / fuel_litres}
+                decimals={2}
+                style={{ color: 'darkred', fontWeight: 400 }}
+              />
+            </div>
+          ) : (
+            <p />
+          )
+      },
+      {
         Header: 'Merchant',
         accessor: 'merchant',
         minWidth: 120,

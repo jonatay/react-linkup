@@ -158,6 +158,14 @@ exports.import_fims_period = (req, res) => {
               fimsPeriod.cal_month
             }-${fimsVoucher.batch_index}`,
             odometer: fimsVoucher.odometer,
+            fuel_litres:
+              parseFloat(fimsVoucher.fuel_litres) > 0
+                ? parseFloat(fimsVoucher.fuel_litres)
+                : null,
+            oil_litres:
+              parseFloat(fimsVoucher.oil_litres) > 0
+                ? parseFloat(fimsVoucher.oil_litres)
+                : null,
             jdata: {}
           };
           // console.log(fleetTransaction);

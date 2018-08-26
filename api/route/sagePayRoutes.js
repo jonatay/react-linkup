@@ -12,6 +12,7 @@ router.get('/sage-bbranches', sageBBranchController.list);
 router.post('/sage-bbranches/import', sageBBranchController.import);
 
 router.get('/sage-accounts', sageAccountController.list);
+router.get('/sage-accounts-emp', sageAccountController.listEmp);
 router.post('/sage-accounts/import-best', sageAccountController.importBest);
 router.post('/sage-accounts/import-cubit', sageAccountController.importCubit);
 router.put(
