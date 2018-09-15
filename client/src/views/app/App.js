@@ -14,7 +14,7 @@ import {
   navActions,
   getAclFront,
   getCurrentLocation
-} from 'src/common';
+} from '../../mid/common';
 
 import NoMatch from '../pages/common/no-match';
 import AppHeader from '../components/common/app-header';
@@ -57,7 +57,7 @@ const App = ({
       </Layout>
     );
   return (
-    <Layout>
+    <Layout style={{height:"inherit"}}>
       <AppHeader
         authenticated={authenticated}
         signOut={signOut}

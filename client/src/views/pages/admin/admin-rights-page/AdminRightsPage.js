@@ -8,8 +8,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import AclTree from 'src/views/components/admin/acl-tree';
-import { getAclTree, getRoles, getResources, getPermissions } from 'src/common';
-import { aclActions, getUsersList } from 'src/admin';
+import { getAclTree, getRoles, getResources, getPermissions } from '../../../../mid/common';
+import { aclActions, getUsersList } from 'src/mid/admin';
 
 import AclAllowDeny from 'src/views/components/admin/acl-allow-deny';
 import AclEditRoleParents from 'src/views/components/admin/acl-edit-role-parents';

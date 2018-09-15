@@ -9,6 +9,7 @@ import { Popover, Button } from 'antd';
 import dateFormat from 'dateformat';
 
 class SageAccountGrid extends React.Component {
+  state = { updateId: 0 };
   render() {
     const columns = [
       {
@@ -40,7 +41,66 @@ class SageAccountGrid extends React.Component {
                   this.props.validateSageAccount(props.original.id)
                 }
               />
-            </Popover>
+            </Popover>{' '}
+            {props.original.jdata && props.original.jdata.update ? (
+              props.original.id !== this.state.updateId ? (
+                //Update Sage Acc
+                <Popover
+                  content={
+                    <div>
+                      <h3>Click to update SAGE ACCOUNT with:</h3>
+                      <pre>
+                        {JSON.stringify(props.original.jdata.update, null, 2)}
+                      </pre>
+                    </div>
+                  }
+                >
+                  <Button
+                    type="primary"
+                    ghost={true}
+                    size="small"
+                    shape="circle"
+                    icon="upload"
+                    onClick={() =>
+                      this.setState({ updateId: props.original.id })
+                    }
+                  />
+                </Popover>
+              ) : (
+                // confirm or cancel
+                <Popover
+                  content={
+                    <div>
+                      <h3>Are you sure</h3>
+                      <pre>
+                        {JSON.stringify(props.original.jdata.update, null, 2)}
+                      </pre>
+                    </div>
+                  }
+                >
+                  <Button
+                    type="primary"
+                    ghost={true}
+                    size="small"
+                    shape="circle"
+                    icon="warning"
+                    onClick={() =>
+                      this.setState({ updateId: props.original.id })
+                    }
+                  />{' '}
+                  <Button
+                    type="danger"
+                    ghost={true}
+                    size="small"
+                    shape="circle"
+                    icon="close-circle-o"
+                    onClick={() => this.setState({ updateId: 0 })}
+                  />
+                </Popover>
+              )
+            ) : (
+              ''
+            )}
           </span>
         )
       },

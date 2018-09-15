@@ -14,7 +14,8 @@ class FleetTransactionFilter extends React.Component {
   constructor(props) {
     super(props);
     // state has to be here as dates need to be turned into moments
-    let params = JSON.parse(Cookies.get('fleetTransactionsFilter'));
+    let params = null;//JSON.parse(Cookies.get('fleetTransactionsFilter'));;
+
     if (!params) {
       params = {
         dateRange: [moment().subtract(6, 'months'), moment()]
