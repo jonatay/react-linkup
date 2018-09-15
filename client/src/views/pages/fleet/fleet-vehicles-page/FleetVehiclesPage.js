@@ -14,7 +14,7 @@ import {
   vehicleActions,
   costCentreGroupActions,
   getCostCentreGroups
-} from 'src/fleet';
+} from 'src/mid/fleet';
 
 import FilterInput from 'src/views/components/common/filter-input/index';
 import VehicleTable from 'src/views/components/fleet/vehicle-table';

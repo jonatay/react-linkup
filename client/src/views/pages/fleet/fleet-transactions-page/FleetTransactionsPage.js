@@ -20,13 +20,16 @@ import {
   getListParams,
   getListOptions,
   getFleetTransactionSummary,
-  getFleetTransactionPeriods
-} from 'src/fleet';
+  getFleetTransactionChartData,
+  getFleetTransactionPeriods,
+  getFleetTransactionTypes
+} from 'src/mid/fleet';
 
 import PageHeader from 'src/views/components/common/page-header';
 import FleetTransactionGrid from '../../../components/fleet/fleet-transaction-grid';
 import FleetTransactionFilter from '../../../components/fleet/fleet-transaction-filter';
 import FleetTransactionSummary from '../../../components/fleet/fleet-transaction-summary';
+import FleetTransactionChart from '../../../components/fleet/fleet-transaction-chart';
 import Cookies from 'js-cookie';
 
 const TabPane = Tabs.TabPane;
@@ -47,7 +50,9 @@ const FleetTransactionsPage = class FleetTransactionsPage extends Component {
           type="editable-card"
           activeKey={this.state.activeKey}
           onChange={activeKey => {
-            Cookies.set('fleetTransactionsActiveKey', activeKey, { expires: 7 });
+            Cookies.set('fleetTransactionsActiveKey', activeKey, {
+              expires: 7
+            });
             this.setState({ activeKey });
           }}
         >
@@ -73,6 +78,17 @@ const FleetTransactionsPage = class FleetTransactionsPage extends Component {
           >
             <FleetTransactionSummary {...this.props} />
           </TabPane>
+          <TabPane
+            key="chart"
+            closable={false}
+            tab={
+              <span>
+                <Icon type="area-chart" /> chart
+              </span>
+            }
+          >
+            <FleetTransactionChart {...this.props} />
+          </TabPane>
         </Tabs>
       </div>
     );
@@ -90,7 +106,9 @@ FleetTransactionsPage.propTypes = {
   listParams: PropTypes.instanceOf(Object).isRequired,
   listOptions: PropTypes.instanceOf(Object).isRequired,
   fleetTransactionSummary: PropTypes.instanceOf(Array).isRequired,
-  fleetTransactionPeriods: PropTypes.instanceOf(Array).isRequired
+  fleetTransactionPeriods: PropTypes.instanceOf(Array).isRequired,
+  fleetTransactionTypes: PropTypes.instanceOf(Array).isRequired,
+  fleetTransactionChartData: PropTypes.instanceOf(Array).isRequired
 };
 
 const mapStateToProps = state => ({
@@ -102,7 +120,9 @@ const mapStateToProps = state => ({
   listParams: getListParams(state),
   listOptions: getListOptions(state),
   fleetTransactionSummary: getFleetTransactionSummary(state),
-  fleetTransactionPeriods: getFleetTransactionPeriods(state)
+  fleetTransactionChartData: getFleetTransactionChartData(state),
+  fleetTransactionPeriods: getFleetTransactionPeriods(state),
+  fleetTransactionTypes: getFleetTransactionTypes(state)
 });
 
 const mapDispatchToProps = {
@@ -111,5 +131,8 @@ const mapDispatchToProps = {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(FleetTransactionsPage)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(FleetTransactionsPage)
 );

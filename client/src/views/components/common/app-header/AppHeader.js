@@ -24,7 +24,8 @@ const iconCheat = {
   'sage-pay': 'cloud-upload-o',
   'bank-accounts': 'credit-card',
   'banks-and-branches': 'shop',
-  'salary-batches': 'solution'
+  'salary-batches': 'solution',
+  'Access':'clock-circle-o'
 };
 
 const { Header } = Layout;

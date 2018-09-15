@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { sageAccountActions, getSageAccounts } from '../../../../sage-pay';
+import { sageAccountActions, getSageAccounts } from '../../../../mid/sage-pay';
 
 import PageHeader from '../../../components/common/page-header/';
 import SageAccountBestImport from '../../../components/sage-pay/sage-account-best-import';

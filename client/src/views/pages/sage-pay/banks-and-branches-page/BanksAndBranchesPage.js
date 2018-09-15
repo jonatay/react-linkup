@@ -15,7 +15,7 @@ import {
   getSageBanks,
   sageBBranchActions,
   getSageBBranches
-} from '../../../../sage-pay';
+} from '../../../../mid/sage-pay';
 
 import { Col, Row, Button } from 'antd';
 

@@ -8,8 +8,8 @@ import { List } from 'immutable';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { userActions, getVisibleUsers } from 'src/admin/users';
-import { getAuthUser } from 'src/common/auth';
+import { userActions, getVisibleUsers } from 'src/mid/admin/users';
+import { getAuthUser } from '../../../../mid/common/auth';
 import { UsersTable } from 'src/views/components/admin/users-table';
 import PageHeader from '../../../components/common/page-header/PageHeader';
 

@@ -25,7 +25,7 @@ import {
   getFimsPeriods,
   tranTypeCcActions,
   getFimsPeriodIsAvailable
-} from 'src/fleet/settings';
+} from 'src/mid/fleet/settings';
 
 import { Tabs, Icon } from 'antd';
 import PageHeader from '../../../components/common/page-header/PageHeader';

@@ -10,7 +10,7 @@ import { Row, Col } from 'antd';
 
 import './style.css';
 
-import { authActions } from 'src/common/auth';
+import { authActions } from '../../../../mid/common/auth';
 
 import { RegisterUserForm } from 'src/views/components/common/register-user-form';
 

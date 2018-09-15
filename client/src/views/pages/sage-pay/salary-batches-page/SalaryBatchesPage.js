@@ -12,11 +12,11 @@ import {
   sageBatchActions,
   getSageBatches,
   getSageBatchInstructions
-} from '../../../../sage-pay/sage-batch';
+} from '../../../../mid/sage-pay/sage-batch';
 
 import PageHeader from '../../../components/common/page-header/';
 import SageBatchGrid from '../../../components/sage-pay/sage-batch-grid';
-import NewSageBatch from '../../../components/sage-pay/new_sage_batch';
+import NewSageBatch from '../../../components/sage-pay/new-sage-batch';
 
 class SalaryBatchesPage extends React.Component {
   componentDidMount() {

@@ -36,7 +36,7 @@ const SalaryBatchesPage = asyncComponent(() =>
 );
 
 const AccessPage = asyncComponent(() =>
-  import('../views/pages/access/access-page')
+  import('../views/pages/attend/attend-page')
 );
 
 export const privateRoutes = [
