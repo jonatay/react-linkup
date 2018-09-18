@@ -82,7 +82,7 @@ class AttendLogFilter extends React.Component {
     return (
       <Row style={{ marginBottom: 10 }}>
         <Col span={12}>
-          <Col span={6}>
+          <Col span={4}>
             <p
               style={{
                 margin: '5px',
@@ -92,7 +92,7 @@ class AttendLogFilter extends React.Component {
               Branch/Dept:
             </p>
           </Col>
-          <Col span={18}>
+          <Col span={20}>
             <TreeSelect {...tProps} />
           </Col>
         </Col>

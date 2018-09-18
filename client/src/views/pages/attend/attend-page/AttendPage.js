@@ -15,11 +15,6 @@ import {
   attendUserActions,
   attendDeptActions,
   attendLogActions,
-  getAttendUsers,
-  getAttendDepts,
-  // getAttendLogs,
-  getAttendLogsVis,
-  getAttendUsersWithDeptLog,
   getAttendLogListParams,
   getAttendLogsPeriods,
   getAttendLogTableData,
@@ -37,11 +32,7 @@ const AttendPage = props => {
 };
 
 AttendPage.propTypes = {
-  attendDepts: PropTypes.array.isRequired,
   attendDeptsTree: PropTypes.array.isRequired,
-  attendUsers: PropTypes.array.isRequired,
-  attendLogs: PropTypes.array.isRequired,
-  attendLogVis: PropTypes.array.isRequired,
   listParams: PropTypes.object.isRequired,
   attendLogPeriods: PropTypes.array.isRequired,
   attendLogTableData: PropTypes.array.isRequired,
@@ -53,11 +44,7 @@ AttendPage.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  attendUsers: getAttendUsers(state),
-  attendDepts: getAttendDepts(state),
   attendDeptsTree: getAttendDeptsTree(state),
-  attendLogs: getAttendUsersWithDeptLog(state),
-  attendLogVis: getAttendLogsVis(state),
   listParams: getAttendLogListParams(state),
   attendLogPeriods: getAttendLogsPeriods(state),
   attendLogTableData: getAttendLogTableData(state),
