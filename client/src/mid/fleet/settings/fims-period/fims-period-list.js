@@ -20,7 +20,7 @@ class FimsPeriodList extends ApiList {
 export const fimsPeriodList = new FimsPeriodList(
   {
     // onAdd: fimsPeriodActions.createFimsPeriodFulfilled(),
-    // onChange: fimsPeriodActions.updateFimsPeriodFulfilled(),
+    // onDeptChange: fimsPeriodActions.updateFimsPeriodFulfilled(),
     onLoad: fimsPeriodActions.loadFimsPeriodsFulfilled(),
     // onRemove: fimsPeriodActions.removeFimsPeriodFulfilled()
   },

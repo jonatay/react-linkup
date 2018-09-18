@@ -15,14 +15,11 @@ import {
   attendUserActions,
   attendDeptActions,
   attendLogActions,
-  getAttendUsers,
-  getAttendDepts,
-  // getAttendLogs,
-  getAttendLogsVis,
-  getAttendUsersWithDeptLog,
   getAttendLogListParams,
   getAttendLogsPeriods,
-  getAttendLogTableData
+  getAttendLogTableData,
+  getAttendDeptsTree,
+  getAttendLogFilter
 } from 'src/mid/attend';
 
 const AttendPage = props => {
@@ -35,32 +32,30 @@ const AttendPage = props => {
 };
 
 AttendPage.propTypes = {
-  attendDepts: PropTypes.array.isRequired,
-  attendUsers: PropTypes.array.isRequired,
-  attendLogs: PropTypes.array.isRequired,
-  attendLogVis: PropTypes.array.isRequired,
+  attendDeptsTree: PropTypes.array.isRequired,
   listParams: PropTypes.object.isRequired,
   attendLogPeriods: PropTypes.array.isRequired,
   attendLogTableData: PropTypes.array.isRequired,
   loadAttendDepts: PropTypes.func.isRequired,
   loadAttendUsers: PropTypes.func.isRequired,
-  loadAttendLogs: PropTypes.func.isRequired
+  loadAttendLogs: PropTypes.func.isRequired,
+  setAttendLogFilter: PropTypes.func.isRequired,
+  attendLogFilter: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  attendUsers: getAttendUsers(state),
-  attendDepts: getAttendDepts(state),
-  attendLogs: getAttendUsersWithDeptLog(state),
-  attendLogVis: getAttendLogsVis(state),
+  attendDeptsTree: getAttendDeptsTree(state),
   listParams: getAttendLogListParams(state),
   attendLogPeriods: getAttendLogsPeriods(state),
-  attendLogTableData: getAttendLogTableData(state)
+  attendLogTableData: getAttendLogTableData(state),
+  attendLogFilter: getAttendLogFilter(state)
 });
 
 const mapDispatchToProps = {
   loadAttendUsers: attendUserActions.loadAttendUsers,
   loadAttendDepts: attendDeptActions.loadAttendDepts,
-  loadAttendLogs: attendLogActions.loadAttendLogs
+  loadAttendLogs: attendLogActions.loadAttendLogs,
+  setAttendLogFilter: attendLogActions.filterAttendLogs
 };
 
 export default withRouter(

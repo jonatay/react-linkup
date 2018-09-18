@@ -92,7 +92,7 @@ exports.importCubit = (req, res) => {
                         update: {
                           account_number: newSAcc.account_number,
                           branch_code: newSAcc.branch_code,
-                          account_type: newSAcc.branch_code
+                          account_type: newSAcc.account_type
                         }
                       }
                     });

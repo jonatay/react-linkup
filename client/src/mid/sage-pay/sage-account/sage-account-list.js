@@ -27,7 +27,7 @@ class SageAccountList extends ApiList {
 export const sageAccountList = new SageAccountList(
   {
     // onAdd: sageAccountActions.createSageaccountFulfilled(),
-    // onChange: sageAccountActions.updateSageaccountFulfilled(),
+    // onDeptChange: sageAccountActions.updateSageaccountFulfilled(),
     onLoad: sageAccountActions.loadSageAccountsFulfilled()
     // onRemove: sageAccountActions.removeSageaccountFulfilled()
   },

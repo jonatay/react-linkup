@@ -99,12 +99,12 @@ class FleetTransactionGrid extends React.Component {
             ? true
             : dateFormat(row[filter.id], 'yy-mm-dd') ===
               dateFormat(filter.value, 'yy-mm-dd'),
-        // Filter: ({ filter, onChange }) => (
+        // Filter: ({ filter, onDeptChange }) => (
         //   <div style={{ height: 30 }}>
         //     <RangePicker
         //     // value={filter ? filter.value : null}
         //     //defaultValue={[moment().subtract(3,'months'), moment()]}
-        //     // onChange={val => onChange(val)}
+        //     // onDeptChange={val => onDeptChange(val)}
         //     />
         //   </div>
         // )

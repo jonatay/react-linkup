@@ -8,53 +8,67 @@ import moment from 'moment';
 
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
-import { Tag, Badge } from 'antd';
+import { Tag, Popover } from 'antd';
 import './style.css';
 
-import _ from 'lodash';
+// import _ from 'lodash';
 
-import selectTableHOC from 'react-table/lib/hoc/selectTable';
-import treeTableHOC from 'react-table/lib/hoc/treeTable';
-
-const SelectTreeTable = selectTableHOC(treeTableHOC(ReactTable));
+// import selectTableHOC from 'react-table/lib/hoc/selectTable';
+// import treeTableHOC from 'react-table/lib/hoc/treeTable';
+//
+// const SelectTreeTable = selectTableHOC(treeTableHOC(ReactTable));
 
 class AttendLogTable extends React.Component {
   state = {
     data: [],
-    perCols: []
+    perCols: [],
+    tableRowCount: 20
   };
 
-  static getDerivedStateFromProps(props, state) {
-    return state;
+  static getDerivedStateFromProps(
+    { attendLogTableData, attendLogPeriods },
+    state
+  ) {
+    // console.log({ attendLogTableData, attendLogPeriods });
+    return {
+      ...state,
+      data: attendLogTableData,
+      perCols: attendLogPeriods,
+      tableRowCount:
+        attendLogTableData.length > 0
+          ? attendLogTableData.length
+          : state.tableRowCount
+    };
   }
   render() {
+    const { data, perCols } = this.state;
     const columns = [
       {
         Header: 'Branch',
         accessor: 'parentDept.name',
-        aggregate: (values, rows) => _.round(_.mean(values)),
-        Aggregated: row => <span>row.value (avg)</span>,
-        width: 100
+        // aggregate: (values, rows) => _.round(_.mean(values)),
+        // Aggregated: row => <span>row.value (avg)</span>,
+        width: 80
         // Cell: props => <span>{dateFormat(props.value, 'GMT:ddd (mm-dd) HH:MM')}</span>
       },
       {
         Header: 'Dept',
         accessor: 'dept.name',
-        aggregate: (values, rows) => _.round(_.mean(values)),
-        Aggregated: row => <span>row.value (avg)</span>,
+        // aggregate: (values, rows) => _.round(_.mean(values)),
+        // Aggregated: row => <span>row.value (avg)</span>,
         width: 100
         // Cell: props => <span>{dateFormat(props.value, 'GMT:ddd (mm-dd) HH:MM')}</span>
       },
       {
         Header: 'Who',
         accessor: 'name',
-        width: 200
+        width: 150
       },
-      ...this.props.attendLogPeriods.map(p => ({
+      ...perCols.map(p => ({
         Header: dateFormat(p, 'mm-dd ddd'),
         className: 'tdLogPeriod',
         accessor: p,
-        minWidth: 140,
+        width: 100,
         Cell: ({ value }) =>
           !value ? (
             ''
@@ -67,25 +81,40 @@ class AttendLogTable extends React.Component {
                   <Tag color="red">none</Tag>
                 )
               ) : value.length === 1 ? (
-                <Tag color="orange">
+                <Tag color="orange" className="tdLogTab">
                   {dateFormat(value[0].log_time, 'GMT:H:MM')}
                 </Tag>
               ) : value.length === 2 ? (
                 <span>
-                  <Tag color="green">
+                  <Tag color="green" className="tdLogTab">
                     {dateFormat(value[0].log_time, 'GMT:H:MM')}
                   </Tag>
-                  <Tag color="blue">
+                  <Tag color="blue" className="tdLogTab">
                     {dateFormat(value[1].log_time, 'GMT:H:MM')}
                   </Tag>
                 </span>
               ) : (
                 <span>
-                  <Tag color="green">
+                  <Tag color="green" className="tdLogTab">
                     {dateFormat(value[0].log_time, 'GMT:H:MM')}
                   </Tag>
-                  <Tag color="pink">{value.length}</Tag>
-                  <Tag color="blue">
+                  <Popover
+                    content={
+                      <div>
+                        {value.slice(1, -1).map(log => (
+                          <Tag color="cyan" key={log.log_time}>
+                            {dateFormat(log.log_time, 'GMT:H:MM')}
+                          </Tag>
+                        ))}
+                      </div>
+                    }
+                    title="Log Times"
+                  >
+                    <Tag color="pink" className="tdLogTab">
+                      {value.length - 2}
+                    </Tag>
+                  </Popover>
+                  <Tag color="blue" className="tdLogTab">
                     {dateFormat(value[value.length - 1].log_time, 'GMT:H:MM')}
                   </Tag>
                 </span>
@@ -95,17 +124,17 @@ class AttendLogTable extends React.Component {
       }))
     ];
     return (
-      <SelectTreeTable
-        data={this.props.attendLogTableData}
+      <ReactTable
+        data={data}
         columns={columns}
-        defaultPageSize={Math.max(this.props.attendLogTableData.length, 100)}
+        defaultPageSize={18}
         style={{
-          height: window.innerHeight - 105 // This will force the table body to overflow and scroll, since there is not enough room
+          height: window.innerHeight - 140 // This will force the table body to overflow and scroll, since there is not enough room
         }}
+        sort={['parentDept.name', 'dept.name', 'name']}
         className="-striped -highlight"
-        showPaginationTop={false}
-        showPaginationBottom={false}
-        pivotBy={['parentDept.name', 'dept.name']}
+        // showPaginationBottom={false}
+        // pivotBy={['parentDept.name', 'dept.name']}
       />
     );
   }

@@ -15,7 +15,7 @@
     "lodash": "^4.17.5",
     "moment": "^2.22.0",
     "prop-types": "15.6.0",
-    "react": "^16.3.1",
+    "react": "^16.5.1",
     "react-chartist": "^0.13.1",
     "react-dom": "^16.2.0",
     "react-easy-chart": "^1.0.0",
@@ -31,7 +31,7 @@
     "react-sortable-tree-theme-full-node-drag": "^1.1.0",
     "react-table": "^6.8.0",
     "react-table-hoc-fixed-columns": "^0.1.6",
-    "redux": "^3.7.2",
+    "redux": "^4.0.0",
     "redux-form": "^7.2.3",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0",
@@ -60,6 +60,6 @@
     "npm-run-all": "^4.1.2",
     "react-app-rewire-less": "^2.1.2",
     "react-app-rewired": "^1.5.2",
-    "redux-devtools-extension": "^2.13.2"
+    "redux-devtools-extension": "^2.13.5"
   }
 }

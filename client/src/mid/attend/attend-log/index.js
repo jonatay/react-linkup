@@ -11,5 +11,6 @@ export {
   getAttendUsersWithDeptLog,
   getAttendLogListParams,
   getAttendLogsPeriods,
-  getAttendLogTableData
+  getAttendLogTableData,
+  getAttendLogFilter
 } from './attend-log-selectors';

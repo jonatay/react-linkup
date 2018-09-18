@@ -9,7 +9,7 @@ class TransactionTypeList extends ApiList {}
 export const transactionTypeList = new TransactionTypeList(
   {
     // onAdd: costCentreGroupActions.createCostCentreFulfilled(),
-    // onChange: costCentreGroupActions.updateCostCentreFulfilled(),
+    // onDeptChange: costCentreGroupActions.updateCostCentreFulfilled(),
     onLoad: transactionTypeActions.loadTransactionTypesFulfilled()
     // onRemove: costCentreGroupActions.removeCostCentreFulfilled()
   },

@@ -13,7 +13,7 @@ class SageBBranchList extends ApiList {
 export const sageBBranchList = new SageBBranchList(
   {
     // onAdd: sageBBranchActions.createSagebBranchFulfilled(),
-    // onChange: sageBBranchActions.updateSagebBranchFulfilled(),
+    // onDeptChange: sageBBranchActions.updateSagebBranchFulfilled(),
     onLoad: sageBBranchActions.loadSageBBranchesFulfilled()
     // onRemove: sageBBranchActions.removeSagebBranchFulfilled()
   },

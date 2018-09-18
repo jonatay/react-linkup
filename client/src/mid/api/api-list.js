@@ -91,7 +91,7 @@ export class ApiList {
   //   });
   //
   //   ref.on('child_changed', snapshot => {
-  //     emit(this._actions.onChange(this.unwrapSnapshot(snapshot)));
+  //     emit(this._actions.onDeptChange(this.unwrapSnapshot(snapshot)));
   //   });
   //
   //   ref.on('child_removed', snapshot => {
