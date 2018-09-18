@@ -1,8 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
-const user_controller = require('../controllers/access/userController');
+const attendUserController = require('../controllers/attend/attendUserController');
+const attendDeptController = require('../controllers/attend/attendDeptController');
+const attendLogController = require('../controllers/attend/attendLogController');
 
-router.get('/attend-users', user_controller.list);
+router.get('/attend-users', attendUserController.list);
+router.get('/attend-depts', attendDeptController.list);
+router.get('/attend-logs/:params', attendLogController.list);
 
 module.exports = router;

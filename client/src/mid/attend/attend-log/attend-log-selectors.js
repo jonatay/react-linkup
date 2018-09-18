@@ -3,10 +3,6 @@ import { getAttendUsers, getAttendUsersWithDept } from '../attend-user';
 import { getAttendDepts } from '../attend-dept';
 import _ from 'lodash';
 import moment from 'moment';
-import {
-  getFleetTransactionList,
-  getFleetTransactionsFromState
-} from '../../fleet/fleet-transactions/fleet-transaction-selectors';
 
 export const getAttendLogsRoot = state => {
   return state.attend.attendLogs;
@@ -93,8 +89,8 @@ export const getAttendLogsVis = createSelector(
 
 const sortLogByTime = (a, b) => (a > b ? 1 : a < b ? -1 : 0);
 
-const findLogByDay = (arr, log) =>
-  arr.find(i => moment(i.log_time).isSame(log.log_time, 'day'));
+// const findLogByDay = (arr, log) =>
+//   arr.find(i => moment(i.log_time).isSame(log.log_time, 'day'));
 
 // const sample = { log_time: Date(), inTime : 'first log time', outTime : 'last log time'}
 
@@ -131,30 +127,37 @@ export const getAttendUsersWithDeptLog = createSelector(
 
 export const getPerId = log => moment(log).format('YYYY-MM-DD');
 
-export const getAttendLogsPeriods = createSelector(
-  getAttendLogList,
-  logs =>
-    logs
-      .toArray()
-      .map(log => log.log_time.slice(0, 10))
-      .sort((a, b) => (a < b ? -1 : a < b ? 1 : 0))
-      .reduce((r, p) => (r[r.length - 1] === p ? r : [...r, p]), [])
-  //   .reduce(
-  //     (ret, log) =>
-  //       ret.find(p => moment(p.log_time).isSame(log.log_time, 'day'))
-  //         ? ret
-  //         : [...ret, getPerId(log)],
-  //     []
-  //   )
-  //   .sort((a, b) => (a > b ? 1 : a < b ? -1 : 0))
+export const getAttendLogsPeriods = createSelector(getAttendLogList, logs =>
+  logs
+    .toArray()
+    .map(log => log.log_time.slice(0, 10))
+    .sort(sortLogByTime)
+    .reverse()
+    .reduce((r, p) => (r[r.length - 1] === p ? r : [...r, p]), [])
 );
+
+const isUserInDepts = (user, depts) =>
+  depts.reduce(
+    (ret, dept) =>
+      ret ||
+      ((user.dept && user.dept.id.toString() === dept) ||
+        (user.parentDept && user.parentDept.id.toString() === dept)),
+    false
+  );
 
 export const getAttendLogTableData = createSelector(
   getAttendUsersWithDept,
   getAttendLogs,
   getAttendLogsPeriods,
-  (users, logs, periods) =>
+  getAttendLogFilter,
+  (users, logs, periods, filter) =>
     users
+      .filter(
+        user =>
+          filter.depts && filter.depts.length > 0
+            ? isUserInDepts(user, filter.depts)
+            : false
+      )
       .map(user => ({
         ...user,
         logCount: logs.filter(log => log.user_id === user.id).length,

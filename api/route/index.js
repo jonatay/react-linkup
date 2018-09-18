@@ -9,6 +9,7 @@ const root_controller = require('../controllers/rootController');
 const adminRoutes = require('./adminRoutes');
 const fleetRoutes = require('./fleetRoutes');
 const sagePayRoutes = require('./sagePayRoutes');
+const attendRoutes = require('./attendRoutes');
 
 /*
 implement firebase auth middleware,
@@ -33,5 +34,6 @@ router.get('/', root_controller.root);
 router.use('/admin', adminRoutes);
 router.use('/fleet', fleetRoutes);
 router.use('/sage-pay', sagePayRoutes);
+router.use('/attend', attendRoutes);
 
 module.exports = router;

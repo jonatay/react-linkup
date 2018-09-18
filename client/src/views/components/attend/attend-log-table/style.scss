@@ -1,4 +1,18 @@
 .tdLogPeriod {
   border-right-color: lightblue !important;
   border-left-color: lightblue !important;
+  padding: 2px;
+  text-align: center;
+  .tdLogTab {
+    padding-left: 2px;
+    padding-right: 2px;
+    margin-right: 1px;
+    font-size: 11px;
+  }
+}
+
+.ReactTable .rt-th,
+.ReactTable .rt-td {
+  padding-top: 4px;
+  padding-bottom: 4px;
 }

@@ -1,24 +1,34 @@
 const sql = require('mssql');
-const table = 'dbo.USERINFO';
-const msSqlConnection = process.env.ZK_ACCESS_MSSQL_CONN;
+const table = 'dbo.DEPARTMENTS';
+const config = process.env.ZK_ACCESS_MSSQL_CONN;
 
-module.exports.list = function() {
-  return new Promise((resolve, reject) => {
-    console.log('zkUSERINFO: connection');
-    sql.connect(msSqlConnection).then(function() {
-      console.log('zkUSERINFO: connected, querying');
-      new sql.Request()
-        .query("select USERID AS id, lastname + ', ' + Name AS name, Badgenumber AS auth_id, DEFAULTDEPTID AS dept_id from " + table)
-        .then(recordsets => {
-          console.log(
-            'zkUSERINFO: queried ',
-            recordsets.recordset.length,
-            ' recs returned'
-          );
-          sql.close();
-          resolve(recordsets.recordset);
-        })
-        .catch(err => reject(err));
+module.exports.list = () =>
+  new sql.ConnectionPool(config)
+    .connect()
+    .then(pool => {
+      console.log('zkDEPARTMENTS: connected, querying');
+      return pool
+        .request()
+        .query(
+          'select DEPTID AS id, DEPTNAME AS name, SUPDEPTID AS parent_id, code from ' +
+            table
+        );
+    })
+    .then(result => {
+      let rows = result.recordset;
+      console.log(
+        'zkDEPARTMENTS: queried ',
+        rows.length,
+        ' recs returned'
+      );
+      sql.close();
+
+      return rows;
+    })
+    .catch(error => {
+      // res.status(500).send({ message: '${error}' });
+      console.log(error);
+      sql.close();
+      return { error };
     });
-  });
-};
+

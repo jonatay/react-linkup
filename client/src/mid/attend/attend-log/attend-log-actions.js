@@ -3,6 +3,8 @@ export const attendLogActions = {
   LOAD_ATTEND_LOGS_FULFILLED: 'ATTEND_LOAD_ATTEND_LOGS_FULFILLED',
   LOAD_ATTEND_LOGS_FAILED: 'ATTEND_LOAD_ATTEND_LOGS_FAILED',
 
+  FILTER_ATTEND_LOGS: 'ATTEND_FILTER_ATTEND_LOGS',
+
   CREATE_ATTEND_LOG: 'ATTEND_CREATE_ATTEND_LOG',
   CREATE_ATTEND_LOG_FAILED: 'ATTEND_CREATE_ATTEND_LOG_FAILED',
   CREATE_ATTEND_LOG_FULFILLED: 'ATTEND_CREATE_ATTEND_LOG_FULFILLED',
@@ -27,6 +29,11 @@ export const attendLogActions = {
   loadAttendLogsFailed: error => ({
     type: attendLogActions.LOAD_ATTEND_LOGS_FAILED,
     payload: { error }
+  }),
+
+  filterAttendLogs: filter => ({
+    type: attendLogActions.FILTER_ATTEND_LOGS,
+    payload: { filter }
   }),
 
   createAttendLog: attendLog => ({

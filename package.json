@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "set DEBUG=reactLinkup:* & nodemon ./bin/www"
+    "start": "set DEBUG=reactLinkup:* & nodemon ./bin/www",
+    "test": "mocha --watch"
   },
   "dependencies": {
     "@firebase/app-types": "^0.1.1",
@@ -31,7 +32,16 @@
     "simple-xml": "^0.0.10",
     "soap": "^0.24.0",
     "strong-soap": "^1.9.0",
+    "tedious": "2.2.4",
     "xml-js": "^1.6.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "expect": "^23.5.0",
+    "mocha": "^5.2.0",
+    "nock": "^9.6.1",
+    "should": "^13.2.3",
+    "sinon": "^6.1.5",
+    "supertest": "^3.1.0"
+  }
 }

@@ -13,7 +13,7 @@ class SageBankList extends ApiList {
 export const sageBankList = new SageBankList(
   {
     // onAdd: sageBankActions.createSagebankFulfilled(),
-    // onChange: sageBankActions.updateSagebankFulfilled(),
+    // onDeptChange: sageBankActions.updateSagebankFulfilled(),
     onLoad: sageBankActions.loadSageBanksFulfilled()
     // onRemove: sageBankActions.removeSagebankFulfilled()
   },

@@ -2,9 +2,9 @@ import { List, Record } from 'immutable';
 import { attendLogActions } from './attend-log-actions';
 
 export const AttendLogState = new Record({
-  filter: '',
+  filter: { depts: ['7', '8'] },
   list: new List(),
-  listParams: {},
+  listParams: {}
 });
 
 export function attendLogReducer(
@@ -13,18 +13,13 @@ export function attendLogReducer(
 ) {
   switch (type) {
     case attendLogActions.CREATE_ATTEND_LOG_FULFILLED:
-      return state.set(
-        'list',
-        state.list.unshift(payload.attendLog)
-      );
+      return state.set('list', state.list.unshift(payload.attendLog));
 
     case attendLogActions.UPDATE_ATTEND_LOG_FULFILLED:
       return state.set(
         'list',
         state.list.map(r => {
-          return r.id === payload.attendLog.id
-            ? payload.attendLog
-            : r;
+          return r.id === payload.attendLog.id ? payload.attendLog : r;
         })
       );
 
@@ -37,10 +32,10 @@ export function attendLogReducer(
       );
 
     case attendLogActions.LOAD_ATTEND_LOGS_FULFILLED:
-      return state.set(
-        'list',
-        new List(payload.attendLogs)
-      );
+      return state.set('list', new List(payload.attendLogs));
+
+    case attendLogActions.FILTER_ATTEND_LOGS:
+      return state.set('filter', { ...state.filter, ...payload.filter });
 
     default:
       return state;

@@ -5,5 +5,6 @@ export { attendDeptSagas } from './attend-dept-sagas';
 export {
   getAttendDeptList,
   getAttendDepts,
-  getAttendDeptById
+  getAttendDeptById,
+  getAttendDeptsTree
 } from './attend-dept-selectors';

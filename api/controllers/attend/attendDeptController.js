@@ -1,5 +1,5 @@
-const ModelAttendUser = require('../../models/access/zkAccess/ModelAttendUser');
+const ModelAttendDept = require('../../models/access/zkAccess/ModelAttendDept');
 
 exports.list = function(req, res) {
-  ModelAttendUser.list().then(data => res.json(data));
+  ModelAttendDept.list().then(data => res.json(data));
 };
