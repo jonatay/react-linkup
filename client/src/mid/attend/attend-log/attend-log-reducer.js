@@ -2,7 +2,7 @@ import { List, Record } from 'immutable';
 import { attendLogActions } from './attend-log-actions';
 
 export const AttendLogState = new Record({
-  filter: { depts: ['7', '8'] },
+  filter: { depts: ['7', '8'], excludeWeekends: true },
   list: new List(),
   listParams: {}
 });

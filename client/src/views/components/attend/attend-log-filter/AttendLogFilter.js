@@ -6,7 +6,7 @@ import React from 'react';
 // import Cookies from 'js-cookie';
 import moment from 'moment';
 
-import { DatePicker, Row, Col, TreeSelect } from 'antd';
+import { DatePicker, Row, Col, TreeSelect, Checkbox } from 'antd';
 const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 
 const { RangePicker } = DatePicker;
@@ -20,14 +20,14 @@ class AttendLogFilter extends React.Component {
 
     if (!params) {
       params = {
-        dateRange: [moment().subtract(7, 'days'), moment()]
+        dateRange: [moment().subtract(14, 'days'), moment()]
       };
     } else if (params.dateRange) {
       params = {
         dateRange: [moment(params.dateRange[0]), moment(params.dateRange[1])]
       };
     }
-    this.state = { params, options: {}, depts: [] };
+    this.state = { params, options: {}, depts: [], excludeWeekends: true };
     this.props.loadAttendLogs(params);
     this.props.loadAttendUsers();
     this.props.loadAttendDepts();
@@ -56,6 +56,12 @@ class AttendLogFilter extends React.Component {
     this.props.setAttendLogFilter({ depts });
   };
 
+  onExcludeWeekendsChange = excludeWeekends => {
+    console.log('onExcludeWeekendsChange', excludeWeekends);
+    this.setState({ excludeWeekends });
+    this.props.setAttendLogFilter({ excludeWeekends });
+  };
+
   render() {
     const { attendDeptsTree } = this.props;
     const tProps = {
@@ -70,13 +76,13 @@ class AttendLogFilter extends React.Component {
       searchPlaceholder: 'Select Dept',
       treeDefaultExpandAll: true,
       style: {
-        width: 300
+        width: '100%'
       }
     };
     return (
       <Row style={{ marginBottom: 10 }}>
         <Col span={12}>
-          <Col span={8}>
+          <Col span={6}>
             <p
               style={{
                 margin: '5px',
@@ -86,12 +92,12 @@ class AttendLogFilter extends React.Component {
               Branch/Dept:
             </p>
           </Col>
-          <Col span={16}>
+          <Col span={18}>
             <TreeSelect {...tProps} />
           </Col>
         </Col>
         <Col span={8}>
-          <Col span={8}>
+          <Col span={6}>
             <p
               style={{
                 margin: '5px',
@@ -108,6 +114,16 @@ class AttendLogFilter extends React.Component {
               allowClear={false}
             />
           </Col>
+        </Col>
+        <Col span={4}>
+          <Checkbox
+            onChange={({ target: { checked } }) =>
+              this.onExcludeWeekendsChange(checked)
+            }
+            checked={this.state.excludeWeekends}
+          >
+            Exclude Weekends
+          </Checkbox>
         </Col>
       </Row>
     );

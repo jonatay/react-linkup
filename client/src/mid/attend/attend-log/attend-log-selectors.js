@@ -81,18 +81,9 @@ export const getAttendLogsVis = createSelector(
         }))
       }))
     )
-  // depts.reduce(
-  //   (res, dept) => (dept.parent_id === 0 ? [...res, dept] : res),
-  //   []
-  // )
 );
 
 const sortLogByTime = (a, b) => (a > b ? 1 : a < b ? -1 : 0);
-
-// const findLogByDay = (arr, log) =>
-//   arr.find(i => moment(i.log_time).isSame(log.log_time, 'day'));
-
-// const sample = { log_time: Date(), inTime : 'first log time', outTime : 'last log time'}
 
 const getAttendForUser = (user, logs) =>
   logs
@@ -127,13 +118,22 @@ export const getAttendUsersWithDeptLog = createSelector(
 
 export const getPerId = log => moment(log).format('YYYY-MM-DD');
 
-export const getAttendLogsPeriods = createSelector(getAttendLogList, logs =>
-  logs
-    .toArray()
-    .map(log => log.log_time.slice(0, 10))
-    .sort(sortLogByTime)
-    .reverse()
-    .reduce((r, p) => (r[r.length - 1] === p ? r : [...r, p]), [])
+export const getAttendLogsPeriods = createSelector(
+  getAttendLogList,
+  getAttendLogFilter,
+  (logs, filter) =>
+    logs
+      .toArray()
+      .map(log => log.log_time.slice(0, 10))
+      .filter(
+        log =>
+          filter.excludeWeekends
+            ? moment(log).day() > 0 && moment(log).day() < 6
+            : true
+      )
+      .sort(sortLogByTime)
+      .reverse()
+      .reduce((r, p) => (r[r.length - 1] === p ? r : [...r, p]), [])
 );
 
 const isUserInDepts = (user, depts) =>

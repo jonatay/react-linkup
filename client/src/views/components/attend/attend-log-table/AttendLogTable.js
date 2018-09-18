@@ -99,7 +99,15 @@ class AttendLogTable extends React.Component {
                     {dateFormat(value[0].log_time, 'GMT:H:MM')}
                   </Tag>
                   <Popover
-                    content={<pre>{JSON.stringify(value, null, 2)}</pre>}
+                    content={
+                      <div>
+                        {value.slice(1, -1).map(log => (
+                          <Tag color="cyan" key={log.log_time}>
+                            {dateFormat(log.log_time, 'GMT:H:MM')}
+                          </Tag>
+                        ))}
+                      </div>
+                    }
                     title="Log Times"
                   >
                     <Tag color="pink" className="tdLogTab">
