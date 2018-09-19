@@ -1,1 +1,0 @@
-export const analyticsId = 'UA-126041937-1';
