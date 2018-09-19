@@ -4,7 +4,7 @@
 */
 import React from 'react';
 // import Cookies from 'js-cookie';
-import moment from 'moment';
+// import moment from 'moment';
 
 import { DatePicker, Row, Col, TreeSelect, Checkbox } from 'antd';
 const SHOW_PARENT = TreeSelect.SHOW_PARENT;
