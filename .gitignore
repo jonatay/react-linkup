@@ -16,3 +16,5 @@ public/javascripts/
 /util/sage/
 /files/
 /build/
+/client/src/.env
+/client/src/mid/config.js

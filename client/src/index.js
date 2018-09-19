@@ -9,6 +9,7 @@ import { initAuth } from './mid/common/auth';
 import history from './mid/history';
 import configureStore from './mid/store';
 import App from './views/app';
+
 // import registerServiceWorker from './registerServiceWorker';
 // import './index.css';
 
