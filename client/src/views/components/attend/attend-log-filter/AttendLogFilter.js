@@ -13,22 +13,9 @@ const { RangePicker } = DatePicker;
 // const Option = Select.Option;
 
 class AttendLogFilter extends React.Component {
+  state = { params: {}, options: {}, depts: [], excludeWeekends: true };
   constructor(props) {
     super(props);
-    // state has to be here as dates need to be turned into moments
-    let params = null; //JSON.parse(Cookies.get('fleetTransactionsFilter'));;
-
-    if (!params) {
-      params = {
-        dateRange: [moment().subtract(14, 'days'), moment()]
-      };
-    } else if (params.dateRange) {
-      params = {
-        dateRange: [moment(params.dateRange[0]), moment(params.dateRange[1])]
-      };
-    }
-    this.state = { params, options: {}, depts: [], excludeWeekends: true };
-    this.props.loadAttendLogs(params);
     this.props.loadAttendUsers();
     this.props.loadAttendDepts();
   }
@@ -36,6 +23,7 @@ class AttendLogFilter extends React.Component {
   static getDerivedStateFromProps(
     {
       attendLogFilter: { depts }
+
     },
     state
   ) {
