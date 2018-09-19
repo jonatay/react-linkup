@@ -33,7 +33,7 @@ const AttendPage = props => {
 
 AttendPage.propTypes = {
   attendDeptsTree: PropTypes.array.isRequired,
-  listParams: PropTypes.object.isRequired,
+  attendLogListParams: PropTypes.object.isRequired,
   attendLogPeriods: PropTypes.array.isRequired,
   attendLogTableData: PropTypes.array.isRequired,
   loadAttendDepts: PropTypes.func.isRequired,
@@ -45,7 +45,7 @@ AttendPage.propTypes = {
 
 const mapStateToProps = state => ({
   attendDeptsTree: getAttendDeptsTree(state),
-  listParams: getAttendLogListParams(state),
+  attendLogListParams: getAttendLogListParams(state),
   attendLogPeriods: getAttendLogsPeriods(state),
   attendLogTableData: getAttendLogTableData(state),
   attendLogFilter: getAttendLogFilter(state)

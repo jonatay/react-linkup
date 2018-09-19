@@ -1,10 +1,11 @@
 import { List, Record } from 'immutable';
 import { attendLogActions } from './attend-log-actions';
+import moment from 'moment';
 
 export const AttendLogState = new Record({
   filter: { depts: ['7', '8'], excludeWeekends: true },
   list: new List(),
-  listParams: {}
+  listParams: { dateRange: [moment().subtract(7, 'days'), moment()] }
 });
 
 export function attendLogReducer(
