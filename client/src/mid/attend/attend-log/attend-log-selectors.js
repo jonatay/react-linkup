@@ -91,8 +91,8 @@ const getAttendForUser = (user, logs) =>
     .sort(sortLogByTime)
     .reduce((ret, log) => {
       //let item = findLogByDay(ret, log);
-      let idx = ret.findIndex(e =>
-        moment(e.log_time).isSame(log.log_time, 'day')
+      let idx = ret.findIndex(
+        e => e.log_time.slice(0, 10) === log.log_time.slice(0, 10)
       );
       if (idx === -1) {
         return [...ret, { log_time: log.log_time, entry_time: log.log_time }];
@@ -116,8 +116,6 @@ export const getAttendUsersWithDeptLog = createSelector(
       .filter(user => user.attend.length > 0)
 );
 
-export const getPerId = log => moment(log).format('YYYY-MM-DD');
-
 export const getAttendLogsPeriods = createSelector(
   getAttendLogList,
   getAttendLogFilter,
@@ -125,15 +123,15 @@ export const getAttendLogsPeriods = createSelector(
     logs
       .toArray()
       .map(log => log.log_time.slice(0, 10))
+      .sort(sortLogByTime)
+      .reverse()
+      .reduce((r, p) => (r[r.length - 1] === p ? r : [...r, p]), [])
       .filter(
         log =>
           filter.excludeWeekends
             ? moment(log).day() > 0 && moment(log).day() < 6
             : true
       )
-      .sort(sortLogByTime)
-      .reverse()
-      .reduce((r, p) => (r[r.length - 1] === p ? r : [...r, p]), [])
 );
 
 const isUserInDepts = (user, depts) =>
@@ -161,7 +159,7 @@ export const getAttendLogTableData = createSelector(
       .map(user => ({
         ...user,
         logCount: logs.filter(log => log.user_id === user.id).length,
-        attend: getAttendForUser(user, logs),
+        //attend: getAttendForUser(user, logs),
         ...periods.reduce(
           (r, p) => ({
             ...r,

@@ -22,12 +22,25 @@ class AttendLogFilter extends React.Component {
 
   static getDerivedStateFromProps(
     {
-      attendLogFilter: { depts }
-
+      loadAttendLogs,
+      attendLogFilter: { depts },
+      attendLogListParams
     },
     state
   ) {
-    return depts ? { ...state, depts } : null;
+    //console.log(state, attendLogListParams);
+    let newState = state;
+    if (depts) {
+      newState = { ...newState, depts };
+    }
+    if (attendLogListParams) {
+      newState = { ...newState, params: attendLogListParams };
+      if (attendLogListParams.dateRange && ( !state.params.dateRange  )) {
+        loadAttendLogs(attendLogListParams);
+        //console.log(state.params.dateRange, attendLogListParams.dateRange);
+      }
+    }
+    return newState;
   }
 
   onDateRangeChange(dateRange) {

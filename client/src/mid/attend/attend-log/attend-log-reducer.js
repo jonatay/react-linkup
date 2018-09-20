@@ -5,7 +5,7 @@ import moment from 'moment';
 export const AttendLogState = new Record({
   filter: { depts: ['7', '8'], excludeWeekends: true },
   list: new List(),
-  listParams: { dateRange: [moment().subtract(7, 'days'), moment()] }
+  listParams: { dateRange: [moment().subtract(10, 'days'), moment()] }
 });
 
 export function attendLogReducer(
@@ -13,6 +13,8 @@ export function attendLogReducer(
   { payload, type }
 ) {
   switch (type) {
+    case attendLogActions.LOAD_ATTEND_LOGS:
+      return state.set('listParams',payload.listParams)
     case attendLogActions.CREATE_ATTEND_LOG_FULFILLED:
       return state.set('list', state.list.unshift(payload.attendLog));
 
