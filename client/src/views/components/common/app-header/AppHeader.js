@@ -5,6 +5,14 @@ import './header.css';
 
 const SubMenu = Menu.SubMenu;
 
+const idxCheat = {
+  Admin: 999,
+  Fleet: 10,
+  HR: 20,
+  Attend: 5,
+  'sage-pay': 50
+};
+
 const iconCheat = {
   Admin: 'tool',
   Fleet: 'car',
@@ -25,7 +33,7 @@ const iconCheat = {
   'bank-accounts': 'credit-card',
   'banks-and-branches': 'shop',
   'salary-batches': 'solution',
-  'Access':'clock-circle-o'
+  Attend: 'clock-circle-o'
 };
 
 const { Header } = Layout;
@@ -43,7 +51,7 @@ const AppHeader = ({
         signOut();
         break;
       case 'userProfile':
-        navigateTo('/user/profile');
+        navigateTo('/user-profile');
         break;
       default:
         navigateTo(`/${key}`);
@@ -74,7 +82,7 @@ const AppHeader = ({
     >
       {/*<div className="logo" />*/}
       <div
-        onClick={() => navigateTo('/')}
+        onClick={() => navigateTo('/home')}
         style={{
           width: 70,
           height: 31,
@@ -112,20 +120,29 @@ const AppHeader = ({
           <Menu.Item key="signOut">Logout</Menu.Item>
         </SubMenu>
 
-        {aclFront.map(menu => (
-          <SubMenu
-            style={{ marginTop: -5 }}
-            key={menu.resource.toLowerCase()}
-            title={
-              <span>
-                <Icon type={iconCheat[menu.resource]} />
-                {menu.label}
-              </span>
-            }
-          >
-            {menu.children.map(mapMenuChildren(menu.resource))}
-          </SubMenu>
-        ))}
+        {aclFront
+          .sort(
+            (a, b) =>
+              idxCheat[a.resource] > idxCheat[b.resource]
+                ? 1
+                : idxCheat[a.resource] < idxCheat[b.resource]
+                  ? -1
+                  : 0
+          )
+          .map(menu => (
+            <SubMenu
+              style={{ marginTop: -5 }}
+              key={menu.resource.toLowerCase()}
+              title={
+                <span>
+                  <Icon type={iconCheat[menu.resource]} />
+                  {menu.label}
+                </span>
+              }
+            >
+              {menu.children.map(mapMenuChildren(menu.resource))}
+            </SubMenu>
+          ))}
       </Menu>
     </Header>
   );

@@ -30,6 +30,7 @@ export const authReducer = (state = new AuthState(), { payload, type }) => {
       });
 
     case authActions.SIGN_IN_FAILED:
+    case authActions.REGISTER_NEW_USER_FAILED:
       return state.merge({
         authError: payload.error
       });

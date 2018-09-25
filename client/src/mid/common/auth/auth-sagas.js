@@ -65,7 +65,7 @@ function* signInWithEmailPassword({ payload: { email, password } }) {
   yield put(
     authActions.signInFulfilled(authData.user, idToken, customClaim.roles)
   );
-  yield history.push('/');
+  yield history.push('/home');
 }
 
 function* registerNewUser({ payload }) {
@@ -90,7 +90,7 @@ function* registerNewUser({ payload }) {
     yield put(
       authActions.signInFulfilled(authData.user, idToken, customClaim.roles)
     );
-    yield history.push('/');
+    yield history.push('/home');
   } catch (error) {
     yield put(authActions.registerNewUserFailed(error));
   }
