@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "set DEBUG=reactLinkup:* & nodemon ./bin/www",
-    "test": "mocha --watch"
+    "test": "mocha --watch",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@firebase/app-types": "^0.1.1",

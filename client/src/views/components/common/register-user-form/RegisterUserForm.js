@@ -115,7 +115,7 @@ class RegisterUserForm extends React.Component {
           })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
         </FormItem>
         <FormItem {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" id="submit">
             Register
           </Button>
         </FormItem>

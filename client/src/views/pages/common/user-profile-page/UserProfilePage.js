@@ -7,21 +7,24 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import PageHeader from 'src/views/components/common/page-header/PageHeader';
+import UserAvatar from 'src/views/components/user/user-avatar';
 
-const UserProfilePage = (props) => {
+const UserProfilePage = props => {
   return (
-    <div><h1>User Profiule</h1></div>
+    <div>
+      {' '}
+      <PageHeader>user-profile</PageHeader>
+      <UserAvatar />
+    </div>
   );
 };
 
-UserProfilePage.propTypes = {
-}
+UserProfilePage.propTypes = {};
 
-const mapStateToProps = state => ({
-});
+const mapStateToProps = state => ({});
 
-const mapDispatchToProps = {
-};
+const mapDispatchToProps = {};
 
 export default withRouter(
   connect(

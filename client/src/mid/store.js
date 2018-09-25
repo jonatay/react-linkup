@@ -8,6 +8,8 @@ import history from './history';
 import reducers from './reducers';
 import sagas from './sagas';
 
+// import { loadState, saveState } from './localStorage';
+
 export default function configureStore() {
   const sagaMiddleware = createSagaMiddleware();
   let middleware = applyMiddleware(sagaMiddleware, routerMiddleware(history));
@@ -21,6 +23,8 @@ export default function configureStore() {
       );
     }
   }
+
+  // const persistedState = loadState();
 
   const store = createStore(reducers, middleware);
   sagaMiddleware.run(sagas);
@@ -40,6 +44,10 @@ export default function configureStore() {
       ReactGA.pageview(location.pathname);
     });
   }
+
+  // store.subscribe(() => {
+  //   saveState(store.getState());
+  // });
 
   return store;
 }
