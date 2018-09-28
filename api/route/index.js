@@ -10,6 +10,14 @@ const adminRoutes = require('./adminRoutes');
 const fleetRoutes = require('./fleetRoutes');
 const sagePayRoutes = require('./sagePayRoutes');
 const attendRoutes = require('./attendRoutes');
+const imageProxy = require('../controllers/imageProxy/imageProxy');
+
+
+/*
+      *** NB: up here routes are UNPROTECTED, only use for utils. TODO: maybe move ../fims-api into api at some point.
+ */
+router.get('/image-proxy/:url/:width/:height.:extension?', imageProxy.imageProxy);
+
 
 /*
 implement firebase auth middleware,
@@ -27,6 +35,10 @@ implement acl middleware
    eg. http://api-host:port/api(1)/fleet(2)/transactions(3)/operator(4)
  */
 router.use('/*', acl.middleware(3, userId));
+
+/*
+      *** NB: from here down, all routes protected by AUTH and ACL
+ */
 
 /* GET api root page. */
 router.get('/', root_controller.root);
