@@ -3,7 +3,7 @@ import { attendLogActions } from './attend-log-actions';
 import moment from 'moment';
 
 export const AttendLogState = new Record({
-  filter: { depts: ['7', '8'], excludeWeekends: true },
+  filter: { depts: ['2', '3', '4', '5'], excludeWeekends: true },
   list: new List(),
   listParams: { dateRange: [moment().subtract(10, 'days'), moment()] }
 });
@@ -14,7 +14,7 @@ export function attendLogReducer(
 ) {
   switch (type) {
     case attendLogActions.LOAD_ATTEND_LOGS:
-      return state.set('listParams',payload.listParams)
+      return state.set('listParams', payload.listParams);
     case attendLogActions.CREATE_ATTEND_LOG_FULFILLED:
       return state.set('list', state.list.unshift(payload.attendLog));
 
