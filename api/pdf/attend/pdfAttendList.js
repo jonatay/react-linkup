@@ -3,10 +3,17 @@ const faker = require('faker');
 
 const _ = require('lodash');
 
+const blockToTextDiv = 5.2;
+
+const getTruncatedText = (text, blockSize) =>
+  text.length <= blockSize / blockToTextDiv
+    ? text
+    : text.slice(0, blockSize / blockToTextDiv);
+
 const doHeader = (doc, headers, x, y, options) => {
   let currentX = x;
   const startY = y;
-  console.log(headers);
+  //console.log(headers);
   headers.forEach((head, idx) => {
     doc
       .fillColor('black')
@@ -42,13 +49,25 @@ const doRow = (doc, row, x, y, options) => {
         : options.columnWidths.length > 0
           ? options.columnWidths[options.columnWidths.length - 1]
           : options.width / size;
-    if (currentX + blockSize > options.width) {
-      return idx;
+    if (text.length <= blockSize / blockToTextDiv) {
+      doc
+        .fillColor('black')
+        .fillOpacity(1)
+        .text(text, currentX + options.xIndent, startY);
+    } else {
+      doc
+        .fillColor('black')
+        .fillOpacity(1)
+        .text(
+          text.slice(0, blockSize / blockToTextDiv),
+          currentX + options.xIndent,
+          startY
+        )
+        .fontSize(3)
+        .text('...', currentX + blockSize - 5, startY + 7)
+        .fontSize(options.fontSize);
     }
-    doc
-      .fillColor('black')
-      .fillOpacity(1)
-      .text(text, currentX + options.xIndent, startY);
+
     doc
       .lineJoin('miter')
       .rect(currentX, startY - 2, blockSize, options.rowHeight)
@@ -59,7 +78,7 @@ const doRow = (doc, row, x, y, options) => {
   });
 };
 
-const createTable = (doc, data, options = {}) => {
+const createTable = (doc, tableData, options = {}) => {
   // set some default options
   options = {
     fontSize: 9,
@@ -68,7 +87,6 @@ const createTable = (doc, data, options = {}) => {
     rowHeight: 12,
     xIndent: 4,
     columnWidths: [],
-    fixedColumns: [],
     ...options
   };
 
@@ -78,30 +96,52 @@ const createTable = (doc, data, options = {}) => {
   let currentY = startY;
   doc.fontSize(options.fontSize);
 
-  let aRows = options.chunkColomns
-    ? _.chunk(data.slice(options.chunkColomns.from), options.chunkColomns.count).map()
-    : [data];
-  // do header if req
-  aRows.forEach();
-  if (options.headers && options.headers.length > 0) {
-    doHeader(doc, options.headers, startX, startY, options);
-    currentY += options.rowHeight;
-  }
+  // init Header
+  const fixHead = options.headers.slice(0, options.chunkColumns.from);
+  const chunkHead =
+    options.chunkColumns && options.chunkColumns.count > 0
+      ? _.chunk(
+          options.headers.slice(options.chunkColumns.from),
+          options.chunkColumns.count
+        ).map((chunk, chunkIdx) => [...fixHead, ...chunk])
+      : [tableData];
 
-  data.forEach(value => {
-    let currentX = startX,
-      size = value.length;
-    doRow(doc, value, currentX, currentY, options);
-
-    currentY += options.rowHeight;
-    if (currentY > options.pageHeight) {
-      doc.addPage({ layout: 'landscape', margin: 20 });
-      currentY = startY;
-      if (options.headers && options.headers.length > 0) {
-        doHeader(doc, options.headers, startX, startY, options);
+  // chunk Table
+  const chunkData =
+    options.chunkColumns && options.chunkColumns.count > 0
+      ? tableData.reduce((acc, row) => {
+          const fixCol = row.slice(0, options.chunkColumns.from);
+          return _.chunk(
+            row.slice(options.chunkColumns.from),
+            options.chunkColumns.count
+          ).map((chunk, chunkIdx) => {
+            return acc.length === 0
+              ? [[...fixCol, ...chunk]]
+              : [...acc[chunkIdx], [...fixCol, ...chunk]];
+          });
+        }, [])
+      : tableData;
+  //draw table
+  chunkData.forEach((chunk, chunkIdx) => {
+    chunk.forEach((chunkRow, rowIdx) => {
+      let currentX = startX,
+        size = chunkRow.length;
+      if (
+        (rowIdx === 0 || currentY === startY) &&
+        (chunkHead && chunkHead[chunkIdx])
+      ) {
+        currentY += options.rowHeight;
+        doHeader(doc, chunkHead[chunkIdx], startX, currentY, options);
         currentY += options.rowHeight;
       }
-    }
+      doRow(doc, chunkRow, currentX, currentY, options);
+
+      currentY += options.rowHeight;
+      if (currentY > options.pageHeight) {
+        doc.addPage({ layout: 'landscape', margin: 20 });
+        currentY = startY;
+      }
+    });
   });
 };
 
@@ -111,7 +151,7 @@ const testTableArray = (height, width) => {
   for (let y = 0; y < height; y++) {
     line = [];
     for (let x = 0; x < width; x++) {
-      line.push(faker.lorem.word());
+      line.push(`${x} ${y} ${faker.lorem.word()}`);
     }
     res.push(line);
   }
@@ -119,7 +159,11 @@ const testTableArray = (height, width) => {
 };
 
 exports.report = (req, res) => {
-  const testArr = testTableArray(12, 9);
+  const {
+    listParams: { depts, dateRange, excludeWeekends }
+  } = JSON.parse(req.params.params);
+  // console.log(depts, dateRange, excludeWeekends);
+  const testArr = testTableArray(100, 30);
   // console.log(testArr);
   const doc = new PDFDocument({
     bufferPages: true,
@@ -132,10 +176,20 @@ exports.report = (req, res) => {
   doc.font('fonts/consola.ttf').fontSize(4);
   createTable(doc, testArr.slice(1), {
     width: 760,
-    columnWidths: [140, 90, 85],
-    headers: testArr.slice(0, 1)[0],
-    fixedColumns: [0],
-    chunkColumns: { from: 1, count: 7 }
+    pageHeight: 570,
+    columnWidths: [140, 70],
+    headers: testArr[0],
+    chunkColumns: { from: 2, count: 7 }
   });
   doc.end();
 };
+
+/* The basic principal per console
+[[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]].reduce(
+  (acc, curr) =>
+    _.chunk(curr, 2).map(
+      (c, i) => (acc.length === 0 ? [c] : [...acc[i], [...c]])
+    ),
+  []
+);
+*/

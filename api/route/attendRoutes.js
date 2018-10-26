@@ -9,4 +9,6 @@ router.get('/attend-users', attendUserController.list);
 router.get('/attend-depts', attendDeptController.list);
 router.get('/attend-logs/:params', attendLogController.list);
 
+router.get('/attend-logs/list-pdf/:params', attendLogController.pdf);
+
 module.exports = router;

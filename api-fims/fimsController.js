@@ -33,6 +33,7 @@ module.exports.post_batch_import = (req, res) => {
       fimsPeriod.rows_received++;
       fimsPeriod.batch_total +=
         Math.round(parseFloat(voucher.amount) * 100) / 100;
+      console.log(voucher.transaction_time);
       ModelFimsVoucher.upsertFimsVoucher({
         ...voucher,
         batch_index: idx + 1,

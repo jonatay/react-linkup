@@ -127,8 +127,3 @@ const PdfAttendLog = ({ attendLogPeriods, attendLogTableData }) => {
 };
 
 export default PdfAttendLog;
-
-/*
-
-
- */

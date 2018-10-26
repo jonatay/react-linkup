@@ -5,7 +5,7 @@
 import React from 'react';
 // import Cookies from 'js-cookie';
 // import moment from 'moment';
-import { PDFDownloadLink, BlobProvider } from '@react-pdf/renderer';
+// import { PDFDownloadLink, BlobProvider } from '@react-pdf/renderer';
 
 import {
   DatePicker,
@@ -14,7 +14,9 @@ import {
   TreeSelect,
   Checkbox,
   Button,
-  Modal
+  Modal,
+  Spin,
+  Alert
 } from 'antd';
 const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 
@@ -27,7 +29,7 @@ class AttendLogFilter extends React.Component {
     options: {},
     depts: [],
     excludeWeekends: true,
-    PdfAttendLog: null
+    showPdf: false
   };
 
   constructor(props) {
@@ -69,21 +71,27 @@ class AttendLogFilter extends React.Component {
   }
 
   onDeptChange = depts => {
-    console.log('onDeptChange ', depts);
+    // console.log('onDeptChange ', depts);
     this.setState({ depts });
     this.props.setAttendLogFilter({ depts });
     this.clearPdf();
   };
 
   onExcludeWeekendsChange = excludeWeekends => {
-    console.log('onExcludeWeekendsChange', excludeWeekends);
+    // console.log('onExcludeWeekendsChange', excludeWeekends);
     this.setState({ excludeWeekends });
     this.props.setAttendLogFilter({ excludeWeekends });
     this.clearPdf();
   };
 
   renderPdf() {
-    this.setState({ PdfAttendLog: this.props.PdfAttendLog(this.props) });
+    // this.setState({ PdfAttendLog: this.props.PdfAttendLog(this.props) });
+    this.props.loadAttendLogPdf({
+      depts: this.state.depts,
+      dateRange: this.state.params.dateRange,
+      excludeWeekends: this.state.excludeWeekends
+    });
+    this.setState({ showPdf: true });
   }
 
   handlePdfModalClose() {
@@ -91,13 +99,14 @@ class AttendLogFilter extends React.Component {
   }
 
   clearPdf() {
-    delete this.state.PdfAttendLog;
-    this.setState({ PdfAttendLog: null });
+    // delete this.state.PdfAttendLog;
+    this.props.clearAttendLogPdf(this.props.blobUrl);
+    this.setState({ showPdf: false });
   }
 
   render() {
-    const { attendDeptsTree, attendDepts } = this.props;
-    const { PdfAttendLog } = this.state;
+    const { attendDeptsTree, blobUrl } = this.props;
+    const { showPdf } = this.state;
     const tProps = {
       treeData:
         attendDeptsTree && attendDeptsTree.length === 1
@@ -113,85 +122,54 @@ class AttendLogFilter extends React.Component {
         width: '100%'
       }
     };
-    console.log(this.props.attendDepts, this.props.attendLogListParams);
-    const getFileName = () =>
-      `attend-log-${this.props.attendLogFilter.depts
-        .map(deptId =>
-          this.props.attendDepts
-            .find(dept => parseInt(deptId, 10) === dept.id)
-            .name.toLowerCase()
-            .replace(/\s/g, '-')
-        )
-        .join('-')}-${this.props.attendLogListParams.dateRange[0].format(
-        'YY-MM-DD'
-      )}-to-${this.props.attendLogListParams.dateRange[1].format(
-        'YY-MM-DD'
-      )}.pdf`;
+    // console.log(this.props.attendDepts, this.props.attendLogListParams);
+    // const getFileName = () =>
+    //   `attend-log-${this.props.attendLogFilter.depts
+    //     .map(deptId =>
+    //       this.props.attendDepts
+    //         .find(dept => parseInt(deptId, 10) === dept.id)
+    //         .name.toLowerCase()
+    //         .replace(/\s/g, '-')
+    //     )
+    //     .join('-')}-${this.props.attendLogListParams.dateRange[0].format(
+    //     'YY-MM-DD'
+    //   )}-to-${this.props.attendLogListParams.dateRange[1].format(
+    //     'YY-MM-DD'
+    //   )}.pdf`;
     return (
       <div>
         <Modal
-          visible={PdfAttendLog !== null}
+          visible={showPdf} //&& this.props.blobUrl !== null
           title="Attend PDF"
+          width={1060}
           onOk={() => this.handlePdfModalClose()}
           onCancel={() => this.handlePdfModalClose()}
           footer={[
-            <span key="download">
-              {PdfAttendLog !== null ? (
-                <PDFDownloadLink
-                  document={PdfAttendLog}
-                  fileName={getFileName()}
-                >
-                  {({ blob, url, loading, error }) =>
-                    loading ? (
-                      <Button icon="printer" type="danger" disabled>
-                        Loading
-                      </Button>
-                    ) : (
-                      <Button icon="download" type="primary">
-                        Download
-                      </Button>
-                    )
-                  }
-                </PDFDownloadLink>
-              ) : (
-                <p>nada</p>
-              )}
-            </span>,
-            <span key="space"> </span>,
-            <Button key="ok" onClick={() => this.handlePdfModalClose()}>
-              Ok
+            <Button
+              icon="close-square"
+              key="close"
+              onClick={() => this.handlePdfModalClose()}
+            >
+              Close
             </Button>
           ]}
-          width="500"
           style={{ top: 10 }}
           bodyStyle={{
-            height: 600
+            height: 500
           }}
         >
-          {PdfAttendLog !== null ? (
-            <BlobProvider document={PdfAttendLog}>
-              {({ blob, url, loading, error }) =>
-                loading ? (
-                  <p>loading</p>
-                ) : (
-                  <iframe
-                    src={url}
-                    title="pdfPreview"
-                    width="100%"
-                    height="100%"
-                  >
-                    <p>Your browser does not support iframes.</p>
-                  </iframe>
-                )
-              }
-            </BlobProvider>
+          {blobUrl !== null ? (
+            <iframe src={blobUrl} title="pdfPreview" width="100%" height="100%">
+              <p>Your browser does not support iframes.</p>
+            </iframe>
           ) : (
-            // <PDFViewer style={{ height: '100%', width: '100%' }}>
-            //   {PdfAttendLog}
-            // </PDFViewer>
-            <div>
-              <h3>Whoops...</h3>
-            </div>
+            <Spin tip="Loading...">
+              <Alert
+                message="Loading"
+                description="PDF is being generated on server, please be patrient."
+                type="info"
+              />
+            </Spin>
           )}
         </Modal>
         <Row style={{ marginBottom: 10 }}>

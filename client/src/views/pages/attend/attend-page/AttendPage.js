@@ -10,7 +10,7 @@ import { withRouter } from 'react-router-dom';
 
 import AttendLogFilter from 'src/views/components/attend/attend-log-filter';
 import AttendLogTable from 'src/views/components/attend/attend-log-table';
-import PdfAttendLog from 'src/pdf/attend/PdfAttendLog';
+// import PdfAttendLog from 'src/pdf/attend/PdfAttendLog';
 
 import {
   attendUserActions,
@@ -21,7 +21,8 @@ import {
   getAttendLogTableData,
   getAttendDeptsTree,
   getAttendLogFilter,
-  getAttendDepts
+  getAttendDepts,
+  getBlobUrl
 } from 'src/mid/attend';
 
 const AttendPage = props => {
@@ -44,7 +45,10 @@ AttendPage.propTypes = {
   loadAttendLogs: PropTypes.func.isRequired,
   setAttendLogFilter: PropTypes.func.isRequired,
   attendLogFilter: PropTypes.object.isRequired,
-  PdfAttendLog : PropTypes.func.isRequired
+  // PdfAttendLog : PropTypes.func.isRequired,
+  loadAttendLogPdf: PropTypes.func.isRequired,
+  blobUrl: PropTypes.string,
+  clearAttendLogPdf: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -54,14 +58,17 @@ const mapStateToProps = state => ({
   attendLogPeriods: getAttendLogsPeriods(state),
   attendLogTableData: getAttendLogTableData(state),
   attendLogFilter: getAttendLogFilter(state),
-  PdfAttendLog: PdfAttendLog
+  // PdfAttendLog: PdfAttendLog
+  blobUrl: getBlobUrl(state)
 });
 
 const mapDispatchToProps = {
   loadAttendUsers: attendUserActions.loadAttendUsers,
   loadAttendDepts: attendDeptActions.loadAttendDepts,
   loadAttendLogs: attendLogActions.loadAttendLogs,
-  setAttendLogFilter: attendLogActions.filterAttendLogs
+  setAttendLogFilter: attendLogActions.filterAttendLogs,
+  loadAttendLogPdf: attendLogActions.loadAttendLogPdf,
+  clearAttendLogPdf: attendLogActions.clearAttendLogPdf
 };
 
 export default withRouter(

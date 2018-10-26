@@ -73,3 +73,18 @@ export const apiCustom = (path, key, action, data, method, token) => {
     myInit
   );
 };
+
+export const apiPdf = (path, action, params, token) => {
+  let myHeaders = new Headers();
+  myHeaders.append('Content-Type', 'blob');
+  myHeaders.append('Authorization', 'Bearer ' + token);
+  var myInit = {
+    method: 'GET',
+    headers: myHeaders,
+    // body: JSON.stringify(params),
+    accept: 'blob'
+  };
+  var query = params ? '/' + encodeURIComponent(JSON.stringify(params)) : '';
+
+  return fetch(`/api/${path}/${action}${query}`, myInit);
+};

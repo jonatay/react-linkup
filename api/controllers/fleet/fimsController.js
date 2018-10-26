@@ -127,6 +127,7 @@ exports.import_fims_period = (req, res) => {
               parseInt(fimsVoucher.transaction_date.substr(4, 2)) - 1,
               parseInt(fimsVoucher.transaction_date.substr(6, 2))
             ),
+            transaction_time: fimsVoucher.transaction_time,
             process_date: new Date(
               parseInt(fimsVoucher.process_date.substr(0, 4)),
               parseInt(fimsVoucher.process_date.substr(4, 2)) - 1,

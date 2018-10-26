@@ -20,6 +20,10 @@ export function getAttendLogListParams(state) {
   return getAttendLogsRoot(state).listParams;
 }
 
+export function getBlobUrl(state) {
+  return getAttendLogsRoot(state).blobUrl;
+}
+
 //=====================================
 //  MEMOIZED SELECTORS
 //-------------------------------------

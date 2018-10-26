@@ -22,16 +22,18 @@ SELECT *
 
 const sqlInsert = `
 INSERT INTO fleet.fleet_transaction(
-            tax_year, tax_month, transaction_date, process_date, registration, 
+            tax_year, tax_month, transaction_date, transaction_time, process_date, registration, 
             cost_centre_id, vehicle_id, driver_id, fims_voucher_id, merchant_id, 
             amount, jdata, transaction_type_id, description, vat_amount, 
             invoice_number, odometer, fuel_litres, oil_litres)
-    VALUES ($[tax_year], $[tax_month], $[transaction_date], $[process_date], $[registration], 
+    VALUES ($[tax_year], $[tax_month], $[transaction_date], $[transaction_time], $[process_date], 
+            $[registration], 
             $[cost_centre_id], $[vehicle_id], $[driver_id], $[fims_voucher_id], $[merchant_id], 
             $[amount], $[jdata], $[transaction_type_id], $[description], $[vat_amount], 
             $[invoice_number], $[odometer], $[fuel_litres], $[oil_litres])
 ON CONFLICT ON CONSTRAINT fleet_transaction_fims_voucher_id_invoice_number_key DO UPDATE
     SET tax_year=$[tax_year], tax_month=$[tax_month], transaction_date=$[transaction_date],
+            transaction_time=$[transaction_time],
             process_date=$[process_date], registration=$[registration],
             cost_centre_id=$[cost_centre_id], vehicle_id=$[vehicle_id], driver_id=$[driver_id],
             fims_voucher_id=$[fims_voucher_id], merchant_id=$[merchant_id], amount=$[amount],

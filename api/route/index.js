@@ -12,8 +12,6 @@ const sagePayRoutes = require('./sagePayRoutes');
 const attendRoutes = require('./attendRoutes');
 const imageProxy = require('../controllers/imageProxy/imageProxy');
 
-const PDFAttendList = require('../pdf/attend/pdfAttendList');
-
 /*
       *** NB: up here routes are UNPROTECTED, only use for utils. TODO: maybe move ../fims-api into api at some point.
  */
@@ -22,7 +20,6 @@ router.get(
   imageProxy.imageProxy
 );
 
-router.get('/pdf/test', PDFAttendList.report);
 
 /*
 implement firebase auth middleware,

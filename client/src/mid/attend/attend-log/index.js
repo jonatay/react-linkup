@@ -12,5 +12,6 @@ export {
   getAttendLogListParams,
   getAttendLogsPeriods,
   getAttendLogTableData,
-  getAttendLogFilter
+  getAttendLogFilter,
+  getBlobUrl
 } from './attend-log-selectors';
