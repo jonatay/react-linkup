@@ -17,6 +17,11 @@ export const attendLogActions = {
   UPDATE_ATTEND_LOG_FAILED: 'ATTEND_UPDATE_ATTEND_LOG_FAILED',
   UPDATE_ATTEND_LOG_FULFILLED: 'ATTEND_UPDATE_ATTEND_LOG_FULFILLED',
 
+  LOAD_ATTEND_LOG_PDF: 'ATTEND_LOAD_ATTEND_LOG_PDF',
+  LOAD_ATTEND_LOG_PDF_FULFILLED: 'ATTEND_LOAD_ATTEND_LOG_PDF_FULFILLED',
+  LOAD_ATTEND_LOG_PDF_FAILED: 'ATTEND_LOAD_ATTEND_LOG_PDF_FAILED',
+  CLEAR_ATTEND_LOG_PDF: 'ATTEND_CLEAR_ATTEND_LOG_PDF',
+
   loadAttendLogs: listParams => ({
     type: attendLogActions.LOAD_ATTEND_LOGS,
     payload: { listParams }
@@ -79,5 +84,24 @@ export const attendLogActions = {
   updateAttendLogFulfilled: attendLog => ({
     type: attendLogActions.UPDATE_ATTEND_LOG_FULFILLED,
     payload: { attendLog }
+  }),
+
+  loadAttendLogPdf: listParams => ({
+    type: attendLogActions.LOAD_ATTEND_LOG_PDF,
+    payload: { listParams }
+  }),
+  loadAttendLogPdfFulfilled: blobUrl => ({
+    type: attendLogActions.LOAD_ATTEND_LOG_PDF_FULFILLED,
+    payload: { blobUrl }
+  }),
+
+  loadAttendLogPdfFailed: error => ({
+    type: attendLogActions.LOAD_ATTEND_LOG_PDF_FAILED,
+    payload: { error }
+  }),
+
+  clearAttendLogPdf: blobUrl => ({
+    type: attendLogActions.CLEAR_ATTEND_LOG_PDF,
+    payload: { blobUrl }
   })
 };

@@ -4,7 +4,8 @@ import {
   apiRemove,
   apiUpdate,
   statusHelper,
-  apiCustom
+  apiCustom,
+  apiPdf
 } from './api-fetch';
 
 export class ApiList {
@@ -69,6 +70,18 @@ export class ApiList {
     return apiCustom(this.path, key, action, data, method, this.token)
       .then(statusHelper)
       .then(response => response.json())
+      .catch(error => error);
+  }
+
+  getPdf(params, action) {
+    return apiPdf(this.path, action, params, this.token)
+      .then(statusHelper)
+      .then(response => response.blob())
+      .then(
+        response =>
+          URL.createObjectURL(new Blob([response], { type: 'application/pdf' }))
+        //response.blob().then(myBlob => URL.createObjectURL(myBlob))
+      )
       .catch(error => error);
   }
 

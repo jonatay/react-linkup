@@ -131,3 +131,7 @@ a {
 
 .ant-table-row > tr > td {
   padding: 0; }
+
+.pull-text-right {
+  text-align: right;
+  padding-right: 10px !important; }

@@ -3,9 +3,10 @@ import { attendLogActions } from './attend-log-actions';
 import moment from 'moment';
 
 export const AttendLogState = new Record({
-  filter: { depts: ['7', '8'], excludeWeekends: true },
+  filter: { depts: ['2', '3', '4', '5'], excludeWeekends: true },
   list: new List(),
-  listParams: { dateRange: [moment().subtract(10, 'days'), moment()] }
+  listParams: { dateRange: [moment().subtract(10, 'days'), moment()] },
+  blobUrl: null
 });
 
 export function attendLogReducer(
@@ -14,7 +15,7 @@ export function attendLogReducer(
 ) {
   switch (type) {
     case attendLogActions.LOAD_ATTEND_LOGS:
-      return state.set('listParams',payload.listParams)
+      return state.set('listParams', payload.listParams);
     case attendLogActions.CREATE_ATTEND_LOG_FULFILLED:
       return state.set('list', state.list.unshift(payload.attendLog));
 
@@ -39,6 +40,12 @@ export function attendLogReducer(
 
     case attendLogActions.FILTER_ATTEND_LOGS:
       return state.set('filter', { ...state.filter, ...payload.filter });
+
+    case attendLogActions.LOAD_ATTEND_LOG_PDF_FULFILLED:
+      return state.set('blobUrl', payload.blobUrl);
+    case attendLogActions.CLEAR_ATTEND_LOG_PDF:
+      URL.revokeObjectURL(payload.blobUrl);
+      return state.set('blobUrl', null);
 
     default:
       return state;

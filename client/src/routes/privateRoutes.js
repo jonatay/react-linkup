@@ -39,7 +39,9 @@ const AttendPage = asyncComponent(() =>
   import('src/views/pages/attend/attend-page')
 );
 
-const HomePage = asyncComponent(() => import('src/views/pages/common/user-home'));
+const HomePage = asyncComponent(() =>
+  import('src/views/pages/common/user-home')
+);
 
 export const privateRoutes = [
   { path: '/admin/users', component: AdminUsersPage },
@@ -53,6 +55,7 @@ export const privateRoutes = [
   { path: '/sage-pay/banks-and-branches', component: BanksAndBranchesPage },
   { path: '/sage-pay/salary-batches', component: SalaryBatchesPage },
   { path: '/attend/attend', component: AttendPage },
+  { path: '/hr/attendance', component: AttendPage },
   { path: '/user-profile', component: UserProfilePage },
   { path: '/home', component: HomePage },
   { path: '/', component: RootPage }

@@ -5,6 +5,8 @@
   "proxy": "http://localhost:3000/",
   "dependencies": {
     "@firebase/app-types": "0.x",
+    "@react-pdf/renderer": "latest",
+    "@react-pdf/styled-components": "^1.2.0",
     "antd": "^3.8.1",
     "babel-polyfill": "^6.26.0",
     "chartist": "0.10.1",
@@ -41,7 +43,8 @@
     "redux-saga": "^0.16.0",
     "reselect": "^3.0.1",
     "source-map-explorer": "^1.5.0",
-    "webpack": "4.0.0"
+    "webpack": "4.0.0",
+    "yoga-layout": "github:naminho/yoga-layout-windows"
   },
   "scripts": {
     "analyze": "source-map-explorer build/static/js/main.*",

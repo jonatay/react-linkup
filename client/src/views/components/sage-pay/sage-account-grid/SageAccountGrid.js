@@ -8,8 +8,15 @@ import 'react-table/react-table.css';
 import { Popover, Button } from 'antd';
 import dateFormat from 'dateformat';
 
+const extractAccountDtls = acc => ({
+  account_number: acc.account_number,
+  branch_code: acc.branch_code,
+  account_type: acc.account_type,
+  sage_bank: acc.sageBank.bank_name
+});
+
 class SageAccountGrid extends React.Component {
-  state = { updateId: 0 };
+  state = { updateSageId: 0, updateCubitId: 0 };
   render() {
     const columns = [
       {
@@ -32,8 +39,14 @@ class SageAccountGrid extends React.Component {
               }
             >
               <Button
-                type="primary"
-                ghost={true}
+                type={
+                  props.original.validationResult
+                    ? props.original.validationResult.valid
+                      ? 'primary'
+                      : 'danger'
+                    : 'default'
+                }
+                //ghost={true}
                 size="small"
                 shape="circle"
                 icon="check-square-o"
@@ -43,38 +56,77 @@ class SageAccountGrid extends React.Component {
               />
             </Popover>{' '}
             {props.original.jdata && props.original.jdata.update ? (
-              props.original.id !== this.state.updateId ? (
+              props.original.id !== this.state.updateSageId &&
+              props.original.id !== this.state.updateCubitId ? (
                 //Update Sage Acc
-                <Popover
-                  content={
-                    <div>
-                      <h3>Click to update SAGE ACCOUNT with:</h3>
-                      <pre>
-                        {JSON.stringify(props.original.jdata.update, null, 2)}
-                      </pre>
-                    </div>
-                  }
-                >
-                  <Button
-                    type="primary"
-                    ghost={true}
-                    size="small"
-                    shape="circle"
-                    icon="upload"
-                    onClick={() =>
-                      this.setState({ updateId: props.original.id })
+                <span>
+                  <Popover
+                    content={
+                      <div>
+                        <h3>Click to update SAGE ACCOUNT with:</h3>
+                        <pre>
+                          {JSON.stringify(props.original.jdata.update, null, 2)}
+                        </pre>
+                      </div>
                     }
-                  />
-                </Popover>
+                  >
+                    <Button
+                      type="primary"
+                      ghost={true}
+                      size="small"
+                      shape="circle"
+                      icon="upload"
+                      onClick={() =>
+                        this.setState({ updateSageId: props.original.id })
+                      }
+                    />
+                  </Popover>
+                  {' '}
+                  <Popover
+                    content={
+                      <div>
+                        <h3>Click to update CUBIT with:</h3>
+                        <pre>
+                          {JSON.stringify(
+                            extractAccountDtls(props.original),
+                            null,
+                            2
+                          )}
+                        </pre>
+                      </div>
+                    }
+                  >
+                    <Button
+                      type="primary"
+                      ghost={true}
+                      size="small"
+                      shape="circle"
+                      icon="download"
+                      onClick={() =>
+                        this.setState({ updateCubitId: props.original.id })
+                      }
+                    />
+                  </Popover>
+                </span>
               ) : (
                 // confirm or cancel
                 <Popover
                   content={
                     <div>
-                      <h3>Are you sure</h3>
-                      <pre>
-                        {JSON.stringify(props.original.jdata.update, null, 2)}
-                      </pre>
+                      <h3>Are you sure?</h3>
+                      {props.original.id === this.state.updateSageId ? (
+                        <pre>
+                          {JSON.stringify(props.original.jdata.update, null, 2)}
+                        </pre>
+                      ) : (
+                        <pre>
+                          {JSON.stringify(
+                            extractAccountDtls(props.original),
+                            null,
+                            2
+                          )}
+                        </pre>
+                      )}
                     </div>
                   }
                 >
@@ -85,7 +137,7 @@ class SageAccountGrid extends React.Component {
                     shape="circle"
                     icon="warning"
                     onClick={() =>
-                      this.setState({ updateId: props.original.id })
+                      this.setState({ updateSageId: props.original.id })
                     }
                   />{' '}
                   <Button
@@ -94,7 +146,9 @@ class SageAccountGrid extends React.Component {
                     size="small"
                     shape="circle"
                     icon="close-circle-o"
-                    onClick={() => this.setState({ updateId: 0 })}
+                    onClick={() =>
+                      this.setState({ updateSageId: 0, updateCubitId: 0 })
+                    }
                   />
                 </Popover>
               )
