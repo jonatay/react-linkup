@@ -5,7 +5,6 @@
   "proxy": "http://localhost:3000/",
   "dependencies": {
     "@firebase/app-types": "0.x",
-    "@react-pdf/styled-components": "^1.2.0",
     "antd": "^3.8.1",
     "babel-polyfill": "^6.26.0",
     "chartist": "0.10.1",
