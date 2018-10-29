@@ -40,3 +40,6 @@ for (var r = 0; r < rows.length; r++)
  eval("(function() { " + code + "})")();
 }
 $$;
+
+
+--SET plv8.start_proc = 'plv8.plv8_startup';

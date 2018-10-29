@@ -35,8 +35,8 @@ exports.list = params => db.many(sqlList, params);
 
 exports.getCcgIdByVehicle = (vehicleId, date) =>
   db
-    .one(sqlGetCcgIdByVehicle, { vehicleId })
-    .then(vCcg => vCcg.cost_centre_group_id);
+    .oneOrNone(sqlGetCcgIdByVehicle, { vehicleId })
+    .then(vCcg => (vCcg ? vCcg.cost_centre_group_id : null));
 
 exports.insert = vehicleCcg => db.one(sqlInsert, vehicleCcg);
 

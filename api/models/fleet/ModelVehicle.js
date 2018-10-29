@@ -10,7 +10,7 @@ SELECT * from fleet.vehicle_get_id($[id]) vehicle
 `;
 
 const sqlGetByRegistration = `
-  SELECT * FROM fleet.vehicle WHERE registration = $[registration]
+  SELECT * FROM fleet.vehicle WHERE registration = $[registration] AND is_active=true
 `;
 // SELECT id FROM fleet.vehicle WHERE $[fimsName] = ANY (fims_names)
 // 	AND $[fimsReg] = ANY (fims_registrations)

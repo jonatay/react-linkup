@@ -49,3 +49,11 @@ plv8.elog(NOTICE, path(2.5));
 plv8.elog(NOTICE, "HELLO WORLD".toProperCase());
 
 $$;
+
+do language plv8 $$
+let sql = `SELECT surname || ', ' || first_names AS name, employee_code 
+            FROM hr.employee 
+            WHERE employee_code LIKE $1 AND leave_date IS NULL`;
+let emps = plv8.execute(sql, ['A%']);
+plv8.elog(NOTICE, JSON.stringify(emps.map(emp=>`${emp.employee_code} - ${emp.name}`),null,2));
+$$
