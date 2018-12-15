@@ -26,7 +26,7 @@ app.set('view engine', 'pug');
 app.set('views', __dirname + '/views');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'client/build/img', 'favicon.ico')));
 // app.use(morgan('combined'));
 
 app.use(
@@ -44,7 +44,8 @@ app.use(
 );
 
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// app.use('/static', express.static(path.join(__dirname, 'public')))
 
 // app.use('/', index);
 // app.use('/users', users);
@@ -52,6 +53,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', api);
 app.use('/api-fims', apiFims);
 
+app.use(
+  express.static(path.join(__dirname, 'client/build'), {  })
+);
 app.use('/static', express.static('client/build/static'));
 app.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname, 'client/build', 'index.html'));

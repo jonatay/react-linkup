@@ -9,7 +9,7 @@ SELECT * FROM fleet.transaction_type WHERE $[purchaseType] = ANY (fims_purchase_
 `;
 
 const sqlInsertFims = `
-INSERT INTO fleet.transaction_type (name, fims_purchase_types) VALUES ( $[purchaseType], $[town], $[oil_coy], $[fimsPurchaseTypes] )
+INSERT INTO fleet.transaction_type (name, fims_purchase_types) VALUES ( $[purchaseType], $[fimsPurchaseTypes] )
 RETURNING *
 `;
 

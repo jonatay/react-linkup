@@ -77,6 +77,7 @@ exports.import_fims_period = (req, res) => {
       .each(
         // async function so await can be used
         async fimsVoucher => {
+          // do something with warnings
           const vehicle = await ModelVehicle.getOrInsert(
             fimsVoucher.vehicle_description,
             fimsVoucher.registration

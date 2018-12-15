@@ -51,6 +51,7 @@ function* refreshToken(user) {
   while (user !== null) {
     yield put(authActions.refreshIdToken(user));
     yield delay(tokenTimeout);
+    //yield put(authActions.signOut());
   }
 }
 
