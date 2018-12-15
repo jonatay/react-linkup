@@ -3,7 +3,7 @@ const db = require('../../services/postgres/db');
 const coyCodes = ['aaab', 'aaac', 'aaad'];
 
 const sqlList = `
-SELECT * from hr.sp_rpt_emp_month_summary($[company_code], $[tax_year], $[tax_month]);
+SELECT * from hr.sp_rpt_emp_month_summary($[company_code], $[tax_year], $[tax_month]) WHERE employee_id <> 574;
 `;
 
 exports.list = (tax_year, tax_month) =>

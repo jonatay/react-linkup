@@ -158,11 +158,14 @@ const testTableArray = (height, width) => {
   return res;
 };
 
+const buildAttendLogTable = ({
+  listParams: { depts, dateRange, excludeWeekends }
+}) => new Promise((resolve, reject) => {});
+
 exports.report = (req, res) => {
-  const {
-    listParams: { depts, dateRange, excludeWeekends }
-  } = JSON.parse(req.params.params);
+  // const params = JSON.parse(req.params.params);
   // console.log(depts, dateRange, excludeWeekends);
+
   const testArr = testTableArray(100, 30);
   // console.log(testArr);
   const doc = new PDFDocument({
