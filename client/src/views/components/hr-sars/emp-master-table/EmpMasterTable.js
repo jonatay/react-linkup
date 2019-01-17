@@ -4,11 +4,14 @@
 */
 import React from 'react';
 import { Table } from 'antd';
+import EmpDetailTable from '../emp-detail-table';
 
 const EmpMasterTable = props => {
-  const expandedRowRender = (rec, idx) => {
-    console.log(rec,idx)
-  }
+  const expandedRowRender = (rec, idx) => (
+    <EmpDetailTable
+      empDetails={props.empDetails.filter(edr => edr.emp_master_id === rec.id)}
+    />
+  );
   const columns = [
     {
       title: 'Period',
@@ -56,7 +59,9 @@ const EmpMasterTable = props => {
       dataSource={props.empMasters}
       columns={columns}
       rowKey="id"
-      size='small' expandedRowRender={expandedRowRender}
+      size="small"
+      expandedRowRender={expandedRowRender}
+      pagination={false}
     />
   );
 };

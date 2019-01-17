@@ -1,9 +1,10 @@
 const db = require('../../services/postgres/db');
 
 const sqlList = `
-SELECT id, emp_master_id, period, employee_code, periods_worked, import_data, 
-       cubit_company_code
-  FROM sars.emp_employee
+SELECT ee.id, ee.emp_master_id, ee.period, ee.employee_code, ee.periods_worked, ee.import_data, 
+       ee.cubit_company_code, e.surname, e.first_names
+  FROM sars.emp_employee ee
+  JOIN hr.employee e ON ee.employee_code = e.employee_code
 `;
 
 // const sqlGetByEmployeeCode = `

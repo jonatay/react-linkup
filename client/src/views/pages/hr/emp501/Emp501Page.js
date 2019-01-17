@@ -6,7 +6,7 @@ import { Select, Row, Col } from 'antd';
 
 import {
   getEmpMasters,
-  getEmpDetailByMasterId,
+  getEmpDetails,
   empMasterActions,
   empDetailActions
 } from 'src/mid/hr';
@@ -108,7 +108,7 @@ class Emp501Page extends React.Component {
           <Row>
             <EmpMasterTable
               empMasters={this.props.empMasters}
-              empDeatils={this.props.empDetails}
+              empDetails={this.props.empDetails}
             />
           </Row>
         </div>
@@ -126,7 +126,7 @@ Emp501Page.propTypes = {
 
 const mapStateToProps = state => ({
   empMasters: getEmpMasters(state),
-  empDetails: getEmpDetailByMasterId(state)
+  empDetails: getEmpDetails(state)
 });
 
 const mapDispatchToProps = {
