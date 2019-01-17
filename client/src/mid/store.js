@@ -15,7 +15,7 @@ export default function configureStore() {
   let middleware = applyMiddleware(sagaMiddleware, routerMiddleware(history));
 
   if (process.env.NODE_ENV !== 'production') {
-    const devToolsExtension = window.devToolsExtension;
+    const devToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION__;
     if (typeof devToolsExtension === 'function') {
       middleware = compose(
         middleware,

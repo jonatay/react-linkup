@@ -10,6 +10,7 @@ const adminRoutes = require('./adminRoutes');
 const fleetRoutes = require('./fleetRoutes');
 const sagePayRoutes = require('./sagePayRoutes');
 const attendRoutes = require('./attendRoutes');
+const hrSarsRoutes = require('./hrSarsRoutes')
 const imageProxy = require('../controllers/imageProxy/imageProxy');
 
 /*
@@ -49,5 +50,6 @@ router.use('/admin', adminRoutes);
 router.use('/fleet', fleetRoutes);
 router.use('/sage-pay', sagePayRoutes);
 router.use('/attend', attendRoutes);
+router.use('/hr-sars', hrSarsRoutes);
 
 module.exports = router;
