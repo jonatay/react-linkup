@@ -33,7 +33,8 @@ const iconCheat = {
   'bank-accounts': 'credit-card',
   'banks-and-branches': 'shop',
   'salary-batches': 'solution',
-  Attend: 'clock-circle-o'
+  Attend: 'clock-circle-o',
+  Emp501: 'shop'
 };
 
 const { Header } = Layout;
