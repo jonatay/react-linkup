@@ -1,3 +1,7 @@
-import { empMasterSagas, empDetailSagas } from './index';
+import { empMasterSagas, empDetailSagas, empCodeSagas } from './index';
 
-export const hrSarsSagas = [...empMasterSagas, ...empDetailSagas];
+export const hrSarsSagas = [
+  ...empMasterSagas,
+  ...empDetailSagas,
+  ...empCodeSagas
+];
