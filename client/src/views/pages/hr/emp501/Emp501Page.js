@@ -7,8 +7,10 @@ import { Select, Row, Col } from 'antd';
 import {
   getEmpMasters,
   getEmpDetails,
+  getEmpCodes,
   empMasterActions,
-  empDetailActions
+  empDetailActions,
+  empCodeActions
 } from 'src/mid/hr';
 
 import { withRouter } from 'react-router-dom';
@@ -40,6 +42,7 @@ class Emp501Page extends React.Component {
   componentDidMount() {
     this.props.loadEmpMasters();
     this.props.loadEmpDetails();
+    this.props.loadEmpCodes();
   }
 
   render() {
@@ -120,18 +123,22 @@ class Emp501Page extends React.Component {
 Emp501Page.propTypes = {
   empMasters: PropTypes.array.isRequired,
   empDetails: PropTypes.array.isRequired,
+  empCodes: PropTypes.array.isRequired,
   loadEmpMasters: PropTypes.func.isRequired,
-  loadEmpDetails: PropTypes.func.isRequired
+  loadEmpDetails: PropTypes.func.isRequired,
+  loadEmpCodes: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   empMasters: getEmpMasters(state),
-  empDetails: getEmpDetails(state)
+  empDetails: getEmpDetails(state),
+  empCodes: getEmpCodes(state)
 });
 
 const mapDispatchToProps = {
   loadEmpMasters: empMasterActions.loadEmpMasters,
-  loadEmpDetails: empDetailActions.loadEmpDetails
+  loadEmpDetails: empDetailActions.loadEmpDetails,
+  loadEmpCodes: empCodeActions.loadEmpCodes
 };
 
 export default withRouter(

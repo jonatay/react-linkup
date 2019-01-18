@@ -6,7 +6,7 @@ import React from 'react';
 
 import { Table } from 'antd';
 
-const EmpDetailTable = props => {
+const EmpCodeTable = props => {
   const columns = [
     {
       title: 'Emp Code',
@@ -40,4 +40,4 @@ const EmpDetailTable = props => {
   );
 };
 
-export default EmpDetailTable;
+export default EmpCodeTable;
