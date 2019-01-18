@@ -112,6 +112,7 @@ class Emp501Page extends React.Component {
             <EmpMasterTable
               empMasters={this.props.empMasters}
               empDetails={this.props.empDetails}
+              empCodes={this.props.empCodes}
             />
           </Row>
         </div>

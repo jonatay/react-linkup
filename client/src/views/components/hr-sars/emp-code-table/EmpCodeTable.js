@@ -5,33 +5,46 @@
 import React from 'react';
 
 import { Table } from 'antd';
+import FormatNumber from '../../common/format-number';
 
 const EmpCodeTable = props => {
   const columns = [
     {
-      title: 'Emp Code',
-      dataIndex: 'employee_code',
-      key: 'employee_code'
+      title: 'Code',
+      dataIndex: 'emp_code',
+      key: 'emp_code'
     },
     {
-      title: 'Name',
-      dataIndex: 'surname',
-      key: 'surname',
-      render: (text, rec) => (
-        <div>
-          {text}, {rec.first_names}
-        </div>
+      title: 'Value',
+      dataIndex: 'emp_value',
+      key: 'emp_value',
+      Cell: value => (
+        <FormatNumber
+          {...value}
+          decimals={2}
+          style={{ color: 'navy', fontWeight: 'bold' }}
+        />
       )
     },
     {
-      title: 'Periods Worked',
-      dataIndex: 'periods_worked',
-      key: 'periods_worked'
+      title: 'Month',
+      dataIndex: 'tax_month',
+      key: 'tax_month'
+    },
+    {
+      title: 'Dr',
+      dataIndex: 'sum_debit',
+      key: 'sum_debit'
+    },
+    {
+      title: 'Cr',
+      dataIndex: 'sum_credit',
+      key: 'sum_credit'
     }
   ];
   return (
     <Table
-      dataSource={props.empDetails}
+      dataSource={props.empCodes}
       columns={columns}
       size="small"
       pagination={false}

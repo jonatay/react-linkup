@@ -10,6 +10,7 @@ const EmpMasterTable = props => {
   const expandedRowRender = (rec, idx) => (
     <EmpDetailTable
       empDetails={props.empDetails.filter(edr => edr.emp_master_id === rec.id)}
+      empCodes={props.empCodes.filter(ecr => ecr.emp_master_id === rec.id)}
     />
   );
   const columns = [
