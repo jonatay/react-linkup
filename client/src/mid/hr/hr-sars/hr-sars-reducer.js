@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
-import { empMasterReducer, empDetailReducer, empCodeReducer } from '.';
+import { empMasterReducer, empDetailReducer, empCodeReducer, codeLkpReducer} from '.';
 
 export const hrSarsReducer = combineReducers({
   empMasters: empMasterReducer,
   empDetails: empDetailReducer,
-  empCodes: empCodeReducer
+  empCodes: empCodeReducer,
+  codeLkps: codeLkpReducer
 });

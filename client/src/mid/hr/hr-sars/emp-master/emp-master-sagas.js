@@ -30,6 +30,14 @@ function* removeEmpMaster({ payload: { empMaster } }) {
     yield put(empMasterActions.removeEmpMasterFailed(result));
   }
 }
+
+function* importEmpMaster({ payload: { data } }) {
+  let { empMaster } = yield call(
+    [empMasterList, empMasterList.importEmpMaster],
+    data
+  );
+  yield put(empMasterActions.updateEmpMasterFulfilled(empMaster));
+}
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -66,11 +74,15 @@ function* watchRemoveEmpMaster() {
   yield takeEvery(empMasterActions.REMOVE_EMP_MASTER, removeEmpMaster);
 }
 
+function* watchImportEmpMaster() {
+  yield takeEvery(empMasterActions.IMPORT_EMP_MASTER, importEmpMaster);
+}
 export const empMasterSagas = [
   fork(watchAuthentication),
   fork(watchIdTokenRefresh),
   fork(watchLoadEmpMasters),
   fork(watchUpdateEmpMaster),
   fork(watchCreateEmpMaster),
-  fork(watchRemoveEmpMaster)
+  fork(watchRemoveEmpMaster),
+  fork(watchImportEmpMaster)
 ];
