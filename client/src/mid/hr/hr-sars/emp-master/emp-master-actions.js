@@ -18,6 +18,11 @@ export const empMasterActions = {
   UPDATE_EMP_MASTER_FULFILLED:
     'HR_SARS_UPDATE_EMP_MASTER_FULFILLED',
 
+  IMPORT_EMP_MASTER: 'HR_SARS_IMPORT_EMP_MASTER',
+  IMPORT_EMP_MASTER_FAILED: 'HR_SARS_IMPORT_EMP_MASTER_FAILED',
+  IMPORT_EMP_MASTER_FULFILLED:
+    'HR_SARS_IMPORT_EMP_MASTER_FULFILLED',
+
   loadEmpMasters: () => ({
     type: empMasterActions.LOAD_EMP_MASTERS
   }),
@@ -73,6 +78,21 @@ export const empMasterActions = {
 
   updateEmpMasterFulfilled: empMaster => ({
     type: empMasterActions.UPDATE_EMP_MASTER_FULFILLED,
+    payload: { empMaster }
+  }),
+
+  importEmpMaster: (data) => ({
+    type: empMasterActions.IMPORT_EMP_MASTER,
+    payload: { data }
+  }),
+
+  importEmpMasterFailed: error => ({
+    type: empMasterActions.IMPORT_EMP_MASTER_FAILED,
+    payload: { error }
+  }),
+
+  importEmpMasterFulfilled: empMaster => ({
+    type: empMasterActions.IMPORT_EMP_MASTER_FULFILLED,
     payload: { empMaster }
   })
 };

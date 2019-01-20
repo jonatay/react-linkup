@@ -1,6 +1,6 @@
 /*
     Jono : 18 02 28
-    FimsImport : Stateless Functional Component
+    Emp501Import : Stateless Functional Component
 */
 import React from 'react';
 // import { List } from 'immutable';

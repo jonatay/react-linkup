@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 export const getCodeLkpsRoot = state => {
-  return state.hr-sars.codeLkps;
+  return state.hr.hrSars.codeLkps;
 };
 
 export const getCodeLkpList = state => {

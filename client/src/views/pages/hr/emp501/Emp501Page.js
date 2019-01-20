@@ -8,16 +8,19 @@ import {
   getEmpMasters,
   getEmpDetails,
   getEmpCodes,
+  getCodeLkps,
   empMasterActions,
   empDetailActions,
-  empCodeActions
+  empCodeActions,
+  codeLkpActions
 } from 'src/mid/hr';
 
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Button from 'antd/es/button';
+import { Button } from 'antd';
 
 import EmpMasterTable from 'src/views/components/hr-sars/emp-master-table';
+import Emp501Import from 'src/views/components/hr-sars/emp-501-import';
 
 const Option = Select.Option;
 
@@ -36,13 +39,21 @@ class Emp501Page extends React.Component {
   state = {
     coys: 'aaab',
     period: '2019-02',
-    liveTest: 'Live'
+    liveTest: 'Live',
+    importEmpVisible: false
   };
 
   componentDidMount() {
     this.props.loadEmpMasters();
     this.props.loadEmpDetails();
     this.props.loadEmpCodes();
+    this.props.loadCodeLkps();
+  }
+
+  handleEmp501Upload(data) {
+    console.log(data);
+    this.props.importEmpMaster(data);
+    this.setState({ importEmpVisible: false });
   }
 
   render() {
@@ -86,9 +97,18 @@ class Emp501Page extends React.Component {
                 <Option key="Test">Test</Option>
               </Select>
             </Col>
-            <Col span={2}>
+            <Col span={4}>
               <Button type="primary" icon="plus-square">
                 Create Return
+              </Button>
+            </Col>
+            <Col span={4}>
+              <Button
+                type="ghost"
+                icon="file-text"
+                onClick={e => this.setState({ importEmpVisible: true })}
+              >
+                Import EMP501 text file
               </Button>
             </Col>
           </Row>
@@ -113,9 +133,15 @@ class Emp501Page extends React.Component {
               empMasters={this.props.empMasters}
               empDetails={this.props.empDetails}
               empCodes={this.props.empCodes}
+              codeLkps={this.props.codeLkps}
             />
           </Row>
         </div>
+        <Emp501Import
+          visible={this.state.importEmpVisible}
+          handleOk={data => this.handleEmp501Upload(data)}
+          handleCancel={e => this.setState({ importEmpVisible: false })}
+        />
       </div>
     );
   }
@@ -125,21 +151,27 @@ Emp501Page.propTypes = {
   empMasters: PropTypes.array.isRequired,
   empDetails: PropTypes.array.isRequired,
   empCodes: PropTypes.array.isRequired,
+  codeLkps: PropTypes.array.isRequired,
   loadEmpMasters: PropTypes.func.isRequired,
   loadEmpDetails: PropTypes.func.isRequired,
-  loadEmpCodes: PropTypes.func.isRequired
+  loadEmpCodes: PropTypes.func.isRequired,
+  loadCodeLkps: PropTypes.func.isRequired,
+  importEmpMaster: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   empMasters: getEmpMasters(state),
   empDetails: getEmpDetails(state),
-  empCodes: getEmpCodes(state)
+  empCodes: getEmpCodes(state),
+  codeLkps: getCodeLkps(state)
 });
 
 const mapDispatchToProps = {
   loadEmpMasters: empMasterActions.loadEmpMasters,
   loadEmpDetails: empDetailActions.loadEmpDetails,
-  loadEmpCodes: empCodeActions.loadEmpCodes
+  loadEmpCodes: empCodeActions.loadEmpCodes,
+  loadCodeLkps: codeLkpActions.loadCodeLkps,
+  importEmpMaster: empMasterActions.importEmpMaster
 };
 
 export default withRouter(

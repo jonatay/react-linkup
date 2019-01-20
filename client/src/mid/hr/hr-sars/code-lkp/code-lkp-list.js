@@ -1,4 +1,4 @@
-import { ApiList } from 'src/mid/api/index';
+import { ApiList } from 'src/mid/api';
 import { codeLkpActions } from './code-lkp-actions';
 import { CodeLkp } from './code-lkp';
 
