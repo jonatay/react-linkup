@@ -14,9 +14,9 @@ function csvToJSON(csv) {
   for (let i = 0; i <= aCsv.length - 1; i++) {
     // aCsv.length
     let aLine = aCsv[i].split(',');
-    let aCV = [];
+    let aCV = {};
     for (let j = 0; j <= aLine.length - 1; j += 2) {
-      aCV.push({ code: aLine[j], value: aLine[j + 1] });
+      aCV[aLine[j]] = aLine[j + 1];
     }
     aRes.push(aCV);
   }

@@ -1,4 +1,4 @@
-import { List, Record } from 'immutable';
+import { List, Record, merge } from 'immutable';
 import { empCodeActions } from './emp-code-actions';
 
 export const EmpCodeState = new Record({
@@ -6,24 +6,16 @@ export const EmpCodeState = new Record({
   list: new List()
 });
 
-export function empCodeReducer(
-  state = new EmpCodeState(),
-  { payload, type }
-) {
+export function empCodeReducer(state = new EmpCodeState(), { payload, type }) {
   switch (type) {
     case empCodeActions.CREATE_EMP_CODE_FULFILLED:
-      return state.set(
-        'list',
-        state.list.unshift(payload.empCode)
-      );
+      return state.set('list', state.list.unshift(payload.empCode));
 
     case empCodeActions.UPDATE_EMP_CODE_FULFILLED:
       return state.set(
         'list',
         state.list.map(r => {
-          return r.id === payload.empCode.id
-            ? payload.empCode
-            : r;
+          return r.id === payload.empCode.id ? payload.empCode : r;
         })
       );
 
@@ -36,10 +28,10 @@ export function empCodeReducer(
       );
 
     case empCodeActions.LOAD_EMP_CODES_FULFILLED:
-      return state.set(
-        'list',
-        new List(payload.empCodes)
-      );
+      return state.set('list', new List(payload.empCodes));
+
+    case empCodeActions.IMPORT_EMP_CODES_FULFILLED:
+      return state.set('list', state.list.concat(payload.empCodes));
 
     default:
       return state;

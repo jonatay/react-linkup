@@ -1,5 +1,5 @@
 import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
-import { empMasterActions } from './emp-master-actions';
+import { empMasterActions, empDetailActions, empCodeActions } from '../';
 import { empMasterList } from './emp-master-list';
 import { authActions } from 'src/mid/common/auth';
 
@@ -32,11 +32,13 @@ function* removeEmpMaster({ payload: { empMaster } }) {
 }
 
 function* importEmpMaster({ payload: { data } }) {
-  let { empMaster } = yield call(
+  let { empMaster, empDetails, empCodes } = yield call(
     [empMasterList, empMasterList.importEmpMaster],
-    data
+    { data }
   );
-  yield put(empMasterActions.updateEmpMasterFulfilled(empMaster));
+  yield put(empMasterActions.importEmpMasterFulfilled(empMaster));
+  yield put(empDetailActions.importEmpDetailsFulfilled(empDetails));
+  yield put(empCodeActions.importEmpCodesFulfilled(empCodes));
 }
 //=====================================
 //  WATCHERS

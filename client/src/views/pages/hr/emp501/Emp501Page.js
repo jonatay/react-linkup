@@ -40,7 +40,11 @@ class Emp501Page extends React.Component {
     coys: 'aaab',
     period: '2019-02',
     liveTest: 'Live',
-    importEmpVisible: false
+    importEmpVisible: false,
+    sortedInfo: {
+      order: 'descend',
+      columnKey: 'period',
+    }
   };
 
   componentDidMount() {
@@ -129,12 +133,7 @@ class Emp501Page extends React.Component {
             </Col>
           </Row>
           <Row>
-            <EmpMasterTable
-              empMasters={this.props.empMasters}
-              empDetails={this.props.empDetails}
-              empCodes={this.props.empCodes}
-              codeLkps={this.props.codeLkps}
-            />
+            <EmpMasterTable {...this.props} />
           </Row>
         </div>
         <Emp501Import
@@ -156,7 +155,8 @@ Emp501Page.propTypes = {
   loadEmpDetails: PropTypes.func.isRequired,
   loadEmpCodes: PropTypes.func.isRequired,
   loadCodeLkps: PropTypes.func.isRequired,
-  importEmpMaster: PropTypes.func.isRequired
+  importEmpMaster: PropTypes.func.isRequired,
+  removeEmpMaster: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -171,7 +171,8 @@ const mapDispatchToProps = {
   loadEmpDetails: empDetailActions.loadEmpDetails,
   loadEmpCodes: empCodeActions.loadEmpCodes,
   loadCodeLkps: codeLkpActions.loadCodeLkps,
-  importEmpMaster: empMasterActions.importEmpMaster
+  importEmpMaster: empMasterActions.importEmpMaster,
+  removeEmpMaster: empMasterActions.removeEmpMaster
 };
 
 export default withRouter(
