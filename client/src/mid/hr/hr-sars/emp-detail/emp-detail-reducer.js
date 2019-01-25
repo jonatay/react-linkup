@@ -1,4 +1,4 @@
-import { List, Record } from 'immutable';
+import { List, merge, Record } from 'immutable';
 import { empDetailActions } from './emp-detail-actions';
 
 export const EmpDetailState = new Record({
@@ -12,18 +12,13 @@ export function empDetailReducer(
 ) {
   switch (type) {
     case empDetailActions.CREATE_EMP_DETAIL_FULFILLED:
-      return state.set(
-        'list',
-        state.list.unshift(payload.empDetail)
-      );
+      return state.set('list', state.list.unshift(payload.empDetail));
 
     case empDetailActions.UPDATE_EMP_DETAIL_FULFILLED:
       return state.set(
         'list',
         state.list.map(r => {
-          return r.id === payload.empDetail.id
-            ? payload.empDetail
-            : r;
+          return r.id === payload.empDetail.id ? payload.empDetail : r;
         })
       );
 
@@ -36,10 +31,10 @@ export function empDetailReducer(
       );
 
     case empDetailActions.LOAD_EMP_DETAILS_FULFILLED:
-      return state.set(
-        'list',
-        new List(payload.empDetails)
-      );
+      return state.set('list', new List(payload.empDetails));
+
+    case empDetailActions.IMPORT_EMP_DETAILS_FULFILLED:
+      return state.set('list', state.list.concat(payload.empDetails));
 
     default:
       return state;

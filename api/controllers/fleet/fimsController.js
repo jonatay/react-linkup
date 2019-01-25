@@ -1,6 +1,6 @@
 const Promise = require('bluebird');
-var aWait = require('asyncawait/await');
-var async = require('asyncawait/async');
+// var aWait = require('asyncawait/await');
+// var async = require('asyncawait/async');
 
 const db = require('../../services/postgres/db');
 

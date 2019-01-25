@@ -9,7 +9,6 @@ import { Table } from 'antd';
 import EmpCodeTable from '../emp-code-table';
 import FormatNumber from '../../common/format-number';
 
-const incomeCodes = [4102];
 const payeCodes = [4102];
 const uifCodes = [4141];
 const sdlCodes = [4142];

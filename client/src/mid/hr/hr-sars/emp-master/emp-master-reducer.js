@@ -12,18 +12,14 @@ export function empMasterReducer(
 ) {
   switch (type) {
     case empMasterActions.CREATE_EMP_MASTER_FULFILLED:
-      return state.set(
-        'list',
-        state.list.unshift(payload.empMaster)
-      );
+    case empMasterActions.IMPORT_EMP_MASTER_FULFILLED:
+      return state.set('list', state.list.unshift(payload.empMaster));
 
     case empMasterActions.UPDATE_EMP_MASTER_FULFILLED:
       return state.set(
         'list',
         state.list.map(r => {
-          return r.id === payload.empMaster.id
-            ? payload.empMaster
-            : r;
+          return r.id === payload.empMaster.id ? payload.empMaster : r;
         })
       );
 
@@ -36,10 +32,7 @@ export function empMasterReducer(
       );
 
     case empMasterActions.LOAD_EMP_MASTERS_FULFILLED:
-      return state.set(
-        'list',
-        new List(payload.empMasters)
-      );
+      return state.set('list', new List(payload.empMasters));
 
     default:
       return state;
