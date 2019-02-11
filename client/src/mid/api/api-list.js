@@ -73,6 +73,12 @@ export class ApiList {
       .catch(error => error);
   }
 
+  customApiGet = (path, params) =>
+    apiFetch(path, this.token, params)
+      .then(statusHelper)
+      .then(response => response.json())
+      .catch(error => error);
+
   getPdf(params, action) {
     return apiPdf(this.path, action, params, this.token)
       .then(statusHelper)

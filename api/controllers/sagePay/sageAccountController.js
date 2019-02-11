@@ -1,7 +1,7 @@
 const accountServices = require('../../services/sagePay/accountServices');
 
 const ModelSageAccount = require('../../models/sagePay/ModelSageAccount');
-const ModelCubitEmployee = require('../../models/cubit/cubit/ModelCubitEmployee');
+const ModelCubitEmployee = require('../../models/cubit/ModelCubitEmployee');
 const ModelEmployee = require('../../models/hr/ModelEmployee');
 const ModelSageBBranch = require('../../models/sagePay/ModelSageBBranch');
 

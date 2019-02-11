@@ -7,6 +7,9 @@ import _ from 'lodash';
 import { Button, Modal, Table } from 'antd';
 import EmpDetailTable from '../emp-detail-table';
 import FormatNumber from '../../common/format-number';
+import dateFormat from 'dateformat';
+
+import './style.css'
 
 const payeCodes = [4102];
 const uifCodes = [4141];
@@ -35,7 +38,8 @@ const EmpMasterTable = class EmpMasterTable extends Component {
       filteredInfo: null,
       sortedInfo: {
         order: 'descend',
-        columnKey: 'period',}
+        columnKey: 'period'
+      }
     });
   };
 
@@ -87,13 +91,13 @@ const EmpMasterTable = class EmpMasterTable extends Component {
         dataIndex: 'cubit_company_code',
         key: 'cubit_company_code'
       },
+      // {
+      //   title: 'Status',
+      //   dataIndex: 'status_id',
+      //   key: 'status_id'
+      // },
       {
-        title: 'Status',
-        dataIndex: 'status_id',
-        key: 'status_id'
-      },
-      {
-        title: 'Detail Count',
+        title: 'Emps',
         dataIndex: 'detail_count',
         key: 'detail_count'
       },
@@ -109,7 +113,7 @@ const EmpMasterTable = class EmpMasterTable extends Component {
                   payeCodes.includes(ecr.emp_code)
               )
               .reduce((r, ecr) => r + ecr.emp_value, 0)}
-            decimals={2}
+            decimals={0}
             style={{ color: 'blue', fontWeight: 'bold' }}
           />
         )
@@ -126,7 +130,7 @@ const EmpMasterTable = class EmpMasterTable extends Component {
                   uifCodes.includes(ecr.emp_code)
               )
               .reduce((r, ecr) => r + ecr.emp_value, 0)}
-            decimals={2}
+            decimals={0}
             style={{ color: 'green', fontWeight: 'bold' }}
           />
         )
@@ -143,7 +147,7 @@ const EmpMasterTable = class EmpMasterTable extends Component {
                   sdlCodes.includes(ecr.emp_code)
               )
               .reduce((r, ecr) => r + ecr.emp_value, 0)}
-            decimals={2}
+            decimals={0}
             style={{ color: 'brown', fontWeight: 'bold' }}
           />
         )
@@ -151,7 +155,10 @@ const EmpMasterTable = class EmpMasterTable extends Component {
       {
         title: 'When Created',
         dataIndex: 'when_create',
-        key: 'when_create'
+        key: 'when_create',
+        render: val => (
+          <span>{dateFormat(val, 'yy-mm-dd HH:MM')}</span>
+        )
       },
       {
         render: rec => (

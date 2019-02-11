@@ -18,8 +18,9 @@ types.setTypeParser(1700, 'text', parseFloat);
 
 var pgp = require('pg-promise')(options);
 
-var cubitDbs = JSON.parse(process.env.POSTGRES_CUBIT).map(c =>
-  pgp(process.env.POSTGRES_CONNECT.replace('/linkup', `/${c.db}`))
-);
+var cubitDbs = JSON.parse(process.env.POSTGRES_CUBIT).map(c => ({
+  ccc: c.ccc,
+  db: pgp(process.env.POSTGRES_CONNECT.replace('/linkup', `/${c.db}`))
+}));
 
 module.exports = cubitDbs;

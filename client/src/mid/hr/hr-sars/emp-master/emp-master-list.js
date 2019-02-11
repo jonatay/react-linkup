@@ -10,6 +10,7 @@ class EmpMasterList extends ApiList {
       .then(res => res)
       .catch(e => e);
   };
+  listCubitCompanies = () => this.customApiGet('hr-sars/cubit-companies');
 }
 
 export const empMasterList = new EmpMasterList(

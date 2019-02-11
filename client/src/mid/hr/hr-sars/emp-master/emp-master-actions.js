@@ -3,25 +3,25 @@ export const empMasterActions = {
   LOAD_EMP_MASTERS_FULFILLED: 'HR_SARS_LOAD_EMP_MASTERS_FULFILLED',
   LOAD_EMP_MASTERS_FAILED: 'HR_SARS_LOAD_EMP_MASTERS_FAILED',
 
+  LOAD_CUBIT_COMPANIES: 'HR_SARS_LOAD_CUBIT_COMPANIES',
+  LOAD_CUBIT_COMPANIES_FULFILLED: 'HR_SARS_LOAD_CUBIT_COMPANIES_FULFILLED',
+  LOAD_CUBIT_COMPANIES_FAILED: 'HR_SARS_LOAD_CUBIT_COMPANIES_FAILED',
+
   CREATE_EMP_MASTER: 'HR_SARS_CREATE_EMP_MASTER',
   CREATE_EMP_MASTER_FAILED: 'HR_SARS_CREATE_EMP_MASTER_FAILED',
-  CREATE_EMP_MASTER_FULFILLED:
-    'HR_SARS_CREATE_EMP_MASTER_FULFILLED',
+  CREATE_EMP_MASTER_FULFILLED: 'HR_SARS_CREATE_EMP_MASTER_FULFILLED',
 
   REMOVE_EMP_MASTER: 'HR_SARS_REMOVE_EMP_MASTER',
   REMOVE_EMP_MASTER_FAILED: 'HR_SARS_REMOVE_EMP_MASTER_FAILED',
-  REMOVE_EMP_MASTER_FULFILLED:
-    'HR_SARS_REMOVE_EMP_MASTER_FULFILLED',
+  REMOVE_EMP_MASTER_FULFILLED: 'HR_SARS_REMOVE_EMP_MASTER_FULFILLED',
 
   UPDATE_EMP_MASTER: 'HR_SARS_UPDATE_EMP_MASTER',
   UPDATE_EMP_MASTER_FAILED: 'HR_SARS_UPDATE_EMP_MASTER_FAILED',
-  UPDATE_EMP_MASTER_FULFILLED:
-    'HR_SARS_UPDATE_EMP_MASTER_FULFILLED',
+  UPDATE_EMP_MASTER_FULFILLED: 'HR_SARS_UPDATE_EMP_MASTER_FULFILLED',
 
   IMPORT_EMP_MASTER: 'HR_SARS_IMPORT_EMP_MASTER',
   IMPORT_EMP_MASTER_FAILED: 'HR_SARS_IMPORT_EMP_MASTER_FAILED',
-  IMPORT_EMP_MASTER_FULFILLED:
-    'HR_SARS_IMPORT_EMP_MASTER_FULFILLED',
+  IMPORT_EMP_MASTER_FULFILLED: 'HR_SARS_IMPORT_EMP_MASTER_FULFILLED',
 
   loadEmpMasters: () => ({
     type: empMasterActions.LOAD_EMP_MASTERS
@@ -35,10 +35,22 @@ export const empMasterActions = {
     type: empMasterActions.LOAD_EMP_MASTERS_FAILED,
     payload: { error }
   }),
+  loadCubitCompanies: () => ({
+    type: empMasterActions.LOAD_CUBIT_COMPANIES
+  }),
 
-  createEmpMaster: empMaster => ({
+  loadCubitCompaniesFulfilled: cubitCompanies => ({
+    type: empMasterActions.LOAD_CUBIT_COMPANIES_FULFILLED,
+    payload: { cubitCompanies }
+  }),
+
+  loadCubitCompaniesFailed: error => ({
+    type: empMasterActions.LOAD_CUBIT_COMPANIES_FAILED,
+    payload: { error }
+  }),
+  createEmpMaster: data => ({
     type: empMasterActions.CREATE_EMP_MASTER,
-    payload: { empMaster }
+    payload: { data }
   }),
 
   createEmpMasterFailed: error => ({
@@ -81,7 +93,7 @@ export const empMasterActions = {
     payload: { empMaster }
   }),
 
-  importEmpMaster: (data) => ({
+  importEmpMaster: data => ({
     type: empMasterActions.IMPORT_EMP_MASTER,
     payload: { data }
   }),
