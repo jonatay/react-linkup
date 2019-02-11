@@ -48,3 +48,24 @@ exports.createFromEmp501Import = (empDetail, jEmp) =>
       cubit_company_code: 'import'
     })
   );
+
+ getEmpCode = (empLedger) => {
+       switch (empLedger.cubit_description) {
+             case 'Gross Salary':
+                   return 1234;
+             default:
+                   return null;
+       }
+ }
+
+exports.createFromEmpMasterEmpLedgers = ({
+  empMaster,
+  empDetail,
+  empLedgers
+}) =>
+  Promise.map(empLedgers, empLedger => {
+        let empCode = getEmpCode(empLedger);
+        if (empCode) {
+              return
+        }
+  });

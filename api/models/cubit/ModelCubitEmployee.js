@@ -1,4 +1,4 @@
-const cubitDbs = require('../../../services/postgres/cubit_dbs');
+const cubitDbs = require('../../services/postgres/cubit_dbs');
 
 const sqlList = 'SELECT * FROM cubit.employees';
 

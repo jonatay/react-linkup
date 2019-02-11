@@ -81,9 +81,9 @@ class Emp501Import extends React.Component {
         title="Import Emp501 Return File"
         visible={this.props.visible}
         // onOk={this.handleUpload}
-        // onCancel={this.props.handleCancel}
+        onCancel={this.props.onCancel}
         footer={[
-          <Button key="cancel" onClick={this.props.handleCancel}>
+          <Button key="cancel" onClick={this.props.onCancel}>
             Cancel
           </Button>,
           <Button

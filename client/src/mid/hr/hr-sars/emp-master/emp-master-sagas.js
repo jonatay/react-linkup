@@ -5,14 +5,39 @@ import { authActions } from 'src/mid/common/auth';
 
 function* loadAllEmpMasters() {
   const { empMasters } = yield call([empMasterList, empMasterList.list]);
+  // console.log(empMasters);
   yield put(empMasterActions.loadEmpMastersFulfilled(empMasters));
 }
 
-function* createEmpMaster({ payload: { empMaster } }) {
-  let result = yield call([empMasterList, empMasterList.insert], {
-    empMaster
-  });
-  yield put(empMasterActions.createEmpMasterFulfilled(result.empMaster));
+function* loadAllCubitCompanies() {
+  //console.log('loadAllCubitCompanies');
+  const { cubitCompanies } = yield call([
+    empMasterList,
+    empMasterList.listCubitCompanies
+  ]);
+  // console.log(cubitCompanies);
+  yield put(empMasterActions.loadCubitCompaniesFulfilled(cubitCompanies));
+}
+
+function* createEmpMaster({ payload: { data } }) {
+  let { error, empMaster, empDetails, empCodes } = yield call(
+    [empMasterList, empMasterList.insert],
+    {
+      data
+    }
+  );
+  if (!error) {
+    yield put(empMasterActions.createEmpMasterFulfilled(empMaster));
+    if (empDetails) {
+      yield put(empDetailActions.importEmpDetailsFulfilled(empDetails));
+    }
+    if (empCodes) {
+      yield put(empCodeActions.importEmpCodesFulfilled(empCodes));
+    }
+  } else {
+    console.log(error);
+    yield put(empMasterActions.createEmpMasterFailed(error));
+  }
 }
 
 function* updateEmpMaster({ payload: { id, changes } }) {
@@ -64,6 +89,10 @@ function* watchLoadEmpMasters() {
   yield takeEvery(empMasterActions.LOAD_EMP_MASTERS, loadAllEmpMasters);
 }
 
+function* watchLoadCubitCompanies() {
+  yield takeEvery(empMasterActions.LOAD_CUBIT_COMPANIES, loadAllCubitCompanies);
+}
+
 function* watchCreateEmpMaster() {
   yield takeEvery(empMasterActions.CREATE_EMP_MASTER, createEmpMaster);
 }
@@ -86,5 +115,6 @@ export const empMasterSagas = [
   fork(watchUpdateEmpMaster),
   fork(watchCreateEmpMaster),
   fork(watchRemoveEmpMaster),
-  fork(watchImportEmpMaster)
+  fork(watchImportEmpMaster),
+  fork(watchLoadCubitCompanies)
 ];

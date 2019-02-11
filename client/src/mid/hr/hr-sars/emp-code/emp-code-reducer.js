@@ -1,4 +1,4 @@
-import { List, Record, merge } from 'immutable';
+import { List, Record } from 'immutable';
 import { empCodeActions } from './emp-code-actions';
 
 export const EmpCodeState = new Record({

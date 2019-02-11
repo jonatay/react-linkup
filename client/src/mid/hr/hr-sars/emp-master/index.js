@@ -5,5 +5,6 @@ export { empMasterSagas } from './emp-master-sagas';
 export {
   getEmpMasterList,
   getEmpMasters,
-  getEmpMasterById
+  getEmpMasterById,
+  getCubitCompanies
 } from './emp-master-selectors';

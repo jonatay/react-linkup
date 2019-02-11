@@ -3,7 +3,8 @@ import { empMasterActions } from './emp-master-actions';
 
 export const EmpMasterState = new Record({
   filter: '',
-  list: new List()
+  list: new List(),
+  cubitCompanies: new List() //TODO: Put this in its own midware
 });
 
 export function empMasterReducer(
@@ -33,6 +34,9 @@ export function empMasterReducer(
 
     case empMasterActions.LOAD_EMP_MASTERS_FULFILLED:
       return state.set('list', new List(payload.empMasters));
+
+    case empMasterActions.LOAD_CUBIT_COMPANIES_FULFILLED:
+      return state.set('cubitCompanies', new List(payload.cubitCompanies));
 
     default:
       return state;
