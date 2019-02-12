@@ -113,7 +113,12 @@ const getEmp501Line = emp => ({
   '4497': '2835'
 });
 
-exports.createFromEmpMasterEmployee = ({ empMaster, employee, company }) =>
+exports.createFromEmpMasterEmployee = ({
+  empMaster,
+  employee,
+  cubitEmployee,
+  sageAccount
+}) =>
   db.one(sqlCreate, {
     emp_master_id: empMaster.id,
     period: empMaster.period,
@@ -124,10 +129,42 @@ exports.createFromEmpMasterEmployee = ({ empMaster, employee, company }) =>
     date_from: empMaster.date_from,
     date_to: empMaster.date_to,
     sic7_code: empMaster.sic7,
-    bank_account_type: null,
-    bank_account_number: null,
+    bank_account_type: sageAccount
+      ? sageAccount.account_type
+      : cubitEmployee.bankacctype === 'Savings'
+        ? 2
+        : cubitEmployee.bankacctype === 'Credit Card'
+          ? 5
+          : 1,
+    bank_account_number: sageAccount ? sageAccount.account_number : cubitEmployee.bankaccno,
     bank_branch_number: null,
     bank_name: null,
     bank_branch_name: null,
     bank_account_name: null
   });
+
+/*
+
+Employee Bank Account Type
+3240
+N1
+Employee bank account type.
+ Mandatory
+ The following bank account type options must be used:
+0 = Not Paid by electronic bank transfer
+1 = Cheque/Current Account
+2 = Savings Account
+3 = Transmission Account
+4 = Bond Account
+5 = Credit Card Account
+6 = Subscription Share Account
+7 = Foreign Bank Account
+
+// sage_account - account_type
+
+1 = Current / Checking
+2 = Savings
+3 = Transmission
+4 = Bond
+
+ */

@@ -10,6 +10,9 @@ const ModelHrSarsEmpLedger = require('../../models/hrSars/ModelHrSarsEmpLedger')
 const ModelEmployee = require('../../models/hr/ModelEmployee');
 const ModelEmpLedger = require('../../models/hr/ModelEmpLedger');
 const ModelCubitCompany = require('../../models/cubit/ModelCubitCompany');
+const ModelCubitEmployees = require('../../models/cubit/ModelCubitEmployee');
+
+const ModelSageAccount = require('../../models/sagePay/ModelSageAccount');
 
 exports.list = (req, res) => {
   ModelEmpMaster.list().then(data =>
@@ -22,6 +25,10 @@ exports.listCubitCompanies = (req, res) => {
     res.json({ status: 'list', cubitCompanies: data })
   );
 };
+
+// ModelCubitEmployees.get('RE423').then(data =>
+//   console.log(JSON.stringify(data, null, 2))
+// );
 
 exports.create = (req, res) => {
   try {
@@ -41,6 +48,8 @@ exports.create = (req, res) => {
             //get employee and emp_ledger's for each emp,
             [
               ModelEmployee.getByEmployeeCode(empCode.employee_code),
+              ModelSageAccount.getByAccRef(empCode.employee_code),
+              ModelCubitEmployees.get(empCode.employee_code),
               ModelEmpLedger.getEmpInDateRange(
                 data.dateFrom,
                 data.dateTo,
@@ -50,13 +59,15 @@ exports.create = (req, res) => {
             data => data
           ).then((
             //get employee and emp_ledger's for each emp,
-            [employee, empLedgers]
+            [employee, sageAccount, cubitEmployee, empLedgers]
           ) =>
             //use empMaster and employee to create EmpDetail
             // EmpDetail = sars.emp_employee - has emp dependant codes, name, id, addr, bank etc...
             ModelEmpDetail.createFromEmpMasterEmployee({
               empMaster,
-              employee
+              employee,
+              sageAccount,
+              cubitEmployee
             }).then(empDetail =>
               ModelEmpCode.createFromEmpMasterEmpLedgers({
                 empMaster,
