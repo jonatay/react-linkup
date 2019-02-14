@@ -29,7 +29,7 @@ for (var i = aData.length - 1; i >= 0; i--) {
     if (jVehicle.id) {
       aResult.push(jVehicle);
     }
-    // create new one
+    // createFromEmpDetailsParams new one
     jVehicle = {
       registration: jRow.registration,
       id: jRow.vehicle_id,

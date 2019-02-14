@@ -10,6 +10,10 @@ const ModelHrSarsEmpLedger = require('../../models/hrSars/ModelHrSarsEmpLedger')
 const ModelEmployee = require('../../models/hr/ModelEmployee');
 const ModelEmpLedger = require('../../models/hr/ModelEmpLedger');
 const ModelCubitCompany = require('../../models/cubit/ModelCubitCompany');
+const ModelCubitEmployees = require('../../models/cubit/ModelCubitEmployee');
+
+const ModelSageAccount = require('../../models/sagePay/ModelSageAccount');
+const ModelGLedger = require('../../models/gl/ModelGLedger');
 
 exports.list = (req, res) => {
   ModelEmpMaster.list().then(data =>
@@ -23,11 +27,92 @@ exports.listCubitCompanies = (req, res) => {
   );
 };
 
-exports.create = (req, res) => {
+exports.create = ({ body: { data: params } }, res) =>
+  ModelGLedger.listSDL(
+    params.includeCccs.split(','),
+    params.dateFrom,
+    params.dateTo
+  ).then(sdlLedgers =>
+    Promise.map(
+      //through all employees in coys, in date range
+      ModelEmpLedger.listEmpsInDateRange(
+        params.includeCccs.split(','),
+        params.dateFrom,
+        params.dateTo
+      ),
+      emp =>
+        Promise.map(
+          [
+            ModelEmployee.getByEmployeeCode(emp.employee_code),
+            ModelSageAccount.getByAccRef(emp.employee_code),
+            ModelCubitEmployees.get(emp.employee_code)
+          ],
+          wever => wever
+        ).then(([employee, sageAccount, cubitEmployee]) =>
+          ModelEmpLedger.getEmpInDateRange(
+            params.dateFrom,
+            params.dateTo,
+            emp.employee_code
+          )
+            .then(empLedgers =>
+              ModelEmpCode.newFromEmpLedgers({
+                empLedgers,
+                employee,
+                sdlLedgers
+              })
+            )
+            .then(empCodes =>
+              ModelEmpDetail.newFromEmployeeEmpCodes({
+                employee,
+                empCodes,
+                sageAccount,
+                cubitEmployee,
+                params
+              })
+            )
+        )
+    )
+      .then(empDetails =>
+        // create MASTER
+        ModelEmpMaster.createFromEmpDetailsParams({ params, empDetails })
+      )
+      .then(empMaster =>
+        Promise.map(empMaster.empDetails, empDetail =>
+          // create DETAIL (emp_employee)
+          ModelEmpDetail.createFromEmpDetailEmpMaster({
+            empDetail,
+            empMaster
+          }).then(empDetail =>
+            Promise.map(empDetail.empCodes, empCode =>
+              //create CODE
+              ModelEmpCode.createFromEmpCodeEmpDetail({ empCode, empDetail })
+            ).then(empCodes => ({ empDetail, empCodes }))
+          )
+        )
+          .then(list =>
+            list.reduce(
+              (acc, { empDetail, empCodes }) => ({
+                empDetails: [...acc.empDetails, empDetail],
+                empCodes: [...acc.empCodes, ...empCodes]
+              }),
+              { empDetails: [], empCodes: [] }
+            )
+          )
+          .then(({ empDetails, empCodes }) =>
+            res.json({ empMaster, empDetails, empCodes, sdlLedgers })
+          )
+      )
+  );
+
+// ModelCubitEmployees.get('SE234').then(data =>
+//   console.log(JSON.stringify(data, null, 2))
+// );
+/*
+exports.createFromEmpDetailsParams = (req, res) => {
   try {
     const { data } = req.body;
-    //create empMaster
-    ModelEmpMaster.create(data).then(empMaster =>
+    //createFromEmpDetailsParams empMaster
+    ModelEmpMaster.createFromEmpDetailsParams(data).then(empMaster =>
       //map through employees (BY CODE) (in hr.emp_ledger in date-range)
       Promise.map(
         ModelEmpLedger.listEmpsInDateRange(
@@ -41,6 +126,8 @@ exports.create = (req, res) => {
             //get employee and emp_ledger's for each emp,
             [
               ModelEmployee.getByEmployeeCode(empCode.employee_code),
+              ModelSageAccount.getByAccRef(empCode.employee_code),
+              ModelCubitEmployees.get(empCode.employee_code),
               ModelEmpLedger.getEmpInDateRange(
                 data.dateFrom,
                 data.dateTo,
@@ -50,13 +137,16 @@ exports.create = (req, res) => {
             data => data
           ).then((
             //get employee and emp_ledger's for each emp,
-            [employee, empLedgers]
+            [employee, sageAccount, cubitEmployee, empLedgers]
           ) =>
-            //use empMaster and employee to create EmpDetail
+            //use empMaster and employee to createFromEmpDetailsParams EmpDetail
             // EmpDetail = sars.emp_employee - has emp dependant codes, name, id, addr, bank etc...
+            // dont have all data yet,
             ModelEmpDetail.createFromEmpMasterEmployee({
               empMaster,
-              employee
+              employee,
+              sageAccount,
+              cubitEmployee
             }).then(empDetail =>
               ModelEmpCode.createFromEmpMasterEmpLedgers({
                 empMaster,
@@ -72,7 +162,7 @@ exports.create = (req, res) => {
     res.json({ error });
   }
 };
-
+*/
 exports.remove = (req, res) => {
   const { id } = req.params;
   ModelEmpCode.removeByEmpMaster(id).then(() =>
@@ -140,7 +230,7 @@ exports.importEmp501Text = (req, res) => {
 // .then(empDetails => {
 //   Promise.map(aEmployees, aEmpl => {
 //     let empCodeData = {};
-//     return ModelEmpCode.create(empCodeData);
+//     return ModelEmpCode.createFromEmpDetailsParams(empCodeData);
 //   }).then(empCodes => {
 //     //console.log(aEmployees);
 //     res.json({ empMaster });

@@ -16,7 +16,7 @@ res = [];
 // --then forEach rws
 _.each(rwsVoucher, function(voucher) {
 	var tran = {};
-	// --now get-create needed
+	// --now get-createFromEmpDetailsParams needed
 	tran.invoice_number = "FIMS IMP INV";
 	tran.fims_voucher_id = voucher.id;
 	tran.amount = Math.round(parseFloat(voucher.amount) * 100) / 100;

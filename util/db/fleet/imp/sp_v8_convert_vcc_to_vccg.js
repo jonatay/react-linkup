@@ -8,7 +8,7 @@ const sqlSelect =
 const sqlFind =
 	"SELECT id FROM fleet.vehicle_cost_centre_group vccg " +
 	"WHERE vccg.vehicle_id = $1 AND vccg.cost_centre_group_id = $2";
-// create if not
+// createFromEmpDetailsParams if not
 const sqlInsert =
 	"INSERT INTO fleet.vehicle_cost_centre_group " +
 	" (vehicle_id, cost_centre_group_id) VALUES ($1,$2)";

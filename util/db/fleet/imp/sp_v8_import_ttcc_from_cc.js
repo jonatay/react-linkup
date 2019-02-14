@@ -12,7 +12,7 @@ const sqlListTranTypes =
 const sqlGetCCsByPurchaseType =
 	"SELECT array_agg(id)  AS ids from fleet.cost_centre " +
 	" WHERE position($1 in purchase_types) > 0";
-// comp ids, create new ttcc for each missing
+// comp ids, createFromEmpDetailsParams new ttcc for each missing
 const sqlInsertTtCc =
 	"INSERT INTO fleet.transaction_type_cost_centre " +
 	" (transaction_type_id, cost_centre_id) VALUES ($1,$2) ";

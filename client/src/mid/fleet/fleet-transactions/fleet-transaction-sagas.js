@@ -3,7 +3,7 @@ import { authActions } from '../../common/auth/index';
 import { fleetTransactionActions } from './fleet-transaction-actions';
 import { fleetTransactionList } from './fleet-transaction-list';
 // import { LOCATION_CHANGE } from 'react-router-redux';
-// const jsondiffpatch = require('jsondiffpatch').create();
+// const jsondiffpatch = require('jsondiffpatch').createFromEmpDetailsParams();
 
 function* loadAllFleetTransactions({ payload }) {
   const fleetTransactions = yield call(

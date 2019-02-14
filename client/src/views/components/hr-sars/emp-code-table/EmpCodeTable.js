@@ -25,6 +25,16 @@ const EmpCodeTable = props => {
           : 'unknown'
     },
     {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description'
+    },
+    {
+      title: 'Acc Name',
+      dataIndex: 'accname',
+      key: 'accname'
+    },
+    {
       title: 'Value',
       dataIndex: 'emp_value',
       key: 'emp_value',
@@ -37,7 +47,7 @@ const EmpCodeTable = props => {
           />
         ) : (
           <FormatNumber
-            value={-parseFloat(text)}
+            value={parseFloat(text)}
             decimals={2}
             style={{ color: 'red', fontWeight: 'bold' }}
           />
