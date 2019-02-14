@@ -8,7 +8,7 @@ ref.once('value', function(dataSnapshot) {
   //console.log(dataSnapshot.val());
 });
 
-// require acl and create Firebase backend
+// require acl and createFromEmpDetailsParams Firebase backend
 var acl = require('acl');
 var firebaseBackend = require('./firebase-acl-backend/');
 

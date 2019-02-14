@@ -16,7 +16,7 @@ context('Spies, Stubs, and Clock', () => {
     expect(spy).to.be.called
   })
 
-  it('cy.stub() - create a stub and/or replace a function with stub', () => {
+  it('cy.stub() - createFromEmpDetailsParams a stub and/or replace a function with stub', () => {
     // https://on.cypress.io/stub
     cy.visit('https://example.cypress.io/commands/spies-stubs-clocks')
 
@@ -41,7 +41,7 @@ context('Spies, Stubs, and Clock', () => {
   it('cy.clock() - control time in the browser', () => {
     // https://on.cypress.io/clock
 
-    // create the date in UTC so its always the same
+    // createFromEmpDetailsParams the date in UTC so its always the same
     // no matter what local timezone the browser is running in
     let now = new Date(Date.UTC(2017, 2, 14)).getTime()
 
@@ -54,7 +54,7 @@ context('Spies, Stubs, and Clock', () => {
   it('cy.tick() - move time in the browser', () => {
     // https://on.cypress.io/tick
 
-    // create the date in UTC so its always the same
+    // createFromEmpDetailsParams the date in UTC so its always the same
     // no matter what local timezone the browser is running in
     let now = new Date(Date.UTC(2017, 2, 14)).getTime()
 

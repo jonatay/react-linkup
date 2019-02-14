@@ -10,6 +10,16 @@ SELECT ee.id, ee.emp_master_id, ee.period, ee.employee_code, ee.periods_worked, 
   JOIN hr.employee e ON ee.employee_code = e.employee_code
 `;
 
+const sqlGet = `
+SELECT ee.id, ee.emp_master_id, ee.period, ee.employee_code, ee.periods_worked, ee.emp_employee_data, 
+       ee.cubit_company_code, ee.date_from, ee.date_to, ee.sic7_code, ee.bank_account_type, 
+       ee.bank_account_number, ee.bank_branch_number, ee.bank_name, ee.bank_branch_name, 
+       ee.bank_account_name, e.surname, e.first_names
+  FROM sars.emp_employee ee
+  JOIN hr.employee e ON ee.employee_code = e.employee_code
+  WHERE ee.id = $[id]
+`;
+
 const sqlCreate = `
 INSERT INTO sars.emp_employee(
             emp_master_id, period, employee_code, periods_worked, emp_employee_data, 
@@ -33,12 +43,55 @@ DELETE FROM sars.emp_employee WHERE emp_master_id = $[id]
 
 exports.list = () => db.any(sqlList);
 
+exports.get = id => db.one(sqlGet, { id });
+
 exports.create = data => db.one(sqlCreate, data);
 
 // exports.getByEmployeeCode = employeeCode =>
 //   db
 //     .any(sqlGetByEmployeeCode, { employeeCode })
 //     .then(data => (data.length === 1 ? data[0] : null));
+
+exports.createFromEmpDetailEmpMaster = ({
+  empDetail: {
+    period,
+    employee_code,
+    periods_worked,
+    emp_employee_data,
+    cubit_company_code,
+    date_from,
+    date_to,
+    sic7_code,
+    bank_account_type,
+    bank_account_number,
+    bank_branch_number,
+    bank_name,
+    bank_branch_name,
+    bank_account_name,
+    empCodes
+  },
+  empMaster: { id: emp_master_id }
+}) =>
+  db
+    .one(sqlCreate, {
+      emp_master_id,
+      period,
+      employee_code,
+      periods_worked,
+      emp_employee_data,
+      cubit_company_code,
+      date_from,
+      date_to,
+      sic7_code,
+      bank_account_type,
+      bank_account_number,
+      bank_branch_number,
+      bank_name,
+      bank_branch_name,
+      bank_account_name
+    })
+    .then(empDetail => this.get(empDetail.id)) //return with name
+    .then(empDetail => ({ ...empDetail, empCodes })); //pass down empCodes
 
 exports.removeByEmpMaster = id => db.none(sqlRemoveByEmpMaster, { id });
 
@@ -62,17 +115,25 @@ exports.createFromEmp501Import = ({ empMaster, jEmp }) =>
     bank_account_name: jEmp[3245]
   });
 //);
-const getEmp501Line = emp => ({
-  '3010': '76107094552014020000000000A090',
-  '3015': 'IRP5',
-  '3020': 'A',
-  '3025': '2014',
-  '3030': 'Madi',
-  '3040': 'Jeanette',
-  '3050': 'J',
-  '3060': '7406051213082',
-  '3080': '19740605',
-  '3100': '1550428153',
+//76107094552014020000000000A090
+//76107094552014020000000000A090
+const getEmp501Line = ({ params, employee, empDetail }) => ({
+  '3010': `${params.refPAYE}${params.period}${employee.employee_code.padStart(
+    14,
+    '0'
+  )}`,
+  '3015': 'unknown',
+  '3020': employee.nature_person,
+  //'3026': 'ETI Indicator unknown',
+  '3025': params.taxYear,
+  '3030': employee.surname,
+  '3040': employee.first_names,
+  '3050': employee.initials,
+  '3060': employee.id_number,
+  '3080': `${
+    employee.id_number.substr(0, 2) - 0 > 10 ? '19' : '20'
+  }${employee.id_number.substr(0, 6)}`,
+  '3100': employee.tax_reference_number,
   '3136': '27349808872',
   '3147': '220 Market Str',
   '3149': 'Vryheid',
@@ -97,7 +158,7 @@ const getEmp501Line = emp => ({
   '3253': 'Vryheid',
   '3254': '3100',
   '3262': '673',
-  '3263': '80100',
+  '3263': params.sic7,
   '3279': 'X',
   '3601': '41900',
   '3605': '3400',
@@ -113,6 +174,46 @@ const getEmp501Line = emp => ({
   '4497': '2835'
 });
 
+exports.newFromEmployeeEmpCodes = ({
+  employee,
+  cubitEmployee,
+  sageAccount,
+  empCodes,
+  params
+}) =>
+  new Promise.resolve({
+    period: params.period,
+    employee_code: employee.employee_code,
+    periods_worked: null,
+    cubit_company_code: params.cubit_company_code,
+    date_from: params.dateFrom,
+    date_to: params.dateTo,
+    sic7_code: params.empSIC7,
+    bank_account_type: sageAccount
+      ? sageAccount.account_type
+      : cubitEmployee.bankacctype === 'Savings'
+        ? 2
+        : cubitEmployee.bankacctype === 'Credit Card'
+          ? 5
+          : 1,
+    bank_account_number: sageAccount
+      ? sageAccount.account_number
+      : cubitEmployee.bankaccno,
+    bank_branch_number: sageAccount
+      ? sageAccount.branch_code
+      : cubitEmployee.bankcode,
+    bank_name: sageAccount ? sageAccount.bank_name : cubitEmployee.bankname,
+    bank_branch_name: null,
+    bank_account_name: sageAccount
+      ? sageAccount.acc_holders_name
+      : `${cubitEmployee.enum} ${cubitEmployee.sname}, ${cubitEmployee.fnames}`,
+    employee_id: employee.id,
+    empCodes
+  }).then(empDetail => ({
+    ...empDetail,
+    emp_employee_data: getEmp501Line({ params, employee, empDetail })
+  }));
+
 exports.createFromEmpMasterEmployee = ({
   empMaster,
   employee,
@@ -124,7 +225,7 @@ exports.createFromEmpMasterEmployee = ({
     period: empMaster.period,
     employee_code: employee.employee_code,
     periods_worked: null,
-    emp_employee_data: null,
+    emp_employee_data: getEmp501Line({ empMaster, employee }),
     cubit_company_code: empMaster.cubit_company_code,
     date_from: empMaster.date_from,
     date_to: empMaster.date_to,
@@ -136,11 +237,18 @@ exports.createFromEmpMasterEmployee = ({
         : cubitEmployee.bankacctype === 'Credit Card'
           ? 5
           : 1,
-    bank_account_number: sageAccount ? sageAccount.account_number : cubitEmployee.bankaccno,
-    bank_branch_number: null,
-    bank_name: null,
+    bank_account_number: sageAccount
+      ? sageAccount.account_number
+      : cubitEmployee.bankaccno,
+    bank_branch_number: sageAccount
+      ? sageAccount.branch_code
+      : cubitEmployee.bankcode,
+    bank_name: sageAccount ? sageAccount.bank_name : cubitEmployee.bankname,
     bank_branch_name: null,
-    bank_account_name: null
+    bank_account_name: sageAccount
+      ? sageAccount.acc_holders_name
+      : `${cubitEmployee.enum} ${cubitEmployee.sname}, ${cubitEmployee.fnames}`,
+    employee_id: employee.id
   });
 
 /*

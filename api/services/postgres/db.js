@@ -6,9 +6,11 @@ const options = {
   promiseLib: promise,
   capSQL: true,
   query(e) {
-    // console.log('******************** db.query *******************');
-    // console.log('query:', e.query);
-    // console.log('*************************************************');
+    if (e.query.includes('gl.ledger')) {
+      console.log('******************** db.query *******************');
+      console.log('query:', e.query);
+      console.log('*************************************************');
+    }
   },
   error: (err, e) => {
     if (err instanceof QueryResultError) {

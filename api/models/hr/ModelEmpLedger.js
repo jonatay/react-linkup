@@ -21,7 +21,7 @@ SELECT *
 FROM hr.emp_ledger
 WHERE edate BETWEEN $[dateFrom] AND $[dateTo]
 AND employee_code = $[employeeCode]
-ORDER BY employee_code
+ORDER BY edate
 `;
 exports.list = () => db.many(sqlList);
 

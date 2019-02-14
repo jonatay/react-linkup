@@ -13,7 +13,7 @@ exports.list = () =>
 
 // ES5
 var flatten = function flatten(list) {
-  return list.reduce(function (a, b) {
+  return list.reduce(function(a, b) {
     return a.concat(Array.isArray(b) ? flatten(b) : b);
   }, []);
 };
@@ -27,6 +27,6 @@ exports.get = employeeCode =>
       ],
       empl => empl
     )
-  ).then(res =>
-    flatten(res)[0]//.reduce((acc, item) => (item.lenght > 0 ? acc.concat(item) : acc), [])
+  ).then(
+    res => flatten(res)[0] //.reduce((acc, item) => (item.lenght > 0 ? acc.concat(item) : acc), [])
   );
