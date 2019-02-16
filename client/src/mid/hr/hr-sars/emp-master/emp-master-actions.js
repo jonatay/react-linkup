@@ -23,6 +23,8 @@ export const empMasterActions = {
   IMPORT_EMP_MASTER_FAILED: 'HR_SARS_IMPORT_EMP_MASTER_FAILED',
   IMPORT_EMP_MASTER_FULFILLED: 'HR_SARS_IMPORT_EMP_MASTER_FULFILLED',
 
+  DOWNLOAD_EMP_501: 'HR_SARS_DOWNLOAD_EMP_501',
+
   loadEmpMasters: () => ({
     type: empMasterActions.LOAD_EMP_MASTERS
   }),
@@ -106,5 +108,10 @@ export const empMasterActions = {
   importEmpMasterFulfilled: empMaster => ({
     type: empMasterActions.IMPORT_EMP_MASTER_FULFILLED,
     payload: { empMaster }
+  }),
+
+  downloadEmp501: (data, filename, type) => ({
+    type: empMasterActions.DOWNLOAD_EMP_501,
+    payload: { data, filename, type }
   })
 };
