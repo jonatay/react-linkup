@@ -24,7 +24,7 @@ INSERT INTO sars.emp_code(
   RETURNING *
 `;
 
-const sdlSurnameExceptions = {
+const glSurnameExceptions = {
   TE169: 'Christoffel Erasmus',
   TE167: 'Thuso Lewesa Khanye',
   RE133: 'Prince Ganizeni Ngwenya',
@@ -116,28 +116,10 @@ const getEmpCode = ({ empLedger, employee }) => {
   } else if (empLedger.cubit_description === 'UIF') {
     return 4141;
   }
-
-  // switch (empLedger.cubit_description) {
-  //   case 'Gross Salary':
-  //
-  //   default:
-  //     return null;
-  // }
 };
 
-// exports.createFromEmpMasterEmpLedgers = ({
-//   empMaster,
-//   empDetail,
-//   empLedgers
-// }) =>
-//   Promise.map(empLedgers, empLedger => {
-//     let empCode = getEmpCode(empLedger);
-//     if (empCode) {
-//       return;
-//     }
-//   });
 
-exports.newFromEmpLedgers = ({ empLedgers, employee, sdlLedgers }) =>
+exports.newFromEmpLedgers = ({ empLedgers, employee, gLedgers }) =>
   Promise.reduce(
     empLedgers,
     (acc, empLedger) => {
@@ -163,27 +145,34 @@ exports.newFromEmpLedgers = ({ empLedgers, employee, sdlLedgers }) =>
     []
   ).then(empCodes =>
     Promise.filter(
-      sdlLedgers,
-      sdlLed =>
-        (sdlSurnameExceptions[employee.employee_code] &&
-          sdlLed.cubit_description ===
-            `SDL,  ${sdlSurnameExceptions[employee.employee_code]}.`) ||
-        sdlLed.cubit_description ===
+      gLedgers,
+      gLed =>
+        (glSurnameExceptions[employee.employee_code] &&
+          gLed.cubit_description ===
+            `SDL,  ${glSurnameExceptions[employee.employee_code]}.`) ||
+        gLed.cubit_description ===
           `SDL,  ${employee.first_names} ${employee.surname}.`
-    ).then(sdlLedgers => [
+      ||
+        (glSurnameExceptions[employee.employee_code] &&
+          gLed.cubit_description ===
+          `Company UIF Contribution,  ${glSurnameExceptions[employee.employee_code]}.`) ||
+        gLed.cubit_description ===
+        `Company UIF Contribution,  ${employee.first_names} ${employee.surname}.`
+    ).then(gLedgers => [
       ...empCodes,
-      ...sdlLedgers.map(sdlLed => ({
-        emp_code: 4142,
-        emp_value: sdlLed.credit + sdlLed.debit,
-        tax_month: sdlLed.tax_month,
-        tax_year: sdlLed.tax_year,
-        employee_code: sdlLed.employee_code,
-        sum_credit: sdlLed.credit,
-        sum_debit: sdlLed.debit,
-        cubit_company_code: sdlLed.cubit_company_code,
-        description: sdlLed.cubit_description,
-        accname: sdlLed.accname
+      ...gLedgers.map(gLed => ({
+        emp_code: gLed.accname === 'SDL Payable' ? 4142 : 4141,
+        emp_value: gLed.credit + gLed.debit,
+        tax_month: gLed.tax_month,
+        tax_year: gLed.tax_year,
+        employee_code: gLed.employee_code,
+        sum_credit: gLed.credit,
+        sum_debit: gLed.debit,
+        cubit_company_code: gLed.cubit_company_code,
+        description: gLed.cubit_description,
+        accname: gLed.accname
       }))
     ])
   );
 // SDL,  Santie Muller
+// "Company UIF Contribution,  Shane Douglas van Straaten."

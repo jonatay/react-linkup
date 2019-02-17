@@ -28,11 +28,11 @@ exports.listCubitCompanies = (req, res) => {
 };
 
 exports.create = ({ body: { data: params } }, res) =>
-  ModelGLedger.listSDL(
+  ModelGLedger.listSdlUif(
     params.includeCccs.split(','),
     params.dateFrom,
     params.dateTo
-  ).then(sdlLedgers =>
+  ).then(gLedgers =>
     Promise.map(
       //through all employees in coys, in date range
       ModelEmpLedger.listEmpsInDateRange(
@@ -58,7 +58,7 @@ exports.create = ({ body: { data: params } }, res) =>
               ModelEmpCode.newFromEmpLedgers({
                 empLedgers,
                 employee,
-                sdlLedgers
+                gLedgers
               })
             )
             .then(empCodes =>
@@ -99,7 +99,7 @@ exports.create = ({ body: { data: params } }, res) =>
             )
           )
           .then(({ empDetails, empCodes }) =>
-            res.json({ empMaster, empDetails, empCodes, sdlLedgers })
+            res.json({ empMaster, empDetails, empCodes, gLedgers })
           )
       )
   );
