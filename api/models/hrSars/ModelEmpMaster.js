@@ -100,11 +100,24 @@ exports.createFromEmpDetailsParams = ({
         '2081': empAddrCCode,
         '9999': null
       }),
-      emp_trailer: null,
+      emp_trailer: JSON.stringify({
+        '6010': empDetails.length,
+        '9999': null
+      }),
       include_cccs: includeCccs,
       sic7: empSIC7
     })
     .then(empMaster => ({ ...empMaster, empDetails }));
+/*
+Must be equal to the total CODE VALUE of records for the specific employer
+  (codes from 2010 to 2083, 3010 to 4497, 4582, 4583 and 7002 to 7008,
+  plus all the 9999 codes in between must be added together).
+ */
+const get6020EmpTotCodeValue = ({ empMaster }) => {};
+//empCodes.reduce((acc, { emp_code: eC }) => ((eC) ? acc + eC : acc), 0);
+
+const get6030EmpTotValue = empCodes =>
+  empCodes.reduce((acc, { emp_code: eC }) => (eC ? acc + eC : acc), 0);
 
 exports.remove = id => db.one(sqlRemove, { id });
 

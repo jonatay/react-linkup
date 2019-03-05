@@ -9,7 +9,7 @@ import EmpDetailTable from '../emp-detail-table';
 import FormatNumber from '../../common/format-number';
 import dateFormat from 'dateformat';
 
-import './style.css'
+import './style.css';
 
 const payeCodes = [4102];
 const uifCodes = [4141];
@@ -156,27 +156,37 @@ const EmpMasterTable = class EmpMasterTable extends Component {
         title: 'When Created',
         dataIndex: 'when_create',
         key: 'when_create',
-        render: val => (
-          <span>{dateFormat(val, 'yy-mm-dd HH:MM')}</span>
-        )
+        render: val => <span>{dateFormat(val, 'yy-mm-dd HH:MM')}</span>
       },
       {
         render: rec => (
-          <Button
-            style={{ margin: 5, marginRight: 20 }}
-            type="danger"
-            ghost={true}
-            size="small"
-            shape="circle"
-            icon="delete"
-            onClick={() => {
-              showRemoveEmpMasterConfirm(rec, this.props.removeEmpMaster);
-            }}
-            // disabled={!this.props.fimsPeriodIsAvailable}
-          />
-        ),
-        sorter: (a, b) => (a > b ? 1 : a < b ? -1 : 0),
-        sortOrder: sortedInfo.columnKey === 'when_create' && sortedInfo.order
+          <div>
+            <Button
+              style={{ margin: 5, marginRight: 20 }}
+              type="primary"
+              ghost={true}
+              size="small"
+              shape="circle"
+              icon="edit"
+              onClick={() => this.props.editEmp501(rec.id)}
+              // disabled={!this.props.fimsPeriodIsAvailable}
+            />{' '}
+            <Button
+              style={{ margin: 5, marginRight: 20 }}
+              type="danger"
+              ghost={true}
+              size="small"
+              shape="circle"
+              icon="delete"
+              onClick={() => {
+                showRemoveEmpMasterConfirm(rec, this.props.removeEmpMaster);
+              }}
+              // disabled={!this.props.fimsPeriodIsAvailable}
+            />
+          </div>
+        )
+        // sorter: (a, b) => (a > b ? 1 : a < b ? -1 : 0),
+        // sortOrder: sortedInfo.columnKey === 'when_create' && sortedInfo.order
       }
     ];
 

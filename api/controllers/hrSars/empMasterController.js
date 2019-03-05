@@ -11,6 +11,7 @@ const ModelEmployee = require('../../models/hr/ModelEmployee');
 const ModelEmpLedger = require('../../models/hr/ModelEmpLedger');
 const ModelCubitCompany = require('../../models/cubit/ModelCubitCompany');
 const ModelCubitEmployees = require('../../models/cubit/ModelCubitEmployee');
+const ModelSalSumm = require('../../models/hr/ModelSalSumm');
 
 const ModelSageAccount = require('../../models/sagePay/ModelSageAccount');
 const ModelGLedger = require('../../models/gl/ModelGLedger');
@@ -27,14 +28,20 @@ exports.listCubitCompanies = (req, res) => {
   );
 };
 
+/*
+collects all data, then creates in memory, per emp, detail rec then codes
+codes then fed to master create to get checksum, then emp detail, finally they are also written
+ */
 exports.create = ({ body: { data: params } }, res) =>
-  ModelGLedger.listSDL(
+  //start by getting all emp related data from GENERAL LEDGER in date range, in included coys
+  ModelGLedger.listSdlUif(
     params.includeCccs.split(','),
     params.dateFrom,
     params.dateTo
-  ).then(sdlLedgers =>
+  ).then(gLedgers =>
     Promise.map(
-      //through all employees in coys, in date range
+      // get unique list of all employees in HR LEDGER in date range, in included coys
+      //MAP through all employees in coys, in date range
       ModelEmpLedger.listEmpsInDateRange(
         params.includeCccs.split(','),
         params.dateFrom,
@@ -42,26 +49,36 @@ exports.create = ({ body: { data: params } }, res) =>
       ),
       emp =>
         Promise.map(
+          // for each employee found above, MAP in additional data
           [
             ModelEmployee.getByEmployeeCode(emp.employee_code),
             ModelSageAccount.getByAccRef(emp.employee_code),
-            ModelCubitEmployees.get(emp.employee_code)
+            ModelCubitEmployees.get(emp.employee_code),
+            ModelSalSumm.listByEmpCodeDate(
+              emp.employee_code,
+              params.dateFrom,
+              params.dateTo
+            )
           ],
           wever => wever
-        ).then(([employee, sageAccount, cubitEmployee]) =>
+        ).then(([employee, sageAccount, cubitEmployee, salSumms]) =>
+          // fetch all HR LEDGER for this empl, in date range
           ModelEmpLedger.getEmpInDateRange(
             params.dateFrom,
             params.dateTo,
             emp.employee_code
           )
             .then(empLedgers =>
+              // get EMP CODES from ledgers  *** NB - these haven't been written to db yet, so NO ID ***
               ModelEmpCode.newFromEmpLedgers({
                 empLedgers,
                 employee,
-                sdlLedgers
+                gLedgers,
+                salSumms
               })
             )
             .then(empCodes =>
+              // get EMP EMPLOYEE *** NB - this hasn't been written to db yet, so NO ID ***
               ModelEmpDetail.newFromEmployeeEmpCodes({
                 employee,
                 empCodes,
@@ -73,10 +90,11 @@ exports.create = ({ body: { data: params } }, res) =>
         )
     )
       .then(empDetails =>
-        // create MASTER
+        // create MASTER in db
         ModelEmpMaster.createFromEmpDetailsParams({ params, empDetails })
       )
       .then(empMaster =>
+        //EMP DETAILS, returned in EMP MASTER is one per emp
         Promise.map(empMaster.empDetails, empDetail =>
           // create DETAIL (emp_employee)
           ModelEmpDetail.createFromEmpDetailEmpMaster({
@@ -99,7 +117,7 @@ exports.create = ({ body: { data: params } }, res) =>
             )
           )
           .then(({ empDetails, empCodes }) =>
-            res.json({ empMaster, empDetails, empCodes, sdlLedgers })
+            res.json({ empMaster, empDetails, empCodes, gLedgers })
           )
       )
   );

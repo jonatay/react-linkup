@@ -65,6 +65,27 @@ function* importEmpMaster({ payload: { data } }) {
   yield put(empDetailActions.importEmpDetailsFulfilled(empDetails));
   yield put(empCodeActions.importEmpCodesFulfilled(empCodes));
 }
+
+function* downloadEmp501({ payload: { data, filename, type } }) {
+  var file = new Blob([data], { type: type });
+  if (window.navigator.msSaveOrOpenBlob)
+    // IE10+
+    window.navigator.msSaveOrOpenBlob(file, filename);
+  else {
+    // Others
+    var a = document.createElement('a'),
+      url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    yield setTimeout(function() {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, 0);
+  }
+}
+
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -108,6 +129,10 @@ function* watchRemoveEmpMaster() {
 function* watchImportEmpMaster() {
   yield takeEvery(empMasterActions.IMPORT_EMP_MASTER, importEmpMaster);
 }
+
+function* watchDownloadEmp501() {
+  yield takeEvery(empMasterActions.DOWNLOAD_EMP_501, downloadEmp501);
+}
 export const empMasterSagas = [
   fork(watchAuthentication),
   fork(watchIdTokenRefresh),
@@ -116,5 +141,6 @@ export const empMasterSagas = [
   fork(watchCreateEmpMaster),
   fork(watchRemoveEmpMaster),
   fork(watchImportEmpMaster),
-  fork(watchLoadCubitCompanies)
+  fork(watchLoadCubitCompanies),
+  fork(watchDownloadEmp501)
 ];

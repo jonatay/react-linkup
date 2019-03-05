@@ -98,7 +98,7 @@ class Emp501Import extends React.Component {
           </Button>
         ]}
       >
-        <Row type="flex" justify="left" align="top">
+        <Row type="flex" justify="start" align="top">
           <Col span={24}>
             <Dragger
               {...props}

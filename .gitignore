@@ -1,5 +1,7 @@
 .idea
 serviceAccountKey.json
+token.json
+credentials.json
 /.env
 
 /**/node_modules/
@@ -12,3 +14,5 @@ public/javascripts/
 
 /util/db/dumps/
 /util/sage/
+/util/gsheet/react-linkup-7e1d311f8387.json
+
