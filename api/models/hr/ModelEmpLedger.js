@@ -21,7 +21,7 @@ SELECT *
 FROM hr.emp_ledger
 WHERE edate BETWEEN $[dateFrom] AND $[dateTo]
 AND employee_code = $[employeeCode]
-ORDER BY edate
+ORDER BY edate, cubit_id
 `;
 exports.list = () => db.many(sqlList);
 
@@ -30,5 +30,3 @@ exports.listEmpsInDateRange = (includeCccs, dateFrom, dateTo) =>
 
 exports.getEmpInDateRange = (dateFrom, dateTo, employeeCode) =>
   db.many(sqlGetEmpInDateRange, { dateFrom, dateTo, employeeCode });
-
-

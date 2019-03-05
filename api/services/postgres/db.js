@@ -6,7 +6,7 @@ const options = {
   promiseLib: promise,
   capSQL: true,
   query(e) {
-    if (e.query.includes('gl.ledger')) {
+    if (e.query.includes('hr.sal_summ')) {
       console.log('******************** db.query *******************');
       console.log('query:', e.query);
       console.log('*************************************************');

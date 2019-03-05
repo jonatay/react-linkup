@@ -1,11 +1,14 @@
 const Promise = require('bluebird');
 const db = require('../../services/postgres/db');
+const moment = require('moment');
 
 const sqlList = `
 SELECT ee.id, ee.emp_master_id, ee.period, ee.employee_code, ee.periods_worked, ee.emp_employee_data, 
        ee.cubit_company_code, ee.date_from, ee.date_to, ee.sic7_code, ee.bank_account_type, 
        ee.bank_account_number, ee.bank_branch_number, ee.bank_name, ee.bank_branch_name, 
-       ee.bank_account_name, e.surname, e.first_names
+       ee.bank_account_name, e.surname, e.first_names, 
+       ee.tot_no_tax_income, ee.tot_tax_income, 
+       ee.tot_ded_ra, ee.tot_ded_pen, ee.tot_ded_paye, ee.tot_ded_sdl, ee.tot_ded_uif
   FROM sars.emp_employee ee
   JOIN hr.employee e ON ee.employee_code = e.employee_code
 `;
@@ -14,7 +17,9 @@ const sqlGet = `
 SELECT ee.id, ee.emp_master_id, ee.period, ee.employee_code, ee.periods_worked, ee.emp_employee_data, 
        ee.cubit_company_code, ee.date_from, ee.date_to, ee.sic7_code, ee.bank_account_type, 
        ee.bank_account_number, ee.bank_branch_number, ee.bank_name, ee.bank_branch_name, 
-       ee.bank_account_name, e.surname, e.first_names
+       ee.bank_account_name, e.surname, e.first_names,
+       ee.tot_no_tax_income, ee.tot_tax_income, 
+       ee.tot_ded_ra, ee.tot_ded_pen, ee.tot_ded_paye, ee.tot_ded_sdl, ee.tot_ded_uif
   FROM sars.emp_employee ee
   JOIN hr.employee e ON ee.employee_code = e.employee_code
   WHERE ee.id = $[id]
@@ -25,11 +30,16 @@ INSERT INTO sars.emp_employee(
             emp_master_id, period, employee_code, periods_worked, emp_employee_data, 
             cubit_company_code, date_from, date_to, sic7_code, bank_account_type, 
             bank_account_number, bank_branch_number, bank_name, bank_branch_name, 
-            bank_account_name)
+            bank_account_name,
+            tot_no_tax_income, tot_tax_income, 
+            tot_ded_ra, tot_ded_pen, tot_ded_paye, tot_ded_sdl, tot_ded_uif)
     VALUES ($[emp_master_id], $[period], $[employee_code], $[periods_worked], $[emp_employee_data], 
             $[cubit_company_code], $[date_from], $[date_to], $[sic7_code], $[bank_account_type], 
             $[bank_account_number], $[bank_branch_number], $[bank_name], $[bank_branch_name], 
-            $[bank_account_name])
+            $[bank_account_name],
+            $[tot_no_tax_income], $[tot_tax_income], 
+            $[tot_ded_ra], $[tot_ded_pen], $[tot_ded_paye], $[tot_ded_sdl], $[tot_ded_uif]
+            )
  RETURNING *
 `;
 
@@ -68,7 +78,14 @@ exports.createFromEmpDetailEmpMaster = ({
     bank_name,
     bank_branch_name,
     bank_account_name,
-    empCodes
+    empCodes,
+    tot_no_tax_income,
+    tot_tax_income,
+    tot_ded_ra,
+    tot_ded_pen,
+    tot_ded_paye,
+    tot_ded_sdl,
+    tot_ded_uif
   },
   empMaster: { id: emp_master_id }
 }) =>
@@ -88,7 +105,14 @@ exports.createFromEmpDetailEmpMaster = ({
       bank_branch_number,
       bank_name,
       bank_branch_name,
-      bank_account_name
+      bank_account_name,
+      tot_no_tax_income,
+      tot_tax_income,
+      tot_ded_ra,
+      tot_ded_pen,
+      tot_ded_paye,
+      tot_ded_sdl,
+      tot_ded_uif
     })
     .then(empDetail => this.get(empDetail.id)) //return with name
     .then(empDetail => ({ ...empDetail, empCodes })); //pass down empCodes
@@ -117,62 +141,112 @@ exports.createFromEmp501Import = ({ empMaster, jEmp }) =>
 //);
 //76107094552014020000000000A090
 //76107094552014020000000000A090
-const getEmp501Line = ({ params, employee, empDetail }) => ({
+const getEmp501Line = ({
+  params,
+  employee,
+  empDetail,
+  cubitEmployee,
+  sageAccount
+}) => ({
   '3010': `${params.refPAYE}${params.period}${employee.employee_code.padStart(
     14,
     '0'
   )}`,
-  '3015': 'unknown',
+  '3015':
+    empDetail.empCodes.reduce(
+      (acc, ec) => (ec.emp_code === 4102 ? acc + ec.emp_value : acc),
+      0
+    ) > 0
+      ? 'IRP5'
+      : 'IT3(a)',
   '3020': employee.nature_person,
-  //'3026': 'ETI Indicator unknown',
+  '3026': '**TODO**',
   '3025': params.taxYear,
   '3030': employee.surname,
   '3040': employee.first_names,
-  '3050': employee.initials,
+  '3050':
+    employee.initials !== '??'
+      ? employee.initials
+      : employee.first_names
+          .split(' ')
+          .map(i => i[0])
+          .join('')
+          .toUpperCase(),
   '3060': employee.id_number,
   '3080': `${
     employee.id_number.substr(0, 2) - 0 > 10 ? '19' : '20'
   }${employee.id_number.substr(0, 6)}`,
   '3100': employee.tax_reference_number,
-  '3136': '27349808872',
-  '3147': '220 Market Str',
-  '3149': 'Vryheid',
-  '3150': '3100',
-  '3160': 'A090',
-  '3170': '20130301',
-  '3180': '20140228',
-  '3200': '12.0000',
-  '3210': '12.0000',
-  '3214': 'Mark Street',
-  '3216': 'Vryheid',
-  '3217': '3100',
-  '3240': '1',
-  '3241': '0062032159065',
-  '3242': '270524',
-  '3243': 'FIRSTRAND BANK',
-  '3244': 'VRYHEID                    417',
-  '3245': 'JEANETTE MADI',
-  '3246': '1',
-  '3247': 'N',
-  '3249': 'X',
-  '3253': 'Vryheid',
-  '3254': '3100',
+  '3263': params.empSIC7,
+  '3136': '0349808872',
+  '3138': cubitEmployee.telno,
+  '3146': params.empAddrStreetNbr,
+  '3147': params.empAddrStreetName,
+  '3149': params.empAddrTown,
+  '3150': params.empAddrPCode,
+  '3151': params.empAddrCCode,
+  '3160': employee.employee_code,
+  '3170': params.dateFrom.split('-').join(''),
+  '3180': params.dateTo.split('-').join(''),
+  '3190': moment(employee.hire_date).format('YYYYMMDD'), //.split('-').join(''), //'*ETI-Emp-Date*',
+  '3200': params.taxMonth === 2 ? '12.0000' : '6.0000',
+  '3210':
+    empDetail.empCodes.filter(ec => ec.emp_code === 4142).length + '.0000', //(count SDL)
+  '3213': params.empAddrStreetNbr,
+  '3214': params.empAddrStreetName,
+  '3216': params.empAddrTown,
+  '3217': params.empAddrPCode,
+  '3285': params.empAddrCCode,
+  '3279': 'Y',
+  '3283': params.tradingName,
+  '3288': '2',
+  '3249': 'PO Box',
   '3262': '673',
-  '3263': params.sic7,
-  '3279': 'X',
-  '3601': '41900',
-  '3605': '3400',
-  '3606': '0',
-  '3697': '41900',
-  '3698': '3400',
-  '3702': '0',
-  '4001': '2835',
-  '4102': '176.94',
-  '4141': '838.00',
-  '4142': '424.65',
-  '4149': '1439.59',
-  '4497': '2835'
+  '3253': params.empAddrTown,
+  '3254': params.empAddrPCode,
+  '3286': params.empAddrCCode,
+
+  '3240': empDetail.bank_account_type,
+  '3241': empDetail.bank_account_number,
+  '3242': empDetail.bank_branch_number,
+  '3243': empDetail.bank_name,
+  // optional bank branch name '3244': 'VRYHEID                    417',
+  '3245': empDetail.bank_account_name,
+  '3246': '1',
+  //emp codes summ
+  ...empDetail.empCodes.reduce(
+    (acc, empCode) => ({
+      ...acc,
+      [`${empCode.emp_code}`]: acc[`${empCode.emp_code}`]
+        ? acc[`${empCode.emp_code}`] + empCode.emp_value
+        : empCode.emp_value
+    }),
+    {}
+  ),
+  '3696': empDetail.tot_no_tax_income,
+  '3697': empDetail.tot_tax_income,
+  '4102': empDetail.tot_ded_paye,
+  '4141': empDetail.tot_ded_uif,
+  '4142': empDetail.tot_ded_sdl,
+  '4149':
+    empDetail.tot_ded_paye + empDetail.tot_ded_uif + empDetail.tot_ded_sdl,
+  '4118': empDetail.tot_eti
 });
+
+/*
+  // '3601': '41900',
+  // '3605': '3400',
+  // '3606': '0',
+  // '3697': '41900',
+  // '3698': '3400',
+  // '3702': '0',
+  // '4001': '2835',
+  // '4102': '176.94',
+  // '4141': '838.00',
+  // '4142': '424.65',
+  // '4149': '1439.59',
+  // '4497': '2835'
+ */
 
 exports.newFromEmployeeEmpCodes = ({
   employee,
@@ -184,7 +258,7 @@ exports.newFromEmployeeEmpCodes = ({
   new Promise.resolve({
     period: params.period,
     employee_code: employee.employee_code,
-    periods_worked: null,
+    periods_worked: empCodes.filter(ec => ec.emp_code === 4142).length,
     cubit_company_code: params.cubit_company_code,
     date_from: params.dateFrom,
     date_to: params.dateTo,
@@ -208,10 +282,39 @@ exports.newFromEmployeeEmpCodes = ({
       ? sageAccount.acc_holders_name
       : `${cubitEmployee.enum} ${cubitEmployee.sname}, ${cubitEmployee.fnames}`,
     employee_id: employee.id,
+    //tots
+    tot_no_tax_income: empCodes
+      .filter(ec => [3703].includes(ec.emp_code))
+      .reduce((tot, ec) => tot + ec.emp_value, 0),
+    tot_tax_income: empCodes
+      .filter(ec => [3601, 3605, 3606, 3615].includes(ec.emp_code))
+      .reduce((tot, ec) => tot + ec.emp_value, 0),
+    tot_ded_ra: empCodes
+      .filter(ec => [4002].includes(ec.emp_code))
+      .reduce((tot, ec) => tot + ec.emp_value, 0),
+    tot_ded_pen: empCodes
+      .filter(ec => [4001].includes(ec.emp_code))
+      .reduce((tot, ec) => tot + ec.emp_value, 0),
+    tot_ded_paye: empCodes
+      .filter(ec => [4002].includes(ec.emp_code))
+      .reduce((tot, ec) => tot + ec.emp_value, 0),
+    tot_ded_sdl: empCodes
+      .filter(ec => [4102].includes(ec.emp_code))
+      .reduce((tot, ec) => tot + ec.emp_value, 0),
+    tot_ded_uif: empCodes
+      .filter(ec => [4141].includes(ec.emp_code))
+      .reduce((tot, ec) => tot + ec.emp_value, 0),
+    //codes
     empCodes
   }).then(empDetail => ({
     ...empDetail,
-    emp_employee_data: getEmp501Line({ params, employee, empDetail })
+    emp_employee_data: getEmp501Line({
+      params,
+      employee,
+      empDetail,
+      cubitEmployee,
+      sageAccount
+    })
   }));
 
 exports.createFromEmpMasterEmployee = ({

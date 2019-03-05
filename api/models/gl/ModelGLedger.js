@@ -10,6 +10,7 @@ SELECT * FROM gl.ledger WHERE
     OR
     (cubit_description LIKE 'Company UIF Contribution%' AND accname = 'UIF Payable')
   )
+ORDER BY cubit_id
 `;
 
 exports.listSdlUif = (includeCccs, dateFrom, dateTo) =>

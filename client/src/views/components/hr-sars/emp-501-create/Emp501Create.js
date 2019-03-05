@@ -76,12 +76,10 @@ const companyOptions = coys.map(c => <Option key={c.code}>{c.name}</Option>);
 const Emp501Create = class Emp501Create extends Component {
   state = {
     submitCompany: 'aaab',
-    includeCompanies: ['aaab'],
-    period: '2014-02',
+    includeCompanies: ['aaab', 'aaac', 'aaad'],
+    period: '2018-08',
     importEmpVisible: false,
-    createEmpVisible: false,
-    taxYear: 2014,
-    taxMonth: 2
+    createEmpVisible: false
   };
   handleEmp501Upload(data) {
     console.log(data);
@@ -194,6 +192,11 @@ const Emp501Create = class Emp501Create extends Component {
             onCancel={e => this.setState({ createEmpVisible: false })}
             initialValues={getEmp501Create({
               ...this.state,
+              taxYear:
+                period.substring(5, 7) === '02'
+                  ? period.substring(0, 4) - 0
+                  : period.substring(0, 4) - 0 + 1,
+              taxMonth: period.substring(5, 7),
               cubitCompanies: this.props.cubitCompanies
             })}
           />

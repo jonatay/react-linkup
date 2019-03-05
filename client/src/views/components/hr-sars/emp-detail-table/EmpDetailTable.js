@@ -42,6 +42,11 @@ const EmpDetailTable = props => {
       )
     },
     {
+      title: 'Mths Worked',
+      dataIndex: 'periods_worked',
+      key: 'periods_worked'
+    },
+    {
       title: 'PAYE',
       key: 'paye',
       render: rec => (
@@ -55,6 +60,17 @@ const EmpDetailTable = props => {
             .reduce((r, ecr) => r + ecr.emp_value, 0)}
           decimals={2}
           style={{ color: 'blue', fontWeight: 'bold' }}
+        />
+      )
+    },
+    {
+      title: 'check PAYE',
+      key: 'tot_ded_paye',
+      render: rec => (
+        <FormatNumber
+          value={rec.tot_ded_paye}
+          decimals={2}
+          style={{ color: 'lightblue', fontWeight: 'bold' }}
         />
       )
     },
@@ -74,6 +90,16 @@ const EmpDetailTable = props => {
           style={{ color: 'green', fontWeight: 'bold' }}
         />
       )
+    },{
+      title: 'check UIF',
+      key: 'tot_ded_uif',
+      render: rec => (
+        <FormatNumber
+          value={rec.tot_ded_uif}
+          decimals={2}
+          style={{ color: 'lightgreen', fontWeight: 'bold' }}
+        />
+      )
     },
     {
       title: 'SDL',
@@ -91,11 +117,16 @@ const EmpDetailTable = props => {
           style={{ color: 'brown', fontWeight: 'bold' }}
         />
       )
-    },
-    {
-      title: 'Periods Worked',
-      dataIndex: 'periods_worked',
-      key: 'periods_worked'
+    },{
+      title: 'check SDL',
+      key: 'tot_ded_sdl',
+      render: rec => (
+        <FormatNumber
+          value={rec.tot_ded_sdl}
+          decimals={2}
+          style={{ color: 'lightbrown', fontWeight: 'bold' }}
+        />
+      )
     }
   ];
   return (

@@ -28,7 +28,7 @@ const renderField = ({ placeholder, input, meta: { error, touched } }) => (
     {...formItemLayout}
     //label={<label style={{ textAlign: 'left'}}>{placeholder}</label>}
     label={placeholder}
-    hasFeedback
+    // hasFeedback
     validateStatus={error && touched ? 'error' : 'success'}
     help={error}
   >
