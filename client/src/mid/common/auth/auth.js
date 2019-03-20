@@ -3,7 +3,7 @@ import { authActions } from './auth-actions';
 
 const b64DecodeUnicode = str => {
   // Going backwards: from bytestream, to percent-encoding, to original string.
-  console.log(str);
+  //console.log(str);
   try {
     return decodeURIComponent(
       atob(str)
@@ -14,7 +14,7 @@ const b64DecodeUnicode = str => {
         .join('')
     );
   } catch (e) {
-    console.log(e);
+    //console.log(e);
     return null;
   }
 };

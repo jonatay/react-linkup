@@ -31,6 +31,11 @@ UPDATE fleet.vehicle
    WHERE id=$[id];
 `;
 
+const sqlToggleActive = `
+UPDATE fleet.vehicle SET is_active =  NOT is_active
+WHERE id = $[id]
+RETURNING *
+`;
 exports.list = () => db.any(sqlList);
 
 exports.get = parms => db.one(sqlGet, parms);
@@ -49,3 +54,5 @@ exports.getOrInsert = (name, registration) =>
   );
 
 exports.update = parms => db.none(sqlUpdate, parms);
+
+exports.toggleActive = id => db.one(sqlToggleActive, { id });

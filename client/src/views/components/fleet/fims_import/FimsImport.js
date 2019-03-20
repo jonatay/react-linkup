@@ -125,7 +125,7 @@ class FimsImport extends React.Component {
     };
 
     return (
-      <Row type="flex" justify="left" align="top">
+      <Row type="flex" justify="start" align="top">
         <Col span={20}>
           <FimsPeriodTable {...this.props} />
         </Col>
