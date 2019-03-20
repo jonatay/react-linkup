@@ -20,13 +20,9 @@ exports.update = (req, res) => {
 
 exports.toggleActive = (req, res) => {
   const id = req.params.id;
-  db.none(sqlToggleIsActive, { id }).then(() => {
-    db.one(sqlGetVehicle, { id }).then(v =>
-      res.json({
-        vehicle: {
-          ...v.v
-        }
-      })
-    );
-  });
+  ModelVehicle.toggleActive(id).then(vehicle =>
+    res.json({
+      vehicle
+    })
+  );
 };

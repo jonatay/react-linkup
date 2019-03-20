@@ -43,7 +43,9 @@ class CostCentreGrid extends React.Component {
     { costCentres, costCentreGroups },
     prevState
   ) {
-    return { ...prevState, data: costCentres, costCentreGroups };
+    return prevState.editing.length === 0
+      ? { ...prevState, data: costCentres, costCentreGroups }
+      : { ...prevState, costCentreGroups };
   }
 
   renderEditable(cellInfo) {
@@ -124,10 +126,13 @@ class CostCentreGrid extends React.Component {
       description: '',
       transactionTypes: []
     };
-    this.setState({
-      data: [...this.state.data.filter(r => r.id !== 'add'), addRow],
-      editing: [...this.state.editing.filter(r => r.id !== 'add'), addRow]
-    });
+    this.setState(
+      {
+        data: [...this.state.data.filter(r => r.id !== 'add'), addRow],
+        editing: [...this.state.editing.filter(r => r.id !== 'add'), addRow]
+      },
+      () => console.log(this.state)
+    );
   }
 
   onEditRow(original) {
@@ -153,20 +158,23 @@ class CostCentreGrid extends React.Component {
   }
 
   onCopyRow(original) {
-    this.setState({
-      data: [
-        ...this.state.data.filter(r => r.id !== 'add'),
-        { ...original, id: 'add' }
-      ],
-      editing: [
-        ...this.state.editing.filter(r => r.id !== 'add'),
-        { ...original, id: 'add' }
-      ]
-    });
+    this.setState(
+      {
+        data: [
+          ...this.state.data.filter(r => r.id !== 'add'),
+          { ...original, id: 'add' }
+        ],
+        editing: [
+          ...this.state.editing.filter(r => r.id !== 'add'),
+          { ...original, id: 'add' }
+        ]
+      },
+      () => console.log(this.state)
+    );
   }
 
   render() {
-    const { data } = this.state;
+    const { data, costCentreGroups } = this.state;
     const columns = [
       {
         Header: 'Cost Centre Group',
@@ -175,10 +183,8 @@ class CostCentreGrid extends React.Component {
         Cell: cellInfo =>
           this.findEditRow(cellInfo.original.id) ? (
             <MySelect
-              defaultValue={
-                this.state.data[cellInfo.index].cost_centre_group_id
-              }
-              options={this.state.costCentreGroups.map(r => ({
+              defaultValue={data[cellInfo.index].cost_centre_group_id}
+              options={costCentreGroups.map(r => ({
                 value: r.id,
                 label: r.name
               }))}
@@ -191,7 +197,7 @@ class CostCentreGrid extends React.Component {
               }
             />
           ) : (
-            this.state.data[cellInfo.index][cellInfo.column.id]
+            data[cellInfo.index][cellInfo.column.id]
           )
       },
       {
@@ -224,9 +230,9 @@ class CostCentreGrid extends React.Component {
                 mode="multiple"
                 style={{ width: '100%' }}
                 placeholder="Please select"
-                defaultValue={this.state.data[
-                  cellInfo.index
-                ].transactionTypes.map(ttcc => ttcc.transaction_type_id)}
+                defaultValue={data[cellInfo.index].transactionTypes.map(
+                  ttcc => ttcc.transaction_type_id
+                )}
                 onChange={value => {
                   // console.log(value);
                   this.changeEditData(
@@ -250,14 +256,18 @@ class CostCentreGrid extends React.Component {
             </span>
           ) : (
             <span>
-              {this.state.data[cellInfo.index].transactionTypes
+              {data[cellInfo.index].transactionTypes
                 .sort(
                   (a, b) =>
                     a.transaction_type > b.transaction_type
                       ? 1
-                      : a.transaction_type < b.transaction_type ? -1 : 0
+                      : a.transaction_type < b.transaction_type
+                        ? -1
+                        : 0
                 )
-                .map(ttcc => <Tag key={ttcc.id}>{ttcc.transaction_type}</Tag>)}
+                .map(ttcc => (
+                  <Tag key={ttcc.id}>{ttcc.transaction_type}</Tag>
+                ))}
             </span>
           )
       },
@@ -343,7 +353,7 @@ class CostCentreGrid extends React.Component {
         <ReactTable
           data={data}
           columns={columns}
-          defaultPageSize={14}
+          defaultPageSize={20}
           showPaginationTop={false}
           showPaginationBottom={true}
           defaultSorted={[
