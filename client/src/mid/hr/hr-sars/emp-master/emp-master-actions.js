@@ -25,6 +25,8 @@ export const empMasterActions = {
 
   DOWNLOAD_EMP_501: 'HR_SARS_DOWNLOAD_EMP_501',
 
+  REQUEST_EMP_501_TEXT_DOWNLOAD: 'HR_SARS_REQUEST_EMP_501_TEXT_DOWNLOAD',
+
   loadEmpMasters: () => ({
     type: empMasterActions.LOAD_EMP_MASTERS
   }),
@@ -113,5 +115,9 @@ export const empMasterActions = {
   downloadEmp501: (data, filename, type) => ({
     type: empMasterActions.DOWNLOAD_EMP_501,
     payload: { data, filename, type }
+  }),
+  requestEmp501TextDownload: id => ({
+    type: empMasterActions.REQUEST_EMP_501_TEXT_DOWNLOAD,
+    payload: { id }
   })
 };

@@ -5,7 +5,7 @@ const empDetailController = require('../controllers/hrSars/empDetailController')
 const empCodeController = require('../controllers/hrSars/empCodeController');
 const codeLkpController = require('../controllers/hrSars/codeLkpController');
 
-router.get('/cubit-companies', empMasterController.listCubitCompanies)
+router.get('/cubit-companies', empMasterController.listCubitCompanies);
 router.get('/emp-masters', empMasterController.list);
 router.post('/emp-masters', empMasterController.create);
 router.post(
@@ -16,5 +16,6 @@ router.delete('/emp-masters/:id', empMasterController.remove);
 router.get('/emp-details', empDetailController.list);
 router.get('/emp-codes', empCodeController.list);
 router.get('/code-lkps', codeLkpController.list);
+router.get('/download-emp501/:id', empMasterController.downloadEmp501);
 
 module.exports = router;

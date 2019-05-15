@@ -7,7 +7,7 @@ const sqlGet = 'SELECT * FROM cubit.employees WHERE enum = $[enum]';
 const sqlGetL = 'SELECT * FROM cubit.lemployees WHERE enum = $[enum]';
 
 exports.list = () =>
-  Promise.all(cubitDbs.map(db => db.any(sqlList))).then(data =>
+  Promise.all(cubitDbs.map(({db}) => db.any(sqlList))).then(data =>
     data.reduce((ret, iData) => ret.concat(iData), [])
   );
 

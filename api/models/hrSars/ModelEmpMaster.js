@@ -17,6 +17,9 @@ INSERT INTO sars.emp_master(
             $[when_create], $[emp_header], $[emp_trailer], $[include_cccs], $[sic7])
    RETURNING *
 `;
+const sqlGet = `
+SELECT * FROM sars.emp_master WHERE  id = $[id]
+`;
 
 // const sqlGetByEmployeeCode = `
 // SELECT * FROM hr.employee WHERE employee_code = $[employeeCode]
@@ -27,6 +30,8 @@ RETURNING id
 `;
 
 exports.list = () => db.any(sqlList);
+
+exports.get = id => db.one(sqlGet, { id });
 
 exports.createFromEmpDetailsParams = ({
   params: {
@@ -84,7 +89,7 @@ exports.createFromEmpDetailsParams = ({
         '2025': contactFName,
         '2036': contactSName,
         '2038': contactPos,
-        '2040': contactCNumber,
+        '2026': contactCNumber,
         '2027': contactEMail,
         '2028': payrollSWProv,
         '2029': payrollSWPkg,

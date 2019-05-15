@@ -37,6 +37,8 @@ const glSurnameExceptions = {
   A129: 'Themba Victor Dubazana'
 };
 
+const empCodesRound = [4003];
+
 // const sqlGetByEmployeeCode = `
 // SELECT * FROM hr.employee WHERE employee_code = $[employeeCode]
 // `;
@@ -103,7 +105,9 @@ const getEmpCode = ({ empLedger, employee }) => {
     ) ||
     empLedger.cubit_description === 'Gross Salary'
   ) {
-    return employee.nature_person === 'A' ? 3601 : 3615;
+    return employee.nature_person === 'C' && empLedger.tax_year <= 2018
+      ? 3615
+      : 3601;
   } else if (
     empLedger.accname === 'Salaries - Bonus' ||
     empLedger.accname === 'Salaries Termination Leave Pay'
@@ -129,13 +133,13 @@ const getEmpCode = ({ empLedger, employee }) => {
   } else if (
     empLedger.cubit_description === 'Retirement Annuity Contribution'
   ) {
-    return 4002;
+    return 4003;
   } else if (empLedger.cubit_description === 'PAYE') {
     return 4102;
   } else if (empLedger.cubit_description === 'UIF') {
     return 4141;
   } else {
-    return 9998;
+    return null;
   }
 };
 
@@ -261,7 +265,7 @@ const includesEtiEmpCodesFromSalSumm = (salSumms, employee, empCodes) => {
     // aETICodes[`7003-${('00' + salSumm.p_mth).slice(-2)}`] = {
     aETICodes.push({
       emp_code: 7003,
-      emp_value: 0,
+      emp_value: salSumm.eti,
       tax_month: salSumm.p_mth,
       tax_year: taxYear,
       employee_code: salSumm.emp_code,
@@ -326,8 +330,10 @@ exports.newFromEmpLedgers = ({ empLedgers, employee, gLedgers, salSumms }) =>
         ? [
             ...acc,
             {
-              emp_code: getEmpCode({ empLedger, employee }),
-              emp_value: empLedger.credit + empLedger.debit,
+              emp_code: empCode, //getEmpCode({ empLedger, employee }),
+              emp_value: empCodesRound.includes(empCode)
+                ? parseInt(empLedger.credit + empLedger.debit)
+                : parseInt((empLedger.credit + empLedger.debit) * 100) / 100,
               tax_month: empLedger.tax_month,
               tax_year: empLedger.tax_year,
               employee_code: empLedger.employee_code,

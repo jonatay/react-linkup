@@ -5,7 +5,7 @@ import React from 'react';
 */
 
 import { Row, Col, Statistic, Tag, Collapse } from 'antd';
-import { Field } from 'redux-form';
+// import { Field } from 'redux-form';
 const { Panel } = Collapse;
 
 const PanelHeader = props => (

@@ -157,13 +157,12 @@ class Emp501Page extends React.Component {
                     : null,
                   empDetails: this.props.empDetails
                     .filter(eD => eD.emp_master_id === empMaster.id)
-                    .sort(
-                      (a, b) =>
-                        a.employee_code > b.employee_code
-                          ? 1
-                          : a.employee_code < b.employee_code
-                            ? -1
-                            : 0
+                    .sort((a, b) =>
+                      a.employee_code > b.employee_code
+                        ? 1
+                        : a.employee_code < b.employee_code
+                        ? -1
+                        : 0
                     )
                     .map(eD => ({
                       ...eD,
@@ -228,7 +227,8 @@ Emp501Page.propTypes = {
   importEmpMaster: PropTypes.func.isRequired,
   removeEmpMaster: PropTypes.func.isRequired,
   createEmpMaster: PropTypes.func.isRequired,
-  loadCubitCompanies: PropTypes.func.isRequired
+  loadCubitCompanies: PropTypes.func.isRequired,
+  requestEmp501TextDownload: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -247,7 +247,8 @@ const mapDispatchToProps = {
   importEmpMaster: empMasterActions.importEmpMaster,
   removeEmpMaster: empMasterActions.removeEmpMaster,
   createEmpMaster: empMasterActions.createEmpMaster,
-  loadCubitCompanies: empMasterActions.loadCubitCompanies
+  loadCubitCompanies: empMasterActions.loadCubitCompanies,
+  requestEmp501TextDownload: empMasterActions.requestEmp501TextDownload
 };
 
 export default withRouter(

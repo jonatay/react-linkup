@@ -1,11 +1,11 @@
 const Promise = require('bluebird');
-const { dump } = require('dumper.js');
+// const { dump } = require('dumper.js');
 
 const ModelEmpMaster = require('../../models/hrSars/ModelEmpMaster');
 const ModelEmpDetail = require('../../models/hrSars/ModelEmpDetail');
 const ModelEmpCode = require('../../models/hrSars/ModelEmpCode');
 
-const ModelHrSarsEmpLedger = require('../../models/hrSars/ModelHrSarsEmpLedger');
+// const ModelHrSarsEmpLedger = require('../../models/hrSars/ModelHrSarsEmpLedger');
 
 const ModelEmployee = require('../../models/hr/ModelEmployee');
 const ModelEmpLedger = require('../../models/hr/ModelEmpLedger');
@@ -15,6 +15,37 @@ const ModelSalSumm = require('../../models/hr/ModelSalSumm');
 
 const ModelSageAccount = require('../../models/sagePay/ModelSageAccount');
 const ModelGLedger = require('../../models/gl/ModelGLedger');
+/*
+for (var key in myArray) {
+  console.log("key " + key + " has value " + myArray[key]);
+}
+ */
+exports.downloadEmp501 = async (req, res) => {
+  const extractKeyValLine = aVals => {
+    const rtn = [];
+    for (var key in aVals) {
+      rtn.push(key);
+      rtn.push(aVals[key]);
+    }
+    return rtn.join(',').slice(0, -1);
+  };
+  const { id } = req.params;
+  const aData = [];
+  console.log('download', id);
+  const empMaster = await ModelEmpMaster.get(id);
+  const empDetails = await ModelEmpDetail.getByEmpMaster(id);
+  aData.push(extractKeyValLine(JSON.parse(empMaster.emp_header)));
+  for (let i = 0; i < empDetails.length; i++) {
+    aData.push(extractKeyValLine(JSON.parse(empDetails[i].emp_employee_data)));
+  }
+  aData.push(extractKeyValLine(JSON.parse(empMaster.emp_trailer)));
+  // ModelEmpMaster.get(id).then(empMaster => {
+  res.json({
+    filename: `emp501-${empMaster.period}-${empMaster.cubit_company_code}`,
+    data: aData.join('\n'),
+    type: 'text/plain'
+  });
+};
 
 exports.list = (req, res) => {
   ModelEmpMaster.list().then(data =>

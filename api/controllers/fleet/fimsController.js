@@ -78,26 +78,26 @@ exports.import_fims_period = (req, res) => {
       .each(
         // async function so await can be used
         async fimsVoucher => {
-          console.log(` ..fimsVoucher id ${fimsVoucher.id}`);
+          // console.log(` ..fimsVoucher id ${fimsVoucher.id}`);
           // do something with warnings
           const vehicle = await ModelVehicle.getOrInsert(
             fimsVoucher.vehicle_description,
             fimsVoucher.registration
           );
-          console.log(` ...vehicle id ${vehicle.id}`);
+          // console.log(` ...vehicle id ${vehicle.id}`);
 
           const driver = await ModelDriver.getOrInsert(
             fimsVoucher.driver,
             fimsVoucher.registration
           );
-          console.log(` ...driver id ${driver.id}`);
+          // console.log(` ...driver id ${driver.id}`);
 
           const merchant = await ModelMerchant.getOrInsert(
             fimsVoucher.merchant_name,
             fimsVoucher.merchant_town,
             fimsVoucher.oil_company
           );
-          console.log(` ...merchant id ${merchant.id}`);
+          // console.log(` ...merchant id ${merchant.id}`);
 
           const transactionType = await ModelTransactionType.getOrInsert(
             fimsVoucher.purchase_description,
@@ -107,7 +107,7 @@ exports.import_fims_period = (req, res) => {
               parseInt(fimsVoucher.transaction_date.substr(6, 2))
             )
           );
-          console.log(` ...transactionType id ${transactionType.id}`);
+          // console.log(` ...transactionType id ${transactionType.id}`);
 
           const vehicleCcs = await ModelVehicleCcg.getCcgIdByVehicle(
             vehicle.id
@@ -126,7 +126,7 @@ exports.import_fims_period = (req, res) => {
           )
             .values()
             .next().value;
-          console.log(` ...costCentreId ${costCentreId}`);
+          // console.log(` ...costCentreId ${costCentreId}`);
 
           let fleetTransaction = {
             tax_year:

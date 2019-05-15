@@ -112,7 +112,7 @@ class SageAccountBestImport extends React.Component {
       fileList: this.state.fileList
     };
     return (
-      <Row type="flex" justify="left" align="top">
+      <Row type="flex" justify="start" align="top">
         <Col span={6}>
           <Button
             type="primary"
