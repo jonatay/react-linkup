@@ -107,7 +107,7 @@ function listFiles(auth) {
     {
       auth: auth,
       orderBy: 'name desc',
-      q: `name contains '-salary' and mimeType='application/vnd.google-apps.spreadsheet' and '${googleFolderId}' in parents`
+      q: `name contains '1902-salary' and mimeType='application/vnd.google-apps.spreadsheet' and '${googleFolderId}' in parents`
     },
     (err, res) => {
       if (err) return console.log('The API returned an error: ' + err);

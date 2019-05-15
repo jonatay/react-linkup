@@ -46,6 +46,9 @@ INSERT INTO sars.emp_employee(
 const sqlRemoveByEmpMaster = `
 DELETE FROM sars.emp_employee WHERE emp_master_id = $[id]
 `;
+const sqlGetByEmpMaster = `
+SELECT * FROM sars.emp_employee WHERE emp_master_id = $[id]
+`;
 
 // const sqlGetByEmployeeCode = `
 // SELECT * FROM hr.employee WHERE employee_code = $[employeeCode]
@@ -54,6 +57,8 @@ DELETE FROM sars.emp_employee WHERE emp_master_id = $[id]
 exports.list = () => db.any(sqlList);
 
 exports.get = id => db.one(sqlGet, { id });
+
+exports.getByEmpMaster = id => db.any(sqlGetByEmpMaster, { id });
 
 exports.create = data => db.one(sqlCreate, data);
 
@@ -148,7 +153,7 @@ const getEmp501Line = ({
   cubitEmployee,
   sageAccount
 }) => ({
-  '3010': `${params.refPAYE}${params.period}${employee.employee_code.padStart(
+  '3010': `${params.refPAYE}${params.taxYear}${params.taxMonth}${employee.employee_code.padStart(
     14,
     '0'
   )}`,
@@ -160,7 +165,7 @@ const getEmp501Line = ({
       ? 'IRP5'
       : 'IT3(a)',
   '3020': employee.nature_person,
-  '3026': '**TODO**',
+  '3026': empDetail.tot_eti > 0 ? 'Y' : 'N',
   '3025': params.taxYear,
   '3030': employee.surname,
   '3040': employee.first_names,
@@ -200,7 +205,7 @@ const getEmp501Line = ({
   '3279': 'Y',
   '3283': params.tradingName,
   '3288': '2',
-  '3249': 'PO Box',
+  '3249': 'PO_BOX',
   '3262': '673',
   '3253': params.empAddrTown,
   '3254': params.empAddrPCode,
@@ -219,18 +224,19 @@ const getEmp501Line = ({
       ...acc,
       [`${empCode.emp_code}`]: acc[`${empCode.emp_code}`]
         ? acc[`${empCode.emp_code}`] + empCode.emp_value
-        : empCode.emp_value
+        : parseInt(empCode.emp_value * 100) / 100
     }),
     {}
   ),
   '3696': empDetail.tot_no_tax_income,
-  '3697': empDetail.tot_tax_income,
+ // '3697': empDetail.tot_tax_income,
   '4102': empDetail.tot_ded_paye,
   '4141': empDetail.tot_ded_uif,
-  '4142': empDetail.tot_ded_sdl,
+  '4142': parseInt(empDetail.tot_ded_sdl * 100) / 100,
   '4149':
     empDetail.tot_ded_paye + empDetail.tot_ded_uif + empDetail.tot_ded_sdl,
-  '4118': empDetail.tot_eti
+  '4118': empDetail.tot_eti,
+  '9999': null
 });
 
 /*
@@ -266,10 +272,10 @@ exports.newFromEmployeeEmpCodes = ({
     bank_account_type: sageAccount
       ? sageAccount.account_type
       : cubitEmployee.bankacctype === 'Savings'
-        ? 2
-        : cubitEmployee.bankacctype === 'Credit Card'
-          ? 5
-          : 1,
+      ? 2
+      : cubitEmployee.bankacctype === 'Credit Card'
+      ? 5
+      : 1,
     bank_account_number: sageAccount
       ? sageAccount.account_number
       : cubitEmployee.bankaccno,
@@ -296,10 +302,10 @@ exports.newFromEmployeeEmpCodes = ({
       .filter(ec => [4001].includes(ec.emp_code))
       .reduce((tot, ec) => tot + ec.emp_value, 0),
     tot_ded_paye: empCodes
-      .filter(ec => [4002].includes(ec.emp_code))
+      .filter(ec => [4102].includes(ec.emp_code))
       .reduce((tot, ec) => tot + ec.emp_value, 0),
     tot_ded_sdl: empCodes
-      .filter(ec => [4102].includes(ec.emp_code))
+      .filter(ec => [4142].includes(ec.emp_code))
       .reduce((tot, ec) => tot + ec.emp_value, 0),
     tot_ded_uif: empCodes
       .filter(ec => [4141].includes(ec.emp_code))
@@ -336,10 +342,10 @@ exports.createFromEmpMasterEmployee = ({
     bank_account_type: sageAccount
       ? sageAccount.account_type
       : cubitEmployee.bankacctype === 'Savings'
-        ? 2
-        : cubitEmployee.bankacctype === 'Credit Card'
-          ? 5
-          : 1,
+      ? 2
+      : cubitEmployee.bankacctype === 'Credit Card'
+      ? 5
+      : 1,
     bank_account_number: sageAccount
       ? sageAccount.account_number
       : cubitEmployee.bankaccno,

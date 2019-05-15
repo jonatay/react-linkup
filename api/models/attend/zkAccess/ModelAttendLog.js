@@ -20,10 +20,10 @@ SELECT
   c.USERID AS USER_ID,
   d.DEPTNAME AS department,
   u.name, u.lastname,
-  CHECKTIME AS log_time, 
-  CHECKTYPE AS check_type, 
-  VERIFYCODE as ver_code, 
-  LOGID as log_id, 
+  CHECKTIME AS log_time,
+  CHECKTYPE AS check_type,
+  VERIFYCODE as ver_code,
+  LOGID as log_id,
   sn,
   u.DEFAULTDEPTID AS department_id
 FROM dbo.CHECKINOUT c

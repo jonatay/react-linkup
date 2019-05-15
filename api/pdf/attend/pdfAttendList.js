@@ -1,7 +1,9 @@
 const PDFDocument = require('pdfkit');
 const faker = require('faker');
-
+const moment = require('moment');
 const _ = require('lodash');
+
+const ModelAttendUser = require('../../models/attend/zkAccess/ModelAttendUser');
 
 const blockToTextDiv = 5.2;
 
@@ -158,13 +160,35 @@ const testTableArray = (height, width) => {
   return res;
 };
 
-const buildAttendLogTable = ({
-  listParams: { depts, dateRange, excludeWeekends }
-}) => new Promise((resolve, reject) => {});
+var getDateArray = function(start, end, excludeWeekend) {
+  let arr = new Array();
+  let dt = moment(start);
+  let dTo = moment(end);
+  while (dt <= dTo) {
+    if ((excludeWeekend && dt.isoWeekday() <= 5) || !excludeWeekend) {
+      arr.push({
+        date: dt.toDate(),
+        dow: dt.format('ddd'),
+        label: dt.format('YY-MM-DD')
+      });
+    }
+    dt.add(1, 'd');
+  }
+  console.log(arr);
+  return arr;
+};
+
+const buildAttendLogTable = ({ depts, dateRange, excludeWeekends }) =>
+  new Promise((resolve, reject) => {});
 
 exports.report = (req, res) => {
-  // const params = JSON.parse(req.params.params);
+  const {
+    listParams: { depts, dateRange, excludeWeekends }
+  } = JSON.parse(req.params.params);
+  console.log(depts, dateRange, excludeWeekends);
   // console.log(depts, dateRange, excludeWeekends);
+  const jDates = getDateArray(dateRange[0], dateRange[1], excludeWeekends);
+  ModelAttendUser.listByDept(depts).then(users => console.log(users));
 
   const testArr = testTableArray(100, 30);
   // console.log(testArr);

@@ -1,9 +1,9 @@
 // connect to a database if needed, then pass it to `callback`:
-var promise = require('bluebird');
+const Promise = require('bluebird');
 
 var options = {
   // Initialization Options
-  promiseLib: promise,
+  promiseLib: Promise,
   capSQL: true,
   query(e) {
     console.log('query:', e.query);
@@ -22,5 +22,7 @@ var cubitDbs = JSON.parse(process.env.POSTGRES_CUBIT).map(c => ({
   ccc: c.ccc,
   db: pgp(process.env.POSTGRES_CONNECT.replace('/linkup', `/${c.db}`))
 }));
+
+//cubitDbs.map(({ db }) => db.any('SELECT sname FROM cubit.employees').then(data=>console.log(data)));
 
 module.exports = cubitDbs;

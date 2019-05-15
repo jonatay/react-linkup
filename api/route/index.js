@@ -10,17 +10,18 @@ const adminRoutes = require('./adminRoutes');
 const fleetRoutes = require('./fleetRoutes');
 const sagePayRoutes = require('./sagePayRoutes');
 const attendRoutes = require('./attendRoutes');
-const hrSarsRoutes = require('./hrSarsRoutes')
+const hrSarsRoutes = require('./hrSarsRoutes');
 const imageProxy = require('../controllers/imageProxy/imageProxy');
+const sageOneRoutes = require('./sageOneRoutes');
 
 /*
-      *** NB: up here routes are UNPROTECTED, only use for utils. TODO: maybe move ../fims-api into api at some point.
+ *** NB: up here routes are UNPROTECTED, only use for utils.
+ * TODO: maybe move ../fims-api into api at some point.
  */
 router.get(
   '/image-proxy/:url/:width/:height.:extension?',
   imageProxy.imageProxy
 );
-
 
 /*
 implement firebase auth middleware,
@@ -40,7 +41,7 @@ implement acl middleware
 router.use('/*', acl.middleware(3, userId));
 
 /*
-      *** NB: from here down, all routes protected by AUTH and ACL
+ *** NB: from here down, all routes protected by AUTH and ACL
  */
 
 /* GET api root page. */
@@ -51,5 +52,6 @@ router.use('/fleet', fleetRoutes);
 router.use('/sage-pay', sagePayRoutes);
 router.use('/attend', attendRoutes);
 router.use('/hr-sars', hrSarsRoutes);
+router.use('/sage-one', sageOneRoutes);
 
 module.exports = router;

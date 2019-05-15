@@ -3,7 +3,11 @@ const readline = require('readline');
 const { google } = require('googleapis');
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'];
+const SCOPES = [
+  'https://www.googleapis.com/auth/drive.metadata.readonly',
+  'https://www.googleapis.com/auth/spreadsheets'
+];
+//const SCOPES = [];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
@@ -86,10 +90,31 @@ function listFiles(auth) {
         console.log('Files:');
         files.map(file => {
           console.log(`${file.name} (${file.id})`);
+          listSalSumm(auth, file.id, 'Sc');
+          listSalSumm(auth, file.id, 'Tc');
+          listSalSumm(auth, file.id, 'Rc');
         });
       } else {
         console.log('No files found.');
       }
+    }
+  );
+}
+
+function listSalSumm(auth, fileId, sheetName) {
+  // const fileId = '1lErDl2PNjjmz_LEeVi3vZKILuBLePTDcI3ab2BQQXBE';
+  // const sheetName = 'Sc';
+  const sheets = google.sheets({ version: 'v4', auth });
+  sheets.spreadsheets.values.get(
+    {
+      spreadsheetId: fileId,
+      range: `${sheetName}!A1:X999`
+    },
+    (err, res) => {
+      if (err) return err; //console.log('The API returned an error: ' + err);
+      const rows = res.data.values;
+      console.log(`found ${rows.length} rows in ${fileId} - ${sheetName}`);
+      console.log(rows);
     }
   );
 }

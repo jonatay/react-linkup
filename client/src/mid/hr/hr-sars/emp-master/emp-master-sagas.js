@@ -86,6 +86,16 @@ function* downloadEmp501({ payload: { data, filename, type } }) {
   }
 }
 
+function* requestEmp501TextDownload({ payload: { id } }) {
+  let { data, filename, type } = yield call(
+    [empMasterList, empMasterList.requestEmp501TextDownload],
+    id
+  );
+  console.log(data, filename, type);
+  yield put(empMasterActions.downloadEmp501(data, filename, type));
+  //yield put(empMasterActions.updateEmpMasterFulfilled(result.empMaster));
+}
+
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -133,6 +143,14 @@ function* watchImportEmpMaster() {
 function* watchDownloadEmp501() {
   yield takeEvery(empMasterActions.DOWNLOAD_EMP_501, downloadEmp501);
 }
+
+function* watchRequestEmp501TextDownload() {
+  yield takeEvery(
+    empMasterActions.REQUEST_EMP_501_TEXT_DOWNLOAD,
+    requestEmp501TextDownload
+  );
+}
+
 export const empMasterSagas = [
   fork(watchAuthentication),
   fork(watchIdTokenRefresh),
@@ -142,5 +160,6 @@ export const empMasterSagas = [
   fork(watchRemoveEmpMaster),
   fork(watchImportEmpMaster),
   fork(watchLoadCubitCompanies),
-  fork(watchDownloadEmp501)
+  fork(watchDownloadEmp501),
+  fork(watchRequestEmp501TextDownload)
 ];

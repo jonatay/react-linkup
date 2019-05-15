@@ -18,6 +18,7 @@ const inclCsvCols = [
   'driver',
   'vehicle_description',
   'transaction_date',
+  'transaction_time',
   'process_date',
   'merchant_name',
   'merchant_town',

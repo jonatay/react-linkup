@@ -182,6 +182,16 @@ const EmpMasterTable = class EmpMasterTable extends Component {
                 showRemoveEmpMasterConfirm(rec, this.props.removeEmpMaster);
               }}
               // disabled={!this.props.fimsPeriodIsAvailable}
+            />{' '}
+            <Button
+              style={{ margin: 5, marginRight: 20 }}
+              type="dashed"
+              // ghost={true}
+              size="small"
+              shape="circle"
+              icon="down"
+              onClick={() => this.props.requestEmp501TextDownload(rec.id)}
+              // disabled={!this.props.fimsPeriodIsAvailable}
             />
           </div>
         )
