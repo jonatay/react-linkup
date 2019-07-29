@@ -13,7 +13,13 @@ router.post(
   empMasterController.importEmp501Text
 );
 router.delete('/emp-masters/:id', empMasterController.remove);
+
 router.get('/emp-details', empDetailController.list);
+router.post(
+  '/emp-details/import-emp-easyfile',
+  empDetailController.importEasyfile
+);
+
 router.get('/emp-codes', empCodeController.list);
 router.get('/code-lkps', codeLkpController.list);
 router.get('/download-emp501/:id', empMasterController.downloadEmp501);

@@ -228,7 +228,8 @@ Emp501Page.propTypes = {
   removeEmpMaster: PropTypes.func.isRequired,
   createEmpMaster: PropTypes.func.isRequired,
   loadCubitCompanies: PropTypes.func.isRequired,
-  requestEmp501TextDownload: PropTypes.func.isRequired
+  requestEmp501TextDownload: PropTypes.func.isRequired,
+  importEmpEasyfile: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -248,7 +249,8 @@ const mapDispatchToProps = {
   removeEmpMaster: empMasterActions.removeEmpMaster,
   createEmpMaster: empMasterActions.createEmpMaster,
   loadCubitCompanies: empMasterActions.loadCubitCompanies,
-  requestEmp501TextDownload: empMasterActions.requestEmp501TextDownload
+  requestEmp501TextDownload: empMasterActions.requestEmp501TextDownload,
+  importEmpEasyfile: empDetailActions.importEmpEasyfile
 };
 
 export default withRouter(

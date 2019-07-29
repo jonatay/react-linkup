@@ -2,7 +2,7 @@ const Promise = require('bluebird');
 const moment = require('moment');
 const db = require('../../services/postgres/db');
 const { dump } = require('dumper.js');
-
+const _ = require('lodash');
 const sqlList = `
 SELECT id, emp_code, emp_value, tax_month, employee_code, sum_credit, 
        sum_debit, emp_master_id, emp_employee_id, period, cubit_company_code, 
@@ -103,27 +103,37 @@ const getEmpCode = ({ empLedger, employee }) => {
     ['Salaries Overtime', 'Standby Allowance', 'Telephone and Fax'].includes(
       empLedger.accname
     ) ||
-    empLedger.cubit_description === 'Gross Salary'
+    empLedger.cubit_description === 'Gross Salary' ||
+    (empLedger.accname === 'Salaries Controllers' &&
+      empLedger.cubit_description === 'Allowance' &&
+      empLedger.credit >= 60 &&
+      empLedger.credit <= 80)
   ) {
-    return employee.nature_person === 'C' && empLedger.tax_year <= 2018
+    return employee.nature_person === 'C' &&
+      parseInt(empLedger.tax_year) <= 2018
       ? 3615
       : 3601;
   } else if (
     empLedger.accname === 'Salaries - Bonus' ||
     empLedger.accname === 'Salaries Termination Leave Pay'
   ) {
-    return employee.nature_person === 'A' ? 3605 : 3615;
+    return employee.nature_person === 'C' &&
+      parseInt(empLedger.tax_year) <= 2018
+      ? 3615
+      : 3605; //return employee.nature_person === 'A' ? 3605 : 3615;
+  } else if (
+    ['Salaries Commission', 'Salaries - Commission'].includes(empLedger.accname)
+  ) {
+    return 3606;
   } else if (
     [
       'Salaries Controllers',
       'Cellular Phones',
       'Subsistence and Accommodation',
-      'Salaries Commission',
-      'Salaries - Commission',
       'Incentive Commission'
     ].includes(empLedger.accname)
   ) {
-    return 3606;
+    return 3605;
   } else if (
     ['Vehicle Allowance', 'Vehicle Hire'].includes(empLedger.accname)
   ) {
@@ -332,8 +342,8 @@ exports.newFromEmpLedgers = ({ empLedgers, employee, gLedgers, salSumms }) =>
             {
               emp_code: empCode, //getEmpCode({ empLedger, employee }),
               emp_value: empCodesRound.includes(empCode)
-                ? parseInt(empLedger.credit + empLedger.debit)
-                : parseInt((empLedger.credit + empLedger.debit) * 100) / 100,
+                ? _.round(empLedger.credit + empLedger.debit)
+                : _.round(empLedger.credit + empLedger.debit),
               tax_month: empLedger.tax_month,
               tax_year: empLedger.tax_year,
               employee_code: empLedger.employee_code,
@@ -348,10 +358,10 @@ exports.newFromEmpLedgers = ({ empLedgers, employee, gLedgers, salSumms }) =>
     },
     []
   )
-    .then(
-      //then add in eti recs from salSumms
-      empCodes => includesEtiEmpCodesFromSalSumm(salSumms, employee, empCodes)
-    )
+    // .then(
+    //   //then add in eti recs from salSumms
+    //   empCodes => includesEtiEmpCodesFromSalSumm(salSumms, employee, empCodes)
+    // )
     .then(
       //then add in sdl recs from gLedgers
       empCodes =>
@@ -376,12 +386,12 @@ exports.newFromEmpLedgers = ({ empLedgers, employee, gLedgers, salSumms }) =>
           ...empCodes,
           ...gLedgers.map(gLed => ({
             emp_code: gLed.accname === 'SDL Payable' ? 4142 : 4141,
-            emp_value: gLed.credit + gLed.debit,
+            emp_value: _.round(gLed.credit + gLed.debit, 2),
             tax_month: gLed.tax_month,
             tax_year: gLed.tax_year,
             employee_code: gLed.employee_code,
-            sum_credit: gLed.credit,
-            sum_debit: gLed.debit,
+            sum_credit: _.round(gLed.credit, 2),
+            sum_debit: _.round(gLed.debit, 2),
             cubit_company_code: gLed.cubit_company_code,
             description: gLed.cubit_description,
             accname: gLed.accname

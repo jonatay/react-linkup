@@ -13,6 +13,7 @@ const attendRoutes = require('./attendRoutes');
 const hrSarsRoutes = require('./hrSarsRoutes');
 const imageProxy = require('../controllers/imageProxy/imageProxy');
 const sageOneRoutes = require('./sageOneRoutes');
+const simplePayRoutes = require('./simplePayRoutes');
 
 /*
  *** NB: up here routes are UNPROTECTED, only use for utils.
@@ -51,6 +52,7 @@ router.use('/admin', adminRoutes);
 router.use('/fleet', fleetRoutes);
 router.use('/sage-pay', sagePayRoutes);
 router.use('/attend', attendRoutes);
+router.use('/simple-pay', simplePayRoutes);
 router.use('/hr-sars', hrSarsRoutes);
 router.use('/sage-one', sageOneRoutes);
 

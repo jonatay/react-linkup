@@ -8,6 +8,7 @@ import { fleetReducer } from './fleet/index';
 import { sagePayReducer } from './sage-pay/index';
 import { attendReducer } from './attend';
 import { hrReducer } from './hr';
+import { simplePayReducer } from './simple-pay';
 
 export default combineReducers({
   router: routerReducer,
@@ -17,5 +18,6 @@ export default combineReducers({
   form: formReducer,
   sagePay: sagePayReducer,
   attend: attendReducer,
-  hr: hrReducer
+  hr: hrReducer,
+  simplePay: simplePayReducer
 });

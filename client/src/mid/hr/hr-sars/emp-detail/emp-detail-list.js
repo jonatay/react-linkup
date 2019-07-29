@@ -4,7 +4,13 @@ import { EmpDetail } from './emp-detail';
 
 const empDetailPath = 'hr-sars/emp-details';
 
-class EmpDetailList extends ApiList {}
+class EmpDetailList extends ApiList {
+  importEmpEasyfile = data => {
+    return this.customApiCall(null, 'import-emp-easyfile', data, 'POST')
+      .then(res => res)
+      .catch(e => e);
+  };
+}
 
 export const empDetailList = new EmpDetailList(
   {

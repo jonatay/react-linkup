@@ -106,7 +106,7 @@ exports.createFromEmpDetailsParams = ({
         '9999': null
       }),
       emp_trailer: JSON.stringify({
-        '6010': empDetails.length,
+        '6010': empDetails.length + 1,
         '9999': null
       }),
       include_cccs: includeCccs,

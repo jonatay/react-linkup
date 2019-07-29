@@ -5,6 +5,7 @@ import { fleetSagas } from './fleet';
 import { sagePaySagas } from './sage-pay';
 import { attendSagas } from './attend';
 import { hrSagas } from './hr';
+import { simplePaySagas } from './simple-pay';
 
 export default function* sagas() {
   yield all([
@@ -13,6 +14,7 @@ export default function* sagas() {
     ...fleetSagas,
     ...sagePaySagas,
     ...attendSagas,
-    ...hrSagas
+    ...hrSagas,
+    ...simplePaySagas
   ]);
 }

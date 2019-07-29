@@ -45,6 +45,10 @@ const HomePage = asyncComponent(() =>
 
 const Emp501Page = asyncComponent(() => import('src/views/pages/hr/emp501'));
 
+const EmployeesPage = asyncComponent(() =>
+  import('src/views/pages/hr/employee')
+);
+
 export const privateRoutes = [
   { path: '/admin/users', component: AdminUsersPage },
   { path: '/admin/rights', component: AdminRightsPage },
@@ -62,6 +66,7 @@ export const privateRoutes = [
   { path: '/user-profile', component: UserProfilePage },
 
   { path: '/hr/emp501', component: Emp501Page },
+  { path: '/hr/employees', component: EmployeesPage },
 
   { path: '/home', component: HomePage },
   { path: '/', component: RootPage }

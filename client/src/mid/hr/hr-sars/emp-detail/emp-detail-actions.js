@@ -15,6 +15,10 @@ export const empDetailActions = {
   UPDATE_EMP_DETAIL_FAILED: 'HR_SARS_UPDATE_EMP_DETAIL_FAILED',
   UPDATE_EMP_DETAIL_FULFILLED: 'HR_SARS_UPDATE_EMP_DETAIL_FULFILLED',
 
+  IMPORT_EMP_EAFYFILE: 'HR_SARS_IMPORT_EMP_EAFYFILE',
+  IMPORT_EMP_EAFYFILE_FAILED: 'HR_SARS_IMPORT_EMP_EAFYFILE_FAILED',
+  IMPORT_EMP_EAFYFILE_FULFILLED: 'HR_SARS_IMPORT_EMP_EAFYFILE_FULFILLED',
+
   IMPORT_EMP_DETAILS_FULFILLED: 'HR_SARS_IMPORT_EMP_DETAILS_FULFILLED',
 
   loadEmpDetails: () => ({
@@ -77,5 +81,18 @@ export const empDetailActions = {
   importEmpDetailsFulfilled: empDetails => ({
     type: empDetailActions.IMPORT_EMP_DETAILS_FULFILLED,
     payload: { empDetails }
+  }),
+  importEmpEasyfile: data => ({
+    type: empDetailActions.IMPORT_EMP_EAFYFILE,
+    payload: { data }
+  }),
+  importEmpEasyfileFailed: error => ({
+    type: empDetailActions.IMPORT_EMP_EAFYFILE_FAILED,
+    payload: { error }
+  }),
+
+  importEmpEasyfileFulfilled: result => ({
+    type: empDetailActions.IMPORT_EMP_EAFYFILE_FULFILLED,
+    payload: { result }
   })
 };

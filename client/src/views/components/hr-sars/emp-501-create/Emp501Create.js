@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 import { Button, Col, Row, Select } from 'antd';
 import Emp501Import from '../../../components/hr-sars/emp-501-import';
+import Emp501EfilingExport from '../emp-501-easyfile-import';
 import Emp501CreateForm from '../emp-501-create-form';
 const { Option } = Select;
 
@@ -79,14 +80,19 @@ const Emp501Create = class Emp501Create extends Component {
     includeCompanies: ['aaab', 'aaac', 'aaad'],
     period: '2018-08',
     importEmpVisible: false,
-    createEmpVisible: false
+    createEmpVisible: false,
+    importEasyfileVisible: false
   };
   handleEmp501Upload(data) {
-    console.log(data);
+    //console.log(data);
     this.props.importEmpMaster(data);
     this.setState({ importEmpVisible: false });
   }
-
+  handleEmp501EfilingUpload(data) {
+    //console.log(data);
+    this.props.importEmpEasyfile(data);
+    this.setState({ importEasyfileVisible: false });
+  }
   handleEmp501Create(data) {
     //console.log(data);
     this.props.createEmpMaster(data);
@@ -110,7 +116,7 @@ const Emp501Create = class Emp501Create extends Component {
       <div>
         {' '}
         <Row>
-          <Col span={3}>
+          <Col span={2}>
             <Select
               placeholder="period"
               style={{ width: '100%' }}
@@ -129,7 +135,7 @@ const Emp501Create = class Emp501Create extends Component {
               {periodOptions}
             </Select>
           </Col>
-          <Col span={3}>
+          <Col span={2}>
             <Select
               placeholder="submit company"
               style={{ width: '100%' }}
@@ -139,7 +145,7 @@ const Emp501Create = class Emp501Create extends Component {
               {companyOptions}
             </Select>
           </Col>
-          <Col span={7}>
+          <Col span={6}>
             <Select
               placeholder="company(s)"
               mode="multiple"
@@ -150,7 +156,7 @@ const Emp501Create = class Emp501Create extends Component {
               {companyOptions}
             </Select>
           </Col>
-          <Col span={4}>
+          <Col span={3}>
             <Button
               type="primary"
               icon="plus-square"
@@ -166,7 +172,16 @@ const Emp501Create = class Emp501Create extends Component {
               icon="file-text"
               onClick={e => this.setState({ importEmpVisible: true })}
             >
-              Import EMP501 text file
+              Import EMP501
+            </Button>
+          </Col>
+          <Col span={4}>
+            <Button
+              type="ghost"
+              icon="file-text"
+              onClick={e => this.setState({ importEasyfileVisible: true })}
+            >
+              Import Easyfile Export
             </Button>
           </Col>
         </Row>
@@ -207,6 +222,11 @@ const Emp501Create = class Emp501Create extends Component {
           visible={this.state.importEmpVisible}
           handleOk={data => this.handleEmp501Upload(data)}
           onCancel={e => this.setState({ importEmpVisible: false })}
+        />
+        <Emp501EfilingExport
+          visible={this.state.importEasyfileVisible}
+          handleOk={data => this.handleEmp501EfilingUpload(data)}
+          onCancel={e => this.setState({ importEasyfileVisible: false })}
         />
       </div>
     );
