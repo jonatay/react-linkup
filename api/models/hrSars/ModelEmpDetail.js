@@ -1,6 +1,7 @@
 const Promise = require('bluebird');
 const db = require('../../services/postgres/db');
 const moment = require('moment');
+const _ = require('lodash');
 
 const sqlList = `
 SELECT ee.id, ee.emp_master_id, ee.period, ee.employee_code, ee.periods_worked, ee.emp_employee_data, 
@@ -8,7 +9,8 @@ SELECT ee.id, ee.emp_master_id, ee.period, ee.employee_code, ee.periods_worked, 
        ee.bank_account_number, ee.bank_branch_number, ee.bank_name, ee.bank_branch_name, 
        ee.bank_account_name, e.surname, e.first_names, 
        ee.tot_no_tax_income, ee.tot_tax_income, 
-       ee.tot_ded_ra, ee.tot_ded_pen, ee.tot_ded_paye, ee.tot_ded_sdl, ee.tot_ded_uif
+       ee.tot_ded_ra, ee.tot_ded_pen, ee.tot_ded_paye, ee.tot_ded_sdl, ee.tot_ded_uif, 
+       ee.tot_veh_allow
   FROM sars.emp_employee ee
   JOIN hr.employee e ON ee.employee_code = e.employee_code
 `;
@@ -19,7 +21,8 @@ SELECT ee.id, ee.emp_master_id, ee.period, ee.employee_code, ee.periods_worked, 
        ee.bank_account_number, ee.bank_branch_number, ee.bank_name, ee.bank_branch_name, 
        ee.bank_account_name, e.surname, e.first_names,
        ee.tot_no_tax_income, ee.tot_tax_income, 
-       ee.tot_ded_ra, ee.tot_ded_pen, ee.tot_ded_paye, ee.tot_ded_sdl, ee.tot_ded_uif
+       ee.tot_ded_ra, ee.tot_ded_pen, ee.tot_ded_paye, ee.tot_ded_sdl, ee.tot_ded_uif,
+       ee.tot_veh_allow
   FROM sars.emp_employee ee
   JOIN hr.employee e ON ee.employee_code = e.employee_code
   WHERE ee.id = $[id]
@@ -32,13 +35,14 @@ INSERT INTO sars.emp_employee(
             bank_account_number, bank_branch_number, bank_name, bank_branch_name, 
             bank_account_name,
             tot_no_tax_income, tot_tax_income, 
-            tot_ded_ra, tot_ded_pen, tot_ded_paye, tot_ded_sdl, tot_ded_uif)
+            tot_ded_ra, tot_ded_pen, tot_ded_paye, tot_ded_sdl, tot_ded_uif, tot_veh_allow)
     VALUES ($[emp_master_id], $[period], $[employee_code], $[periods_worked], $[emp_employee_data], 
             $[cubit_company_code], $[date_from], $[date_to], $[sic7_code], $[bank_account_type], 
             $[bank_account_number], $[bank_branch_number], $[bank_name], $[bank_branch_name], 
             $[bank_account_name],
             $[tot_no_tax_income], $[tot_tax_income], 
-            $[tot_ded_ra], $[tot_ded_pen], $[tot_ded_paye], $[tot_ded_sdl], $[tot_ded_uif]
+            $[tot_ded_ra], $[tot_ded_pen], $[tot_ded_paye], $[tot_ded_sdl], $[tot_ded_uif],
+            $[tot_veh_allow]
             )
  RETURNING *
 `;
@@ -47,7 +51,8 @@ const sqlRemoveByEmpMaster = `
 DELETE FROM sars.emp_employee WHERE emp_master_id = $[id]
 `;
 const sqlGetByEmpMaster = `
-SELECT * FROM sars.emp_employee WHERE emp_master_id = $[id]
+SELECT * FROM sars.emp_employee WHERE emp_master_id = $[id] 
+ORDER BY employee_code
 `;
 
 // const sqlGetByEmployeeCode = `
@@ -90,7 +95,8 @@ exports.createFromEmpDetailEmpMaster = ({
     tot_ded_pen,
     tot_ded_paye,
     tot_ded_sdl,
-    tot_ded_uif
+    tot_ded_uif,
+    tot_veh_allow
   },
   empMaster: { id: emp_master_id }
 }) =>
@@ -117,7 +123,8 @@ exports.createFromEmpDetailEmpMaster = ({
       tot_ded_pen,
       tot_ded_paye,
       tot_ded_sdl,
-      tot_ded_uif
+      tot_ded_uif,
+      tot_veh_allow
     })
     .then(empDetail => this.get(empDetail.id)) //return with name
     .then(empDetail => ({ ...empDetail, empCodes })); //pass down empCodes
@@ -153,19 +160,13 @@ const getEmp501Line = ({
   cubitEmployee,
   sageAccount
 }) => ({
-  '3010': `${params.refPAYE}${params.taxYear}${params.taxMonth}${employee.employee_code.padStart(
-    14,
-    '0'
-  )}`,
-  '3015':
-    empDetail.empCodes.reduce(
-      (acc, ec) => (ec.emp_code === 4102 ? acc + ec.emp_value : acc),
-      0
-    ) > 0
-      ? 'IRP5'
-      : 'IT3(a)',
+  '3010': `${params.refPAYE}${params.taxYear}${
+    params.taxMonth
+  }${employee.employee_code.padStart(14, '0')}`,
+  '3015': empDetail.tot_ded_paye > 0 ? 'IRP5' : 'IT3(a)',
+  ...(empDetail.tot_ded_paye === 0 ? { '4150': '2' } : null),
   '3020': employee.nature_person,
-  '3026': empDetail.tot_eti > 0 ? 'Y' : 'N',
+  '3026': 'N', //empDetail.tot_eti > 0 ? 'Y' : 'N',
   '3025': params.taxYear,
   '3030': employee.surname,
   '3040': employee.first_names,
@@ -193,8 +194,8 @@ const getEmp501Line = ({
   '3160': employee.employee_code,
   '3170': params.dateFrom.split('-').join(''),
   '3180': params.dateTo.split('-').join(''),
-  '3190': moment(employee.hire_date).format('YYYYMMDD'), //.split('-').join(''), //'*ETI-Emp-Date*',
-  '3200': params.taxMonth === 2 ? '12.0000' : '6.0000',
+  //'3190': moment(employee.hire_date).format('YYYYMMDD'), //.split('-').join(''), //'*ETI-Emp-Date*',
+  '3200': parseInt(params.taxMonth) === 2 ? '12.0000' : '6.0000',
   '3210':
     empDetail.empCodes.filter(ec => ec.emp_code === 4142).length + '.0000', //(count SDL)
   '3213': params.empAddrStreetNbr,
@@ -216,26 +217,33 @@ const getEmp501Line = ({
   '3242': empDetail.bank_branch_number,
   '3243': empDetail.bank_name,
   // optional bank branch name '3244': 'VRYHEID                    417',
-  '3245': empDetail.bank_account_name,
+  '3245': empDetail.bank_account_name.replace(/,/, ''),
   '3246': '1',
   //emp codes summ
   ...empDetail.empCodes.reduce(
     (acc, empCode) => ({
       ...acc,
       [`${empCode.emp_code}`]: acc[`${empCode.emp_code}`]
-        ? acc[`${empCode.emp_code}`] + empCode.emp_value
-        : parseInt(empCode.emp_value * 100) / 100
+        ? _.round(acc[`${empCode.emp_code}`] + empCode.emp_value)
+        : _.round(empCode.emp_value)
     }),
     {}
   ),
-  '3696': empDetail.tot_no_tax_income,
- // '3697': empDetail.tot_tax_income,
+
+  // '3602': _.round(empDetail.tot_no_tax_income),
+
+  '3696': _.round(empDetail.tot_no_tax_income),
+  '3699': empDetail.tot_tax_income,
+
   '4102': empDetail.tot_ded_paye,
   '4141': empDetail.tot_ded_uif,
-  '4142': parseInt(empDetail.tot_ded_sdl * 100) / 100,
+  '4142': empDetail.tot_ded_sdl,
   '4149':
     empDetail.tot_ded_paye + empDetail.tot_ded_uif + empDetail.tot_ded_sdl,
   '4118': empDetail.tot_eti,
+  '4497': _.round(empDetail.tot_ded_ra + empDetail.tot_ded_pen),
+  // '4582':
+  //   empDetail.tot_veh_allow > 0 ? _.round(empDetail.tot_veh_allow * 0.2) : null,
   '9999': null
 });
 
@@ -291,25 +299,33 @@ exports.newFromEmployeeEmpCodes = ({
     //tots
     tot_no_tax_income: empCodes
       .filter(ec => [3703].includes(ec.emp_code))
-      .reduce((tot, ec) => tot + ec.emp_value, 0),
+      .reduce((tot, ec) => _.round(tot + ec.emp_value, 2), 0),
     tot_tax_income: empCodes
-      .filter(ec => [3601, 3605, 3606, 3615].includes(ec.emp_code))
-      .reduce((tot, ec) => tot + ec.emp_value, 0),
+      .filter(ec => [3601, 3605, 3606].includes(ec.emp_code)) // , 3605
+      .reduce((tot, ec) => _.round(tot + ec.emp_value), 0),
     tot_ded_ra: empCodes
-      .filter(ec => [4002].includes(ec.emp_code))
-      .reduce((tot, ec) => tot + ec.emp_value, 0),
+      .filter(ec => [4002, 4003].includes(ec.emp_code))
+      .reduce((tot, ec) => _.round(tot + ec.emp_value, 2), 0),
     tot_ded_pen: empCodes
       .filter(ec => [4001].includes(ec.emp_code))
-      .reduce((tot, ec) => tot + ec.emp_value, 0),
+      .reduce((tot, ec) => _.round(tot + ec.emp_value, 2), 0),
     tot_ded_paye: empCodes
       .filter(ec => [4102].includes(ec.emp_code))
-      .reduce((tot, ec) => tot + ec.emp_value, 0),
+      .reduce((tot, ec) => _.round(tot + ec.emp_value, 2), 0),
     tot_ded_sdl: empCodes
       .filter(ec => [4142].includes(ec.emp_code))
-      .reduce((tot, ec) => tot + ec.emp_value, 0),
+      .reduce(
+        (tot, ec) =>
+          // console.log(_.round(tot + ec.emp_value, 2)) ||
+          _.round(tot + ec.emp_value, 2),
+        0
+      ),
     tot_ded_uif: empCodes
       .filter(ec => [4141].includes(ec.emp_code))
-      .reduce((tot, ec) => tot + ec.emp_value, 0),
+      .reduce((tot, ec) => tot + _.round(ec.emp_value, 2), 0),
+    tot_veh_allow: empCodes
+      .filter(ec => [3703].includes(ec.emp_code))
+      .reduce((tot, ec) => tot + _.round(ec.emp_value, 2), 0),
     //codes
     empCodes
   }).then(empDetail => ({

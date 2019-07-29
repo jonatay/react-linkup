@@ -29,6 +29,14 @@ function* removeEmpDetail({ payload: { empDetail } }) {
     yield put(empDetailActions.removeEmpDetailFailed(result));
   }
 }
+
+function* importEmpEasyfile({ payload: { data } }) {
+  let result = yield call([empDetailList, empDetailList.importEmpEasyfile], {
+    data
+  });
+  yield put(empDetailActions.importEmpEasyfileFulfilled(result));
+}
+
 //=====================================
 //  WATCHERS
 //-------------------------------------
@@ -65,11 +73,16 @@ function* watchRemoveEmpDetail() {
   yield takeEvery(empDetailActions.REMOVE_EMP_DETAIL, removeEmpDetail);
 }
 
+function* watchImportEmpEasyfile() {
+  yield takeEvery(empDetailActions.IMPORT_EMP_EAFYFILE, importEmpEasyfile);
+}
+
 export const empDetailSagas = [
   fork(watchAuthentication),
   fork(watchIdTokenRefresh),
   fork(watchLoadEmpDetails),
   fork(watchUpdateEmpDetail),
   fork(watchCreateEmpDetail),
-  fork(watchRemoveEmpDetail)
+  fork(watchRemoveEmpDetail),
+  fork(watchImportEmpEasyfile)
 ];

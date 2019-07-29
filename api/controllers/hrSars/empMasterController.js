@@ -1,5 +1,6 @@
 const Promise = require('bluebird');
 // const { dump } = require('dumper.js');
+var numeral = require('numeral');
 
 const ModelEmpMaster = require('../../models/hrSars/ModelEmpMaster');
 const ModelEmpDetail = require('../../models/hrSars/ModelEmpDetail');
@@ -20,12 +21,21 @@ for (var key in myArray) {
   console.log("key " + key + " has value " + myArray[key]);
 }
  */
+
 exports.downloadEmp501 = async (req, res) => {
+  const getValue = (aVals, key) =>
+    ['4141', '4142', '4102', '4149'].includes(key) // N0.00
+      ? numeral(aVals[key]).format('0.00')
+      : ['3699', '4001', '3605', '3606'].includes(key) // N0
+      ? parseInt(aVals[key])
+      : aVals[key];
   const extractKeyValLine = aVals => {
     const rtn = [];
     for (var key in aVals) {
-      rtn.push(key);
-      rtn.push(aVals[key]);
+      if (aVals[key] || parseInt(key) === 9999) {
+        rtn.push(key);
+        rtn.push(getValue(aVals, key));
+      }
     }
     return rtn.join(',').slice(0, -1);
   };
