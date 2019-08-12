@@ -3,7 +3,7 @@ var _ = require('underscore');
 
 var auth =
   'Basic ' +
-  new Buffer(
+  Buffer.from(
     process.env.SAGE_ONE_USERNAME + ':' + process.env.SAGE_ONE_PASSWORD
   ).toString('base64');
 
