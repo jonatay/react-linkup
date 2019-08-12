@@ -54,7 +54,12 @@ class AttendLogFilter extends React.Component {
     let newState = state;
 
     if (state.depts === null) {
-      const depts = JSON.parse(Cookies.get("attend-filter-depts"));
+      let depts = [];
+      try {
+        depts = JSON.parse(Cookies.get("attend-filter-depts"));
+      } catch (e) {
+        console.log("whoops", e);
+      }
       console.log("cDepts", depts);
       setAttendLogFilter({ depts });
       newState = { ...newState, depts };
