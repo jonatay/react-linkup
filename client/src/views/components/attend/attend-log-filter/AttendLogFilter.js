@@ -2,10 +2,11 @@
     Jono : 18 09 12
     AttendLogFilter : React Class Component
 */
-import React from 'react';
+import React from "react";
 // import Cookies from 'js-cookie';
 // import moment from 'moment';
 // import { PDFDownloadLink, BlobProvider } from '@react-pdf/renderer';
+import Cookies from "js-cookie";
 
 import {
   DatePicker,
@@ -15,9 +16,10 @@ import {
   Checkbox,
   Button,
   Modal,
+  Radio,
   Spin,
   Alert
-} from 'antd';
+} from "antd";
 const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 
 const { RangePicker } = DatePicker;
@@ -25,9 +27,10 @@ const { RangePicker } = DatePicker;
 
 class AttendLogFilter extends React.Component {
   state = {
+    deptBranch: "dept",
     params: {},
     options: {},
-    depts: [],
+    depts: null,
     excludeWeekends: true,
     showPdf: false
   };
@@ -42,15 +45,26 @@ class AttendLogFilter extends React.Component {
     {
       loadAttendLogs,
       attendLogFilter: { depts },
-      attendLogListParams
+      attendLogListParams,
+      setAttendLogFilter
     },
     state
   ) {
     // console.log(state, depts, attendLogListParams);
     let newState = state;
-    if (depts) {
+
+    if (state.depts === null) {
+      const depts = JSON.parse(Cookies.get("attend-filter-depts"));
+      console.log("cDepts", depts);
+      setAttendLogFilter({ depts });
       newState = { ...newState, depts };
     }
+
+    if (depts) {
+      console.log(depts);
+      newState = { ...newState, depts };
+    }
+
     if (attendLogListParams) {
       newState = { ...newState, params: attendLogListParams };
       if (attendLogListParams.dateRange && !state.params.dateRange) {
@@ -67,12 +81,21 @@ class AttendLogFilter extends React.Component {
     //   expires: 7
     // });
     this.props.loadAttendLogs({ dateRange });
+    Cookies.set("attend-filter-dateRange", dateRange, { expires: 7 });
     this.clearPdf();
   }
 
+  onDeptBranchChange = deptBranch => {
+    this.setState({ deptBranch });
+    this.props.setAttendLogFilter({ depts: [] });
+  };
+
   onDeptChange = depts => {
-    // console.log('onDeptChange ', depts);
-    this.setState({ depts });
+    //console.log("onDeptChange ", depts);
+    Cookies.set("attend-filter-depts", JSON.stringify(depts), { expires: 7 });
+    this.setState({
+      depts
+    });
     this.props.setAttendLogFilter({ depts });
     this.clearPdf();
   };
@@ -80,6 +103,9 @@ class AttendLogFilter extends React.Component {
   onExcludeWeekendsChange = excludeWeekends => {
     // console.log('onExcludeWeekendsChange', excludeWeekends);
     this.setState({ excludeWeekends });
+    Cookies.set("attend-filter-excludeWeekends", excludeWeekends, {
+      expires: 7
+    });
     this.props.setAttendLogFilter({ excludeWeekends });
     this.clearPdf();
   };
@@ -105,37 +131,29 @@ class AttendLogFilter extends React.Component {
   }
 
   render() {
-    const { attendDeptsTree, blobUrl } = this.props;
-    const { showPdf } = this.state;
+    const { attendDeptsTree, attendBranchesTree, blobUrl } = this.props;
+    const { showPdf, deptBranch } = this.state;
     const tProps = {
+      allowClear: true,
       treeData:
-        attendDeptsTree && attendDeptsTree.length === 1
-          ? attendDeptsTree[0].children
+        deptBranch === "dept"
+          ? attendDeptsTree && attendDeptsTree.length === 1
+            ? attendDeptsTree[0].children
+            : []
+          : attendBranchesTree && attendBranchesTree.length === 1
+          ? attendBranchesTree[0].children
           : [],
       value: this.state.depts,
       onChange: this.onDeptChange,
       treeCheckable: true,
-      showCheckedStrategy: SHOW_PARENT,
-      searchPlaceholder: 'Select Dept',
+      showCheckedStrategy: TreeSelect.SHOW_CHILD,
+      searchPlaceholder:
+        deptBranch === "dept" ? "Select by Dept" : "Select by Branch",
       treeDefaultExpandAll: true,
       style: {
-        width: '100%'
+        width: "100%"
       }
     };
-    // console.log(this.props.attendDepts, this.props.attendLogListParams);
-    // const getFileName = () =>
-    //   `attend-log-${this.props.attendLogFilter.depts
-    //     .map(deptId =>
-    //       this.props.attendDepts
-    //         .find(dept => parseInt(deptId, 10) === dept.id)
-    //         .name.toLowerCase()
-    //         .replace(/\s/g, '-')
-    //     )
-    //     .join('-')}-${this.props.attendLogListParams.dateRange[0].format(
-    //     'YY-MM-DD'
-    //   )}-to-${this.props.attendLogListParams.dateRange[1].format(
-    //     'YY-MM-DD'
-    //   )}.pdf`;
     return (
       <div>
         <Modal
@@ -166,7 +184,7 @@ class AttendLogFilter extends React.Component {
             <Spin tip="Loading...">
               <Alert
                 message="Loading"
-                description="PDF is being generated on server, please be patrient."
+                description="PDF is being generated on server, please be patient."
                 type="info"
               />
             </Spin>
@@ -174,17 +192,17 @@ class AttendLogFilter extends React.Component {
         </Modal>
         <Row style={{ marginBottom: 10 }}>
           <Col span={12}>
-            <Col span={4}>
-              <p
-                style={{
-                  margin: '5px',
-                  textAlign: 'right'
-                }}
+            <Col span={6}>
+              <Radio.Group
+                value={this.state.deptBranch}
+                size="medium"
+                onChange={e => this.onDeptBranchChange(e.target.value)}
               >
-                Branch/Dept:
-              </p>
+                <Radio.Button value="dept">Dept</Radio.Button>
+                <Radio.Button value="branch">Branch</Radio.Button>
+              </Radio.Group>
             </Col>
-            <Col span={20}>
+            <Col span={18}>
               <TreeSelect {...tProps} />
             </Col>
           </Col>
@@ -192,8 +210,8 @@ class AttendLogFilter extends React.Component {
             <Col span={7}>
               <p
                 style={{
-                  margin: '5px',
-                  textAlign: 'right'
+                  margin: "5px",
+                  textAlign: "right"
                 }}
               >
                 Date Range:

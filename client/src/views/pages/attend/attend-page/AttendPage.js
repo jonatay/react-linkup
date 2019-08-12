@@ -2,14 +2,14 @@
     Jono : 18 07 20
     AccessPage : Stateless Functional Component
 */
-import React from 'react';
+import React from "react";
 // import { List } from 'immutable';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
-import AttendLogFilter from 'src/views/components/attend/attend-log-filter';
-import AttendLogTable from 'src/views/components/attend/attend-log-table';
+import AttendLogFilter from "src/views/components/attend/attend-log-filter";
+import AttendLogTable from "src/views/components/attend/attend-log-table";
 // import PdfAttendLog from 'src/pdf/attend/PdfAttendLog';
 
 import {
@@ -20,10 +20,11 @@ import {
   getAttendLogsPeriods,
   getAttendLogTableData,
   getAttendDeptsTree,
+  getAttendBranchesTree,
   getAttendLogFilter,
   getAttendDepts,
   getBlobUrl
-} from 'src/mid/attend';
+} from "src/mid/attend";
 
 const AttendPage = props => {
   return (
@@ -36,6 +37,7 @@ const AttendPage = props => {
 
 AttendPage.propTypes = {
   attendDeptsTree: PropTypes.array.isRequired,
+  attendBranchesTree: PropTypes.array.isRequired,
   attendDepts: PropTypes.array.isRequired,
   attendLogListParams: PropTypes.object.isRequired,
   attendLogPeriods: PropTypes.array.isRequired,
@@ -53,6 +55,7 @@ AttendPage.propTypes = {
 
 const mapStateToProps = state => ({
   attendDeptsTree: getAttendDeptsTree(state),
+  attendBranchesTree: getAttendBranchesTree(state),
   attendDepts: getAttendDepts(state),
   attendLogListParams: getAttendLogListParams(state),
   attendLogPeriods: getAttendLogsPeriods(state),

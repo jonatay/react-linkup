@@ -3,6 +3,11 @@ const moment = require('moment');
 
 const pdfAttendList = require('../../pdf/attend/pdfAttendList');
 
+exports.listTable = function(req, res) {
+  const params = JSON.parse(req.params.params);
+  console.log(params);
+}
+
 exports.list = function(req, res) {
   const params = JSON.parse(req.params.params);
   console.log(params);

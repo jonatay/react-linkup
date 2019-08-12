@@ -3,7 +3,7 @@ import { attendLogActions } from './attend-log-actions';
 import moment from 'moment';
 
 export const AttendLogState = new Record({
-  filter: { depts: ['2', '3', '4', '5'], excludeWeekends: true },
+  filter: { depts: [], excludeWeekends: true },
   list: new List(),
   listParams: { dateRange: [moment().subtract(10, 'days'), moment()] },
   blobUrl: null
