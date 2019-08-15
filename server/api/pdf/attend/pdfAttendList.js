@@ -1,9 +1,11 @@
-const PDFDocument = require('pdfkit');
-const faker = require('faker');
-const moment = require('moment');
-const _ = require('lodash');
+const PDFDocument = require("pdfkit");
+const faker = require("faker");
+const moment = require("moment");
+const _ = require("lodash");
 
-const ModelAttendUser = require('../../models/attend/zkAccess/ModelAttendUser');
+const ModelAttendUser = require("../../models/attend/zkAccess/ModelAttendUser");
+const ModelAttendLog = require("../../models/attend/zkAccess/ModelAttendLog");
+const ModelAttendDept = require("../../models/attend/zkAccess/ModelAttendDept");
 
 const blockToTextDiv = 5.2;
 
@@ -12,13 +14,13 @@ const getTruncatedText = (text, blockSize) =>
     ? text
     : text.slice(0, blockSize / blockToTextDiv);
 
-const doHeader = (doc, headers, x, y, options) => {
+const doRowHeader = (doc, headers, x, y, options) => {
   let currentX = x;
   const startY = y;
   //console.log(headers);
   headers.forEach((head, idx) => {
     doc
-      .fillColor('black')
+      .fillColor("black")
       .fillOpacity(1)
       .text(head, currentX + options.xIndent, startY);
 
@@ -27,14 +29,14 @@ const doHeader = (doc, headers, x, y, options) => {
       options.columnWidths.length > idx
         ? options.columnWidths[idx]
         : options.columnWidths.length > 0
-          ? options.columnWidths[options.columnWidths.length - 1]
-          : options.width / size;
+        ? options.columnWidths[options.columnWidths.length - 1]
+        : options.width / size;
     doc
-      .lineJoin('miter')
+      .lineJoin("miter")
       .rect(currentX, startY - 2, blockSize, options.rowHeight)
       .lineWidth(1)
       .fillOpacity(0.3)
-      .fillAndStroke('#a7cbf4', '#7e96f4');
+      .fillAndStroke("#a7cbf4", "#7e96f4");
     currentX += blockSize;
   });
 };
@@ -49,16 +51,16 @@ const doRow = (doc, row, x, y, options) => {
       options.columnWidths.length > idx
         ? options.columnWidths[idx]
         : options.columnWidths.length > 0
-          ? options.columnWidths[options.columnWidths.length - 1]
-          : options.width / size;
+        ? options.columnWidths[options.columnWidths.length - 1]
+        : options.width / size;
     if (text.length <= blockSize / blockToTextDiv) {
       doc
-        .fillColor('black')
+        .fillColor("black")
         .fillOpacity(1)
         .text(text, currentX + options.xIndent, startY);
     } else {
       doc
-        .fillColor('black')
+        .fillColor("black")
         .fillOpacity(1)
         .text(
           text.slice(0, blockSize / blockToTextDiv),
@@ -66,16 +68,16 @@ const doRow = (doc, row, x, y, options) => {
           startY
         )
         .fontSize(3)
-        .text('...', currentX + blockSize - 5, startY + 7)
+        .text("...", currentX + blockSize - 5, startY + 7)
         .fontSize(options.fontSize);
     }
 
     doc
-      .lineJoin('miter')
+      .lineJoin("miter")
       .rect(currentX, startY - 2, blockSize, options.rowHeight)
       .lineWidth(0.25)
       .strokeOpacity(0.5)
-      .stroke('#7e96f4');
+      .stroke("#7e96f4");
     currentX += blockSize;
   });
 };
@@ -85,12 +87,17 @@ const createTable = (doc, tableData, options = {}) => {
   options = {
     fontSize: 9,
     width: 550,
-    pageHeight: 585,
+    pageHeight: 580,
     rowHeight: 12,
     xIndent: 4,
     columnWidths: [],
     ...options
   };
+
+  let page = 1;
+  doc.text(options.pageHeading, {
+    align: "center"
+  });
 
   // init starts & doc
   const startY = doc.y,
@@ -133,14 +140,21 @@ const createTable = (doc, tableData, options = {}) => {
         (chunkHead && chunkHead[chunkIdx])
       ) {
         currentY += options.rowHeight;
-        doHeader(doc, chunkHead[chunkIdx], startX, currentY, options);
+        doRowHeader(doc, chunkHead[chunkIdx], startX, currentY, options);
         currentY += options.rowHeight;
       }
       doRow(doc, chunkRow, currentX, currentY, options);
 
       currentY += options.rowHeight;
       if (currentY > options.pageHeight) {
-        doc.addPage({ layout: 'landscape', margin: 20 });
+        doc.text(`page: ${page}`, {
+          align: "right"
+        });
+        doc.addPage({ layout: "landscape", margin: 20 });
+        page++;
+        doc.text(options.pageHeading, {
+          align: "center"
+        });
         currentY = startY;
       }
     });
@@ -168,47 +182,89 @@ var getDateArray = function(start, end, excludeWeekend) {
     if ((excludeWeekend && dt.isoWeekday() <= 5) || !excludeWeekend) {
       arr.push({
         date: dt.toDate(),
-        dow: dt.format('ddd'),
-        label: dt.format('YY-MM-DD')
+        label: dt.format("DD (ddd)")
       });
     }
-    dt.add(1, 'd');
+    dt.add(1, "d");
   }
-  console.log(arr);
+  // console.log(arr);
   return arr;
 };
 
-const buildAttendLogTable = ({ depts, dateRange, excludeWeekends }) =>
-  new Promise((resolve, reject) => {});
+const sortLogByTime = (a, b) => (a > b ? 1 : a < b ? -1 : 0);
 
-exports.report = (req, res) => {
+const buildAttendLogTable = ({ depts, dateRange, excludeWeekends }) =>
+  new Promise((resolve, reject) => {
+    const aDates = getDateArray(dateRange[0], dateRange[1], excludeWeekends);
+    ModelAttendUser.listByDept(depts)
+      .then(users => console.log(users) || _.sortBy(users, "name"))
+      .then(
+        users =>
+          console.log("got users length :", users.length) ||
+          ModelAttendLog.listByUsers({ users, dateRange }).then(
+            log =>
+              console.log("got log length :", log) ||
+              resolve([
+                ["Name", ...aDates.map(d => d.label)],
+                ...users.map(u => [
+                  u.name,
+                  ...aDates.map(d => {
+                    let logs = log.filter(
+                      l =>
+                        l.user_id === u.id &&
+                        moment(l.log_time).isSame(d.date, "day")
+                    );
+                    //console.log(d, logs);
+                    return logs.length === 0
+                      ? "none"
+                      : logs.length === 1
+                      ? moment.utc(logs[0].log_time).format("kk:mm")
+                      : `${moment
+                          .utc(logs[0].log_time)
+                          .format("kk:mm")}-${moment
+                          .utc(logs[logs.length - 1].log_time)
+                          .format("kk:mm")}`;
+                  })
+                ])
+              ])
+          )
+      );
+  });
+
+exports.report = async (req, res) => {
   const {
     listParams: { depts, dateRange, excludeWeekends }
   } = JSON.parse(req.params.params);
-  console.log(depts, dateRange, excludeWeekends);
-  // console.log(depts, dateRange, excludeWeekends);
-  const jDates = getDateArray(dateRange[0], dateRange[1], excludeWeekends);
-  ModelAttendUser.listByDept(depts).then(users => console.log(users));
 
-  const testArr = testTableArray(100, 30);
-  // console.log(testArr);
-  const doc = new PDFDocument({
-    bufferPages: true,
-    autoFirstPage: false,
-    layout: 'landscape',
-    margin: 20
+  console.log(depts, dateRange, excludeWeekends);
+
+  const sDepts = await ModelAttendDept.listByDept(depts).then(ds =>
+    ds.map(d => d.name).join(", ")
+  );
+
+  buildAttendLogTable({ depts, dateRange, excludeWeekends }).then(logTable => {
+    const doc = new PDFDocument({
+      bufferPages: true,
+      autoFirstPage: false,
+      layout: "landscape",
+      margin: 20
+    });
+    doc.addPage({ layout: "landscape", margin: 20 });
+    doc.pipe(res);
+    doc.font("fonts/consola.ttf").fontSize(9);
+    createTable(doc, logTable.slice(1), {
+      width: 760,
+      pageHeight: 550,
+      columnWidths: [140, 70],
+      headers: logTable[0],
+      chunkColumns: { from: 2, count: 7 },
+      pageHeading: `attendance report \n depts: ${sDepts} \n dates:${dateRange[0].substring(
+        0,
+        10
+      )}-${dateRange[1].substring(0, 10)}`
+    });
+    doc.end();
   });
-  doc.addPage({ layout: 'landscape', margin: 20 });
-  doc.pipe(res);
-  doc.font('fonts/consola.ttf').fontSize(4);
-  createTable(doc, testArr.slice(1), {
-    width: 760,
-    pageHeight: 570,
-    columnWidths: [140, 70],
-    headers: testArr[0],
-    chunkColumns: { from: 2, count: 7 }
-  });
-  doc.end();
 };
 
 /* The basic principal per console

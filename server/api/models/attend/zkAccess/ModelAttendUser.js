@@ -1,12 +1,12 @@
-const sql = require('mssql');
-const table = 'dbo.USERINFO';
+const sql = require("mssql");
+const table = "dbo.USERINFO";
 const config = process.env.ZK_ACCESS_MSSQL_CONN;
 
 module.exports.list = () =>
   new sql.ConnectionPool(config)
     .connect()
     .then(pool => {
-      console.log('zkUSERINFO: connected, querying');
+      console.log("zkUSERINFO: connected, querying");
       return pool.request().query(
         `select USERID AS id, 
                   lastname + ', ' + Name AS name, 
@@ -17,13 +17,13 @@ module.exports.list = () =>
     })
     .then(result => {
       let rows = result.recordset;
-      console.log('zkUSERINFO: queried ', rows.length, ' recs returned');
+      console.log("zkUSERINFO: queried ", rows.length, " recs returned");
       sql.close();
       return rows;
     })
     .catch(error => {
       // res.status(500).send({ message: '${error}' });
-      console.log('zkUSERINFO: ERROR', error);
+      console.log("zkUSERINFO: ERROR", error);
       sql.close();
       return { error };
     });
@@ -36,14 +36,15 @@ module.exports.listByDept = depts =>
         `SELECT USERID AS id, 
                   lastname + ', ' + Name AS name, 
                   Badgenumber AS auth_id, 
-                  DEFAULTDEPTID AS dept_id 
-           FROM ${table}           
+                  DEFAULTDEPTID AS dept_id
+           FROM ${table}
+           WHERE DEFAULTDEPTID IN ('${depts.join("','")}')
            `
       )
     )
     .then(({ recordset }) => {
-      console.log(recordset);
-      return(recordset)
+      //console.log(recordset);
+      return recordset;
     });
 
 /*
