@@ -1,6 +1,3 @@
-const { callSageAPI } = require('../../services/sageOne/sageApi');
+const SageOneAPI = require("../../services/sageOne/sageOneApi");
 
-exports.list = (req,res) => {
-
-}
-
+exports.list = (req, res) => {};

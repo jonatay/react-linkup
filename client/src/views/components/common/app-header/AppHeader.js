@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Layout, Menu, Avatar, Icon } from 'antd';
-import './header.css';
+import React from "react";
+import PropTypes from "prop-types";
+import { Layout, Menu, Avatar, Icon } from "antd";
+import "./header.css";
 
 const SubMenu = Menu.SubMenu;
 
@@ -10,31 +10,33 @@ const idxCheat = {
   Fleet: 10,
   HR: 20,
   Attend: 5,
-  'sage-pay': 50
+  "sage-pay": 50,
+  "sage-one": 51
 };
 
 const iconCheat = {
-  Admin: 'tool',
-  Fleet: 'car',
-  HR: 'team',
-  Drivers: 'idcard',
-  Vehicles: 'car',
-  Transactions: 'table',
-  Employees: 'contacts',
-  EmpTran: 'table',
-  Advances: 'wallet',
-  Shifts: 'calendar',
-  Leave: 'smile-o',
-  Rights: 'lock',
-  Users: 'user',
-  Attendance: 'clock-circle-o',
-  Settings: 'setting',
-  'sage-pay': 'cloud-upload-o',
-  'bank-accounts': 'credit-card',
-  'banks-and-branches': 'shop',
-  'salary-batches': 'solution',
-  Attend: 'clock-circle-o',
-  Emp501: 'shop'
+  Admin: "tool",
+  Fleet: "car",
+  HR: "team",
+  Drivers: "idcard",
+  Vehicles: "car",
+  Transactions: "table",
+  Employees: "contacts",
+  EmpTran: "table",
+  Advances: "wallet",
+  Shifts: "calendar",
+  Leave: "smile-o",
+  Rights: "lock",
+  Users: "user",
+  Attendance: "clock-circle-o",
+  Settings: "setting",
+  "sage-pay": "cloud-upload-o",
+  "sage-one": "audit",
+  "bank-accounts": "credit-card",
+  "banks-and-branches": "shop",
+  "salary-batches": "solution",
+  Attend: "clock-circle-o",
+  Emp501: "shop"
 };
 
 const { Header } = Layout;
@@ -48,11 +50,11 @@ const AppHeader = ({
 }) => {
   const handleMenuClick = ({ key }) => {
     switch (key) {
-      case 'signOut':
+      case "signOut":
         signOut();
         break;
-      case 'userProfile':
-        navigateTo('/user-profile');
+      case "userProfile":
+        navigateTo("/user-profile");
         break;
       default:
         navigateTo(`/${key}`);
@@ -73,25 +75,25 @@ const AppHeader = ({
   return (
     <Header
       style={{
-        position: 'fixed',
-        width: '100%',
+        position: "fixed",
+        width: "100%",
         left: 0,
-        background: 'white',
-        padding: '5px 2px',
+        background: "white",
+        padding: "5px 2px",
         marginBottom: 5
       }}
     >
       {/*<div className="logo" />*/}
       <div
-        onClick={() => navigateTo('/home')}
+        onClick={() => navigateTo("/home")}
         style={{
           width: 70,
           height: 31,
           // background: 'rgba(255,255,255,.2)',
           // margin: '16px 24px 16px 0',
           // marginTop:5,
-          cursor: 'pointer',
-          float: 'left'
+          cursor: "pointer",
+          float: "left"
         }}
       >
         <img src="/img/LULogoBar2.png" alt="" />
@@ -101,13 +103,13 @@ const AppHeader = ({
         mode="horizontal"
         // theme="dark"
         selectedKeys={
-          typeof currentNavPath === 'string'
-            ? [currentNavPath.replace('/', '')]
+          typeof currentNavPath === "string"
+            ? [currentNavPath.replace("/", "")]
             : []
         }
       >
         <SubMenu
-          style={{ position: 'absolute', right: -1, top: -1, marginTop: -5 }}
+          style={{ position: "absolute", right: -1, top: -1, marginTop: -5 }}
           key="subUser"
           title={
             photoURL ? (
@@ -122,13 +124,12 @@ const AppHeader = ({
         </SubMenu>
 
         {aclFront
-          .sort(
-            (a, b) =>
-              idxCheat[a.resource] > idxCheat[b.resource]
-                ? 1
-                : idxCheat[a.resource] < idxCheat[b.resource]
-                  ? -1
-                  : 0
+          .sort((a, b) =>
+            idxCheat[a.resource] > idxCheat[b.resource]
+              ? 1
+              : idxCheat[a.resource] < idxCheat[b.resource]
+              ? -1
+              : 0
           )
           .map(menu => (
             <SubMenu
