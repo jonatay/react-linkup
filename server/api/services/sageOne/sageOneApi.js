@@ -1,17 +1,16 @@
-var https = require('https');
-var _ = require('underscore');
+var https = require("https");
+var _ = require("underscore");
 
 var auth =
-  'Basic ' +
+  "Basic " +
   Buffer.from(
-    process.env.SAGE_ONE_USERNAME + ':' + process.env.SAGE_ONE_PASSWORD
-  ).toString('base64');
+    process.env.SAGE_ONE_USERNAME + ":" + process.env.SAGE_ONE_PASSWORD
+  ).toString("base64");
 
-var host = 'accounting.sageone.co.za';
+var host = "accounting.sageone.co.za";
 
 function performRequest(endpoint, method, data, callback) {
   var dataString = JSON.stringify(data);
-  endpoint += '?apiKey={' + process.env.SAGE_ONE_API_KEY + '}';
   var headers = {
     // 'Content-Type': 'application/json',
     // 'Content-Length': dataString.length,
@@ -19,22 +18,22 @@ function performRequest(endpoint, method, data, callback) {
   };
   var options = {
     host: host,
-    path: endpoint,
+    path: `/api/2.0.0/${endpoint}?apiKey={${process.env.SAGE_ONE_API_KEY}}&CompanyId=109129`,
     method: method,
     headers: headers
   };
 
-  // console.log(options);
+  console.log(options);
   var req = https.request(options, function(res) {
-    res.setEncoding('utf-8');
+    res.setEncoding("utf-8");
 
-    var responseString = '';
+    var responseString = "";
 
-    res.on('data', function(data) {
+    res.on("data", function(data) {
       responseString += data;
     });
 
-    res.on('end', function() {
+    res.on("end", function() {
       try {
         var responseObject = JSON.parse(responseString);
         // console.log(responseObject);
@@ -43,7 +42,7 @@ function performRequest(endpoint, method, data, callback) {
         console.log(exception);
         callback(
           {
-            exception: 'malformed json data, check sage one api status',
+            exception: "malformed json data, check sage one api status",
             data: responseString
           },
           null
@@ -102,7 +101,4 @@ _.rateLimit = function(func, rate, async) {
 
 // NB Sage API limit is 100 calls per minute, let's go with a delay on 675 ms btw calls
 
-module.exports.callSageAPI = _.rateLimit(
-  performRequest,
-  process.env.SAGE_ONE_LIMIT_DELAY
-);
+module.exports = _.rateLimit(performRequest, process.env.SAGE_ONE_LIMIT_DELAY);

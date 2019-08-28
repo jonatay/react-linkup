@@ -1,0 +1,5 @@
+.ReactTable .rt-th,
+.ReactTable .rt-td {
+  padding: 5px 2px 0px 0px;
+  line-height: 0.75;
+}
