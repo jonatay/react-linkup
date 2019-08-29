@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
-import { soBankAccountReducer } from "./index";
+import { soBankAccountReducer, soBankTransactionReducer } from "./index";
 
 export const sageOneReducer = combineReducers({
-  bankAccounts: soBankAccountReducer
+  bankAccounts: soBankAccountReducer,
+  bankTransactions: soBankTransactionReducer
 });

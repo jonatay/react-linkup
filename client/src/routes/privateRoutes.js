@@ -43,6 +43,10 @@ const SOBankAccountsPage = asyncComponent(() =>
   import("src/views/pages/sage-one/so-bank-accounts-page")
 );
 
+const SOBTransactionPage = asyncComponent(() =>
+  import("src/views/pages/sage-one/so-b-transaction-page")
+);
+
 // Attend
 const AttendPage = asyncComponent(() =>
   import("src/views/pages/attend/attend-page")
@@ -71,6 +75,7 @@ export const privateRoutes = [
   { path: "/sage-pay/salary-batches", component: SalaryBatchesPage },
 
   { path: "/sage-one/bank-accounts", component: SOBankAccountsPage },
+  { path: "/sage-one/bank-transactions", component: SOBTransactionPage },
 
   { path: "/attend/attend", component: AttendPage },
 
