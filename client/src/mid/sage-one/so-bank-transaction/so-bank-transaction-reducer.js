@@ -1,8 +1,15 @@
 import { List, Record } from "immutable";
 import { soBankTransactionActions } from "./so-bank-transaction-actions";
-
+import moment from "moment";
+//{ dateRange: [moment().subtract(10, 'days'), moment()] }
 export const SoBankTransactionState = new Record({
-  filter: {},
+  filter: {
+    dateFrom: moment()
+      .subtract(3, "months")
+      .date(1),
+    dateTo: moment(),
+    filter: [{ field: "BankAccountId", value: "501204", opr: "eq" }]
+  },
   page: {
     top: 100,
     skip: 0,
@@ -21,6 +28,8 @@ export function soBankTransactionReducer(
   switch (type) {
     case soBankTransactionActions.SET_FILTER_SO_BANK_TRANSACTION:
       return state.set("filter", { ...state.filter, ...payload.filter });
+    case soBankTransactionActions.SET_PAGE_SO_BANK_TRANSACTION:
+      return state.set("page", { ...state.page, ...payload.page });
 
     case soBankTransactionActions.CREATE_SO_BANK_TRANSACTION_FULFILLED:
       return state.set("list", state.list.unshift(payload.soBankTransaction));

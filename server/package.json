@@ -43,7 +43,6 @@
     "serve-favicon": "~2.4.5",
     "simple-xml": "^0.0.10",
     "soap": "^0.24.0",
-    "strong-soap": "^1.9.0",
     "tedious": "2.2.4",
     "xml-js": "^1.6.2"
   },

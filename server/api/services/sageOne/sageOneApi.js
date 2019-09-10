@@ -1,33 +1,49 @@
-var https = require("https");
-var _ = require("underscore");
+const https = require("https");
+const _ = require("underscore");
 
-var auth =
+const auth =
   "Basic " +
   Buffer.from(
     process.env.SAGE_ONE_USERNAME + ":" + process.env.SAGE_ONE_PASSWORD
   ).toString("base64");
 
 var host = "accounting.sageone.co.za";
-
-function performRequest(endpoint, method, data, callback) {
-  var dataString = JSON.stringify(data);
-  var headers = {
+// filter is array of `${f.field} ${f.opr} ${f.value}`
+function performRequest(
+  { endpoint, method, data, filter, fromDate, toDate },
+  callback
+) {
+  const dataString = data ? JSON.stringify(data) : JSON.stringify({});
+  const headers = {
     // 'Content-Type': 'application/json',
     // 'Content-Length': dataString.length,
     Authorization: auth
   };
-  var options = {
+
+  const odFilter = filter
+    ? filter.map(f => `&$filter=${f.field} ${f.opr} ${f.value}`).join(" and ")
+    : null;
+  const odFromDate = fromDate ? `&fromDate=${fromDate.substring(0, 10)}` : null;
+  const odToDate = toDate ? `&toDate=${toDate.substring(0, 10)}` : null;
+
+  const options = {
     host: host,
-    path: `/api/2.0.0/${endpoint}?apiKey={${process.env.SAGE_ONE_API_KEY}}&CompanyId=109129`,
+    path: encodeURI(
+      `/api/2.0.0/${endpoint}?apiKey={${
+        process.env.SAGE_ONE_API_KEY
+      }}&CompanyId=109129${odFilter ? odFilter : ""}${
+        odFromDate ? odFromDate : ""
+      }${odToDate ? odToDate : ""}`
+    ),
     method: method,
     headers: headers
   };
 
   console.log(options);
-  var req = https.request(options, function(res) {
+  const req = https.request(options, function(res) {
     res.setEncoding("utf-8");
 
-    var responseString = "";
+    let responseString = "";
 
     res.on("data", function(data) {
       responseString += data;
@@ -35,7 +51,7 @@ function performRequest(endpoint, method, data, callback) {
 
     res.on("end", function() {
       try {
-        var responseObject = JSON.parse(responseString);
+        const responseObject = JSON.parse(responseString);
         // console.log(responseObject);
         callback(null, responseObject);
       } catch (exception) {
@@ -64,11 +80,11 @@ function performRequest(endpoint, method, data, callback) {
 //   requests are never lost and simply deferred until some other time
 
 _.rateLimit = function(func, rate, async) {
-  var queue = [];
-  var timeOutRef = false;
-  var currentlyEmptyingQueue = false;
+  const queue = [];
+  const timeOutRef = false;
+  let currentlyEmptyingQueue = false;
 
-  var emptyQueue = function() {
+  const emptyQueue = function() {
     if (queue.length) {
       currentlyEmptyingQueue = true;
       _.delay(function() {
@@ -88,7 +104,7 @@ _.rateLimit = function(func, rate, async) {
 
   return function() {
     // get arguments into an array
-    var args = _.map(arguments, function(e) {
+    const args = _.map(arguments, function(e) {
       return e;
     });
     // call apply so that we can pass in arguments as parameters as opposed to an array

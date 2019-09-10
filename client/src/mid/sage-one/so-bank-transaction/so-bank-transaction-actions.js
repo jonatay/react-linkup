@@ -1,5 +1,6 @@
 export const soBankTransactionActions = {
   SET_FILTER_SO_BANK_TRANSACTION: "SAGE_ONESET_FILTER_SO_BANK_TRANSACTIONS",
+  SET_PAGE_SO_BANK_TRANSACTION: "SAGE_ONESET_PAGE_SO_BANK_TRANSACTIONS",
 
   LOAD_SO_BANK_TRANSACTIONS: "SAGE_ONE_LOAD_SO_BANK_TRANSACTIONS",
   LOAD_SO_BANK_TRANSACTIONS_FULFILLED:
@@ -29,9 +30,14 @@ export const soBankTransactionActions = {
     payload: { filter }
   }),
 
-  loadSoBankTransactions: page => ({
-    type: soBankTransactionActions.LOAD_SO_BANK_TRANSACTIONS,
+  setSoBankTransactionPage: page => ({
+    type: soBankTransactionActions.SET_PAGE_SO_BANK_TRANSACTION,
     payload: { page }
+  }),
+
+  loadSoBankTransactions: (filter, page) => ({
+    type: soBankTransactionActions.LOAD_SO_BANK_TRANSACTIONS,
+    payload: { filter, page }
   }),
   loadSoBankTransactionsFulfilled: soBankTransactions => ({
     type: soBankTransactionActions.LOAD_SO_BANK_TRANSACTIONS_FULFILLED,

@@ -20,7 +20,7 @@ import {
   Spin,
   Alert
 } from "antd";
-const SHOW_PARENT = TreeSelect.SHOW_PARENT;
+//const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 
 const { RangePicker } = DatePicker;
 // const Option = Select.Option;

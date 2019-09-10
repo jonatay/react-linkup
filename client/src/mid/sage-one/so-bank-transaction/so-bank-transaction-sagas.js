@@ -1,21 +1,24 @@
-import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
-import { soBankTransactionActions } from './so-bank-transaction-actions'
-import { soBankTransactionList } from './so-bank-transaction-list';
-import { authActions } from 'src/mid/common/auth';
+import { call, fork, put, take, takeEvery } from "redux-saga/effects";
+import { soBankTransactionActions } from "./so-bank-transaction-actions";
+import { soBankTransactionList } from "./so-bank-transaction-list";
+import { authActions } from "src/mid/common/auth";
 
-function* loadAllSoBankTransactions() {
-  const soBankTransactions = yield call([
-    soBankTransactionList,
-    soBankTransactionList.list
-  ]);
+function* loadAllSoBankTransactions({ payload: { filter, page } }) {
+  const { soBankTransactions } = yield call(
+    [soBankTransactionList, soBankTransactionList.list],
+    { filter, page }
+  );
   yield put(
     soBankTransactionActions.loadSoBankTransactionsFulfilled(soBankTransactions)
   );
 }
 function* createSoBankTransaction({ payload: { soBankTransaction } }) {
-  let result = yield call([soBankTransactionList, soBankTransactionList.insert], {
-    soBankTransaction
-  });
+  let result = yield call(
+    [soBankTransactionList, soBankTransactionList.insert],
+    {
+      soBankTransaction
+    }
+  );
   yield put(
     soBankTransactionActions.createSoBankTransactionFulfilled(
       result.soBankTransaction
@@ -41,9 +44,11 @@ function* removeSoBankTransaction({ payload: { soBankTransaction } }) {
     [soBankTransactionList, soBankTransactionList.remove],
     soBankTransaction.id
   );
-  if (result.status === 'deleted') {
+  if (result.status === "deleted") {
     yield put(
-      soBankTransactionActions.removeSoBankTransactionFulfilled(soBankTransaction)
+      soBankTransactionActions.removeSoBankTransactionFulfilled(
+        soBankTransaction
+      )
     );
   } else {
     yield put(soBankTransactionActions.removeSoBankTransactionFailed(result));

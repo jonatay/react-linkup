@@ -8,23 +8,94 @@ import "./styles.css";
 
 class SOBankTransactionsTable extends Component {
   state = {
-    loading: false
+    loading: true,
+    init: false
   };
-  componentDidMount() {
-    this.props.loadSoBankTransactions();
-    this.setState({ loading: true });
+
+  // componentDidMount() {
+  //   this.props.loadSoBankTransactions(
+  //     this.props.soBankTransactionFilter,
+  //     this.props.soBankTransactionPage
+  //   );
+  // }
+
+  static getDerivedStateFromProps(
+    {
+      loadSoBankTransactions,
+      loadSoBankAccounts,
+      soBankTransactions,
+      soBankTransactionFilter,
+      soBankTransactionPage
+    },
+    prevState
+  ) {
+    if (soBankTransactions.length) {
+      return { ...prevState, loading: false };
+    } else if (
+      !prevState.init &&
+      soBankTransactionFilter &&
+      soBankTransactionPage
+    ) {
+      loadSoBankAccounts();
+      loadSoBankTransactions(soBankTransactionFilter, soBankTransactionPage);
+      return { ...prevState, init: true };
+    }
+    return prevState;
   }
-  static getDerivedStateFromProps({ soBankTransactions }, prevState) {
-    return soBankTransactions.length
-      ? prevState
-      : { ...prevState, loading: false };
-  }
+
   render() {
+    const { soBankAccounts } = this.props;
     const columns = [
       {
-        Header: "BankAccountId",
+        Header: "Date",
+        accessor: "Date",
+        width: 80,
+        Cell: ({ value }) => <span>{dateFormat(value, "GMT: yy-mm-dd")}</span>
+      },
+
+      {
+        Header: "Payee",
+        accessor: "Payee",
+        width: 75
+      },
+      {
+        Header: "Description",
+        accessor: "Description",
+        width: 200
+      },
+      {
+        Header: "Reference",
+        accessor: "Reference",
+        width: 80
+      },
+      {
+        Header: "TaxTypeId",
+        accessor: "TaxTypeId",
+        width: 80
+      },
+      {
+        Header: "Exclusive",
+        accessor: "Exclusive",
+        width: 100,
+        Cell: props => <FormatNumber {...props} decimals={2} />
+      },
+      {
+        Header: "Total",
+        accessor: "Total",
+        width: 100,
+        Cell: props => <FormatNumber {...props} decimals={2} />
+      },
+      {
+        Header: "Bank Account",
         accessor: "BankAccountId",
-        width: 175
+        width: 120,
+        Cell: ({ value }) => (
+          <div>
+            {soBankAccounts.find(ba => ba.ID === value)
+              ? soBankAccounts.find(ba => ba.ID === value).Name
+              : ""}
+          </div>
+        )
       }
     ];
     return (
@@ -44,12 +115,12 @@ class SOBankTransactionsTable extends Component {
               desc: false
             }
           ]}
-          SubComponent={({ original: row }) => (
-            <div style={{ padding: "2px" }}>
-              <h4>{row.ID}</h4>
-              <pre>{row.Description}</pre>
-            </div>
-          )}
+          // SubComponent={({ original: row }) => (
+          //   <div style={{ padding: "2px" }}>
+          //     <h4>{row.ID}</h4>
+          //     <pre>{row.Description}</pre>
+          //   </div>
+          // )}
           className="-striped -highlight"
         />
       </div>
