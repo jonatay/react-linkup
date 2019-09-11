@@ -1,3 +1,11 @@
-import { soBankAccountSagas } from "./index";
+import {
+  soBankAccountSagas,
+  soBankTransactionSagas,
+  soAccountSagas
+} from "./index";
 
-export const sageOneSagas = [...soBankAccountSagas];
+export const sageOneSagas = [
+  ...soBankAccountSagas,
+  ...soBankTransactionSagas,
+  ...soAccountSagas
+];

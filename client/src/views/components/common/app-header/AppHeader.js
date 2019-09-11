@@ -33,6 +33,7 @@ const iconCheat = {
   "sage-pay": "cloud-upload-o",
   "sage-one": "audit",
   "bank-accounts": "credit-card",
+  "bank-transactions": "table",
   "banks-and-branches": "shop",
   "salary-batches": "solution",
   Attend: "clock-circle-o",
