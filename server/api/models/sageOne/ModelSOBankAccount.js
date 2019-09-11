@@ -4,8 +4,9 @@ const myCache = require("../../services/myCache");
 exports.list = () => {
   return new Promise((resolve, reject) => {
     const soBankAccounts = myCache.get("soBankAccounts");
+    //console.log(soBankAccounts);
     if (soBankAccounts) {
-      resolve({ soBankAccounts });
+      resolve(soBankAccounts);
     } else {
       callSageOneAPI(
         {
@@ -15,7 +16,8 @@ exports.list = () => {
         (err, data) =>
           err
             ? reject(err)
-            : myCache.set("soBankAccounts", obj, 10000) && resolve(data.Results)
+            : myCache.set("soBankAccounts", data.Results, 60000) &&
+              resolve(data.Results)
       );
     }
   });
