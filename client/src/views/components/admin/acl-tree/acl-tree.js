@@ -2,9 +2,9 @@
     Jono : 18 01 11
     RoleTree : React Class Component
 */
-import React from 'react';
-import SortableTree from 'react-sortable-tree';
-import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
+import React from "react";
+import SortableTree from "react-sortable-tree";
+import FileExplorerTheme from "react-sortable-tree-theme-file-explorer";
 // import FullNodeDragTheme from 'react-sortable-tree-theme-full-node-drag';
 
 // import { Button, Input } from 'antd';
@@ -16,15 +16,9 @@ class RolesTree extends React.Component {
       treeData: this.props.aclTree
     };
   }
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      treeData: nextProps.aclTree
-    });
-  }
 
-  componentWillMount() {
-    // console.log(this.state);
-  }
+  static getDerivedStateFromProps = ({aclTree}, state)=> ({...state, treeData: aclTree});
+
 
   render() {
     return (
@@ -44,4 +38,3 @@ class RolesTree extends React.Component {
 }
 
 export default RolesTree;
-

@@ -122,6 +122,13 @@ class SOBankTransactionsTable extends Component {
           //   </div>
           // )}
           className="-striped -highlight"
+          // getTrProps={(state, rowInfo, column) =>
+          //   console.log(state, rowInfo, column) || {
+          //     style: {
+          //       background: rowInfo.row.Total >= 0 ? "green" : "red"
+          //     }
+          //   }
+          // }
         />
       </div>
     );

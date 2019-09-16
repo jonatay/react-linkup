@@ -1,8 +1,16 @@
-import { delay } from 'redux-saga';
-import { call, fork, put, take, cancel, takeEvery } from 'redux-saga/effects';
-import { firebaseAuth } from '../../firebase/index';
-import history from 'src/mid/history';
-import { authActions } from './auth-actions';
+import { push } from "connected-react-router";
+import {
+  call,
+  fork,
+  put,
+  take,
+  cancel,
+  takeEvery,
+  delay
+} from "redux-saga/effects";
+import { firebaseAuth } from "../../firebase/index";
+//import history from 'src/mid/history';
+import { authActions } from "./auth-actions";
 
 const tokenTimeout = 55 * 60 * 1000;
 
@@ -10,11 +18,11 @@ const b64DecodeUnicode = str => {
   // Going backwards: from bytestream, to percent-encoding, to original string.
   return decodeURIComponent(
     atob(str)
-      .split('')
+      .split("")
       .map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
       })
-      .join('')
+      .join("")
   );
 };
 
@@ -25,11 +33,12 @@ function* signIn(authProvider) {
       authProvider
     );
     let idToken = yield call([authData.user, authData.user.getIdToken]);
-    const customClaim = JSON.parse(b64DecodeUnicode(idToken.split('.')[1]));
+    const customClaim = JSON.parse(b64DecodeUnicode(idToken.split(".")[1]));
     yield put(
       authActions.signInFulfilled(authData.user, idToken, customClaim.roles)
     );
-    yield history.push('/');
+    //yield history.push('/');
+    yield put(push("/"));
   } catch (error) {
     yield put(authActions.signInFailed(error));
   }
@@ -39,7 +48,8 @@ function* signOut() {
   try {
     yield call([firebaseAuth, firebaseAuth.signOut]);
     yield put(authActions.signOutFulfilled());
-    yield history.replace('/sign-in');
+    // yield history.replace('/sign-in');
+    yield put(push("/sign-in"));
   } catch (error) {
     yield put(authActions.signOutFailed(error));
   }
@@ -62,11 +72,12 @@ function* signInWithEmailPassword({ payload: { email, password } }) {
     password
   );
   let idToken = yield call([authData.user, authData.user.getIdToken]);
-  const customClaim = JSON.parse(b64DecodeUnicode(idToken.split('.')[1]));
+  const customClaim = JSON.parse(b64DecodeUnicode(idToken.split(".")[1]));
   yield put(
     authActions.signInFulfilled(authData.user, idToken, customClaim.roles)
   );
-  yield history.push('/home');
+  //yield history.push('/home');
+  yield put(push("/home"));
 }
 
 function* registerNewUser({ payload }) {
@@ -87,11 +98,12 @@ function* registerNewUser({ payload }) {
     });
     yield put(authActions.registerNewUserFulfilled(authData.user));
     let idToken = yield call([authData.user, authData.user.getIdToken]);
-    const customClaim = JSON.parse(b64DecodeUnicode(idToken.split('.')[1]));
+    const customClaim = JSON.parse(b64DecodeUnicode(idToken.split(".")[1]));
     yield put(
       authActions.signInFulfilled(authData.user, idToken, customClaim.roles)
     );
-    yield history.push('/home');
+    // yield history.push('/home');
+    yield put(push("/home"));
   } catch (error) {
     yield put(authActions.registerNewUserFailed(error));
   }
