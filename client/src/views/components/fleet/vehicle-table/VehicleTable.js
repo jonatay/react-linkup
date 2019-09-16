@@ -13,11 +13,6 @@ class VehicleTable extends React.Component {
     data: []
   };
 
-  // componentWillReceiveProps = nextProps => {
-  //   const { vehicles } = nextProps;
-  //   this.setState({ data: vehicles.toArray() });
-  // };
-
   showToggleVehicleActiveConfirm = (vehicle, toggleVehicleIsActive) => {
     Modal.confirm({
       title: 'Are you sure toggle active on this vehicle?',

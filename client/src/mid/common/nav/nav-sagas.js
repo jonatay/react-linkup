@@ -1,5 +1,5 @@
-import { push } from 'react-router-redux';
-import { fork, put, take } from 'redux-saga/effects';
+import { push } from "connected-react-router";
+import { fork, put, take} from 'redux-saga/effects';
 import Cookies from 'js-cookie';
 
 import { navActions } from './nav-actions';

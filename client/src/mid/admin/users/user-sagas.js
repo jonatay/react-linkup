@@ -1,8 +1,9 @@
-import { call, fork, put, take, takeEvery } from 'redux-saga/effects';
-import { authActions } from '../../common/auth/index';
-import { userActions } from './user-actions';
-import { userList } from './user-list';
-import { LOCATION_CHANGE } from 'react-router-redux';
+import { call, fork, put, take, takeEvery } from "redux-saga/effects";
+import { authActions } from "../../common/auth/index";
+import { userActions } from "./user-actions";
+import { userList } from "./user-list";
+//import { LOCATION_CHANGE } from 'react-router-redux';
+import { LOCATION_CHANGE } from "connected-react-router";
 
 function* loadAllUsers() {
   const users = yield call([userList, userList.list]);
@@ -38,7 +39,8 @@ function* watchAuthentication() {
 function* watchLocationChange() {
   while (true) {
     let { payload } = yield take(LOCATION_CHANGE);
-    if (payload.pathname.indexOf('admin') === 1) {
+    //console.log(payload);
+    if (payload.location.pathname.indexOf("admin") === 1) {
       yield put(userActions.loadUsers());
     }
   }

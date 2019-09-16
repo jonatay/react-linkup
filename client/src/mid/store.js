@@ -1,22 +1,29 @@
-import { routerMiddleware } from 'react-router-redux';
-import { applyMiddleware, compose, createStore } from 'redux';
-import createSagaMiddleware from 'redux-saga';
-import ReactGA from 'react-ga';
-import { analyticsId } from './config';
+//import { routerMiddleware } from 'react-router-redux';
+import { routerMiddleware } from "connected-react-router";
+import { createBrowserHistory } from "history";
+import { applyMiddleware, compose, createStore } from "redux";
+import createSagaMiddleware from "redux-saga";
+import ReactGA from "react-ga";
+import { analyticsId } from "./config";
 
-import history from './history';
-import reducers from './reducers';
-import sagas from './sagas';
+//import history from './history';
+//import reducers from './reducers';
+import createRootReducer from "./reducers";
+
+import sagas from "./sagas";
+
+export const history = createBrowserHistory();
 
 // import { loadState, saveState } from './localStorage';
 
 export default function configureStore() {
   const sagaMiddleware = createSagaMiddleware();
+  //let middleware = applyMiddleware(sagaMiddleware, routerMiddleware(history));
   let middleware = applyMiddleware(sagaMiddleware, routerMiddleware(history));
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== "production") {
     const devToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION__;
-    if (typeof devToolsExtension === 'function') {
+    if (typeof devToolsExtension === "function") {
       middleware = compose(
         middleware,
         devToolsExtension()
@@ -26,17 +33,19 @@ export default function configureStore() {
 
   // const persistedState = loadState();
 
-  const store = createStore(reducers, middleware);
+  const store = createStore(createRootReducer(history), middleware);
+
   sagaMiddleware.run(sagas);
 
   if (module.hot) {
-    module.hot.accept('./reducers', () => {
-      store.replaceReducer(require('./reducers').default);
+    module.hot.accept("./reducers", () => {
+      //store.replaceReducer(require("./reducers").default);
+      store.replaceReducer(createRootReducer(history));
     });
   }
 
   // init Google Analytics if not in dev
-  if (process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV !== "development") {
     ReactGA.initialize(analyticsId);
     history.listen((location, action) => {
       //console.log('route change:',location.pathname)

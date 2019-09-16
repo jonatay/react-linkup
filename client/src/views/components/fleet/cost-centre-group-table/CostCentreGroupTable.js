@@ -15,10 +15,10 @@ class CostCentreGroupTable extends React.Component {
     this.props.loadCostCentreGroups();
   }
 
-  componentWillReceiveProps = nextProps => {
-    const { costCentreGroups } = nextProps;
-    this.setState({ data: costCentreGroups });
-  };
+  static getDerivedStateFromProps = ({ costCentreGroups }, state) => ({
+    ...state,
+    data: costCentreGroups
+  });
 
   columns = [
     {
