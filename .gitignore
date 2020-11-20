@@ -16,3 +16,4 @@ public/javascripts/
 /util/sage/
 
 /util/gsheet/
+server/www-pm2.json
