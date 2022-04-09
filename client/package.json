@@ -16,7 +16,7 @@
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.13",
     "merge": "1.2.1",
-    "moment": "^2.22.0",
+    "moment": "^2.29.2",
     "prop-types": "15.6.0",
     "react": "^16.5.1",
     "react-avatar-editor": "^11.0.4",
