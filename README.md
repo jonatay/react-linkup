@@ -1,4 +1,4 @@
-Shis has been migrated to https://github.com/jonatay/new-react-linkup
+This has been migrated to https://github.com/jonatay/new-react-linkup
 Still building/compiling on linux, but not windows, breaking changes in router, redux etc force radical rewrite.
 Going to rebuild from ground up, but don't want to mess with this repo while live still using it.
 
